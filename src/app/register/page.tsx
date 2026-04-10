@@ -157,14 +157,14 @@ export default function RegisterPage() {
 
           <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
             <input
-              type="text" placeholder="Full name" value={form.name} required
+              type="text" placeholder="Full name" value={form.name} required minLength={2} maxLength={50}
               onChange={e => setForm({ ...form, name: e.target.value })}
               style={inp}
               onFocus={e => { e.currentTarget.style.border = '1px solid #a28ef9'; e.currentTarget.style.boxShadow = '0 0 0 3px rgba(162,142,249,.15)' }}
               onBlur={e  => { e.currentTarget.style.border = '1px solid #e5e7eb'; e.currentTarget.style.boxShadow = 'none' }}
             />
             <input
-              type="email" placeholder="Enter your email" value={form.email} required
+              type="email" placeholder="Enter your email" value={form.email} required maxLength={100}
               onChange={e => setForm({ ...form, email: e.target.value })}
               style={inp}
               onFocus={e => { e.currentTarget.style.border = '1px solid #a28ef9'; e.currentTarget.style.boxShadow = '0 0 0 3px rgba(162,142,249,.15)' }}
@@ -172,7 +172,7 @@ export default function RegisterPage() {
             />
             <div style={{ position: 'relative' }}>
               <input
-                type={showPw ? 'text' : 'password'} placeholder="Password (min. 6 chars)" value={form.password} required
+                type={showPw ? 'text' : 'password'} placeholder="Password (min. 6 chars)" value={form.password} required minLength={6} maxLength={100}
                 onChange={e => setForm({ ...form, password: e.target.value })}
                 style={{ ...inp, paddingRight: 36 }}
                 onFocus={e => { e.currentTarget.style.border = '1px solid #a28ef9'; e.currentTarget.style.boxShadow = '0 0 0 3px rgba(162,142,249,.15)' }}

@@ -167,7 +167,7 @@ export default function LoginPage() {
 
           <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
             <input
-              type="email" placeholder="Enter  your email" value={form.email} required
+              type="email" placeholder="Enter your email" value={form.email} required maxLength={100}
               onChange={e => setForm({ ...form, email: e.target.value })}
               style={inp}
               onFocus={e => { e.currentTarget.style.border = '1px solid #a28ef9'; e.currentTarget.style.boxShadow = '0 0 0 3px rgba(162,142,249,.15)' }}
@@ -176,7 +176,7 @@ export default function LoginPage() {
 
             <div style={{ position: 'relative' }}>
               <input
-                type={showPw ? 'text' : 'password'} placeholder="Password" value={form.password} required
+                type={showPw ? 'text' : 'password'} placeholder="Password" value={form.password} required minLength={6} maxLength={100}
                 onChange={e => setForm({ ...form, password: e.target.value })}
                 style={{ ...inp, paddingRight: 36 }}
                 onFocus={e => { e.currentTarget.style.border = '1px solid #a28ef9'; e.currentTarget.style.boxShadow = '0 0 0 3px rgba(162,142,249,.15)' }}
