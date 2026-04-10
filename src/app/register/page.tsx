@@ -121,20 +121,20 @@ export default function RegisterPage() {
     <div style={{ display: 'flex', minHeight: '100vh', fontFamily: 'var(--font-fustat, system-ui, sans-serif)' }}>
 
       {/* ── Left: white form ── */}
-      <div style={{ flex: '0 0 38%', minWidth: 340, background: '#fff', display: 'flex', flexDirection: 'column', padding: '24px 32px' }}>
+      <div style={{ flex: '0 0 48%', minWidth: 420, background: '#fff', display: 'flex', flexDirection: 'column', padding: '36px 56px' }}>
         <Link href="/login" style={{ display: 'inline-flex', alignItems: 'center', gap: 6, fontSize: 13, color: '#6b7280', textDecoration: 'none', marginBottom: 'auto' }}>
           <ArrowLeft size={14} /> Back to sign in
         </Link>
 
-        <div style={{ flex: 1, display: 'flex', flexDirection: 'column', justifyContent: 'center', maxWidth: 300, width: '100%', margin: '0 auto', paddingBottom: 48 }}>
-          <div style={{ width: 36, height: 36, border: '1.5px solid #111827', borderRadius: 8, display: 'flex', alignItems: 'center', justifyContent: 'center', marginBottom: 20 }}>
-            <Zap size={16} color="#111827" />
+        <div style={{ flex: 1, display: 'flex', flexDirection: 'column', justifyContent: 'center', maxWidth: 340, width: '100%', margin: '0 auto', paddingBottom: 64 }}>
+          <div style={{ width: 40, height: 40, border: '1.5px solid #111827', borderRadius: 10, display: 'flex', alignItems: 'center', justifyContent: 'center', marginBottom: 28 }}>
+            <Zap size={18} color="#111827" />
           </div>
 
-          <h1 style={{ fontSize: 22, fontWeight: 800, color: '#111827', margin: '0 0 6px' }}>Create your account</h1>
-          <p style={{ fontSize: 13, color: '#9ca3af', margin: '0 0 28px' }}>Free forever · No credit card required</p>
+          <h1 style={{ fontSize: 26, fontWeight: 800, color: '#111827', margin: '0 0 8px' }}>Create your account</h1>
+          <p style={{ fontSize: 14, color: '#9ca3af', margin: '0 0 36px', lineHeight: 1.6 }}>Free forever · No credit card required</p>
 
-          <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
+          <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
             <input
               type="text" placeholder="Full name" value={form.name} required
               onChange={e => setForm({ ...form, name: e.target.value })}
@@ -164,12 +164,12 @@ export default function RegisterPage() {
             </div>
 
             <button type="submit" disabled={loading}
-              style={{ width: '100%', height: 42, borderRadius: 6, border: 'none', background: '#111827', color: '#fff', fontSize: 14, fontWeight: 700, cursor: 'pointer', marginTop: 4, opacity: loading ? 0.7 : 1, transition: 'opacity .2s' }}>
+              style={{ width: '100%', height: 46, borderRadius: 8, border: 'none', background: '#111827', color: '#fff', fontSize: 14, fontWeight: 700, cursor: 'pointer', marginTop: 8, opacity: loading ? 0.7 : 1, transition: 'opacity .2s' }}>
               {loading ? 'Creating account…' : 'Continue'}
             </button>
           </form>
 
-          <div style={{ display: 'flex', alignItems: 'center', gap: 10, margin: '20px 0' }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: 10, margin: '28px 0' }}>
             <div style={{ flex: 1, height: 1, background: '#f3f4f6' }} />
             <span style={{ fontSize: 11, color: '#9ca3af', fontWeight: 600, letterSpacing: 1 }}>OR</span>
             <div style={{ flex: 1, height: 1, background: '#f3f4f6' }} />
