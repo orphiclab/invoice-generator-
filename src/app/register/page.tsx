@@ -11,38 +11,37 @@ const Gm = '#6d28d9'; const L  = '#7c5cfc'; const La = '#a28ef9'
 const W  = '#ffffff';  const G  = '#ddd6fe'
 
 type T = { bg: string; sh: string; c: string }
-
-// Mirror of login grid but with some variations
+// 8 cols × 6 rows = 48 tiles, each with 4:5 aspect ratio
 const TILES: T[] = [
-  { bg: M,  sh: 'half-t',   c: P  }, { bg: B,  sh: 'slash',    c: M  },
-  { bg: P,  sh: 'circ',     c: La }, { bg: B,  sh: 'none',     c: B  },
-  { bg: Gm, sh: 'none',     c: Gm }, { bg: B,  sh: 'diamond',  c: P  },
-  { bg: P,  sh: 'q-tl',     c: M  }, { bg: B,  sh: 'big-circ', c: P  },
+  { bg: M,  sh: 'half-t',  c: P  }, { bg: B,  sh: 'slash',   c: M  },
+  { bg: P,  sh: 'circ',   c: La }, { bg: B,  sh: 'none',    c: B  },
+  { bg: Gm, sh: 'none',   c: Gm }, { bg: B,  sh: 'diamond', c: P  },
+  { bg: P,  sh: 'q-tl',   c: M  }, { bg: B,  sh: 'big-circ',c: P  },
 
-  { bg: B,  sh: 'square',   c: Gm }, { bg: P,  sh: 'none',     c: P  },
-  { bg: B,  sh: 'q-br',     c: M  }, { bg: M,  sh: 'dots',     c: P  },
-  { bg: B,  sh: 'none',     c: B  }, { bg: P,  sh: 'half-r',   c: B  },
-  { bg: B,  sh: 'diamond',  c: Gm }, { bg: M,  sh: 'ring',     c: L  },
+  { bg: B,  sh: 'square', c: Gm }, { bg: P,  sh: 'none',    c: P  },
+  { bg: B,  sh: 'q-br',   c: M  }, { bg: M,  sh: 'dots',    c: P  },
+  { bg: B,  sh: 'none',   c: B  }, { bg: P,  sh: 'half-r',  c: B  },
+  { bg: B,  sh: 'diamond',c: Gm }, { bg: M,  sh: 'ring',    c: L  },
 
-  { bg: P,  sh: 'big-circ', c: M  }, { bg: B,  sh: 'none',     c: B  },
-  { bg: M,  sh: 'slash',    c: P  }, { bg: B,  sh: 'q-tr',     c: P  },
-  { bg: La, sh: 'none',     c: La }, { bg: B,  sh: 'tri',      c: M  },
-  { bg: P,  sh: 'none',     c: P  }, { bg: G,  sh: 'q-bl',     c: La },
+  { bg: P,  sh: 'big-circ',c: M  }, { bg: B,  sh: 'none',   c: B  },
+  { bg: M,  sh: 'slash',  c: P  }, { bg: B,  sh: 'q-tr',    c: P  },
+  { bg: La, sh: 'none',   c: La }, { bg: B,  sh: 'tri',     c: M  },
+  { bg: P,  sh: 'none',   c: P  }, { bg: G,  sh: 'q-bl',    c: La },
 
-  { bg: B,  sh: 'ring',     c: L  }, { bg: M,  sh: 'square',   c: P  },
-  { bg: B,  sh: 'none',     c: B  }, { bg: P,  sh: 'half-b',   c: B  },
-  { bg: B,  sh: 'none',     c: B  }, { bg: Gm, sh: 'diamond',  c: M  },
-  { bg: B,  sh: 'plus',     c: W  }, { bg: M,  sh: 'none',     c: M  },
+  { bg: B,  sh: 'ring',   c: L  }, { bg: M,  sh: 'square',  c: P  },
+  { bg: B,  sh: 'none',   c: B  }, { bg: P,  sh: 'half-b',  c: B  },
+  { bg: B,  sh: 'none',   c: B  }, { bg: Gm, sh: 'diamond', c: M  },
+  { bg: B,  sh: 'plus',   c: W  }, { bg: M,  sh: 'none',    c: M  },
 
-  { bg: P,  sh: 'diamond',  c: Gm }, { bg: B,  sh: 'dots',     c: La },
-  { bg: M,  sh: 'q-tr',     c: L  }, { bg: B,  sh: 'big-circ', c: M  },
-  { bg: B,  sh: 'none',     c: B  }, { bg: P,  sh: 'none',     c: P  },
-  { bg: B,  sh: 'tri',      c: P  }, { bg: L,  sh: 'q-br',     c: B  },
+  { bg: P,  sh: 'diamond',c: Gm }, { bg: B,  sh: 'dots',    c: La },
+  { bg: M,  sh: 'q-tr',   c: L  }, { bg: B,  sh: 'big-circ',c: M  },
+  { bg: B,  sh: 'none',   c: B  }, { bg: P,  sh: 'none',    c: P  },
+  { bg: B,  sh: 'tri',    c: P  }, { bg: L,  sh: 'q-br',    c: B  },
 
-  { bg: B,  sh: 'big-circ', c: P  }, { bg: Gm, sh: 'slash',    c: M  },
-  { bg: P,  sh: 'square',   c: La }, { bg: B,  sh: 'half-l',   c: P  },
-  { bg: M,  sh: 'dots',     c: B  }, { bg: B,  sh: 'none',     c: B  },
-  { bg: P,  sh: 'ring',     c: Gm }, { bg: M,  sh: 'diamond',  c: P  },
+  { bg: B,  sh: 'big-circ',c: P  }, { bg: Gm, sh: 'slash',  c: M  },
+  { bg: P,  sh: 'square', c: La }, { bg: B,  sh: 'half-l',  c: P  },
+  { bg: M,  sh: 'dots',   c: B  }, { bg: B,  sh: 'none',    c: B  },
+  { bg: P,  sh: 'ring',   c: Gm }, { bg: M,  sh: 'diamond', c: P  },
 ]
 
 function Shape({ t, c }: { t: string; c: string }) {
@@ -77,12 +76,14 @@ function Shape({ t, c }: { t: string; c: string }) {
 
 function GeometricGrid() {
   return (
-    <div style={{ display: 'grid', gridTemplateColumns: 'repeat(8, 1fr)', gridTemplateRows: 'repeat(6, 1fr)', width: '100%', height: '100%' }}>
-      {TILES.map((tile, i) => (
-        <div key={i} style={{ background: tile.bg, overflow: 'hidden', width: '100%', height: '100%' }}>
-          <Shape t={tile.sh} c={tile.c} />
-        </div>
-      ))}
+    <div style={{ width: '100%', height: '100%', background: B }}>
+      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(8, 1fr)', width: '100%' }}>
+        {TILES.map((tile, i) => (
+          <div key={i} style={{ background: tile.bg, overflow: 'hidden', aspectRatio: '4 / 5' }}>
+            <Shape t={tile.sh} c={tile.c} />
+          </div>
+        ))}
+      </div>
     </div>
   )
 }
