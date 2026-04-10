@@ -15,7 +15,7 @@ interface Currency { id: string; code: string; symbol: string; name: string }
 interface Item { description: string; quantity: number; unitPrice: number }
 
 const inputStyle = { background: '#ffffff', borderColor: '#e5e7eb' }
-const labelStyle = { color: 'rgba(255,255,255,0.55)' }
+const labelStyle = { color: '#6b7280' }
 
 export default function NewInvoicePage() {
   const router = useRouter()
@@ -251,7 +251,7 @@ export default function NewInvoicePage() {
         {/* Actions */}
         <div className="flex justify-end gap-3">
           <Link href="/invoices">
-            <Button variant="outline" className="border-border hover:bg-muted" style={{ color: 'rgba(255,255,255,0.5)' }}>Cancel</Button>
+            <Button variant="outline" className="border-border hover:bg-muted" style={{ color: '#6b7280' }}>Cancel</Button>
           </Link>
           <Button type="submit" disabled={loading} className="text-gray-900" style={{ background: 'linear-gradient(135deg, #6B50EE, #3B82F6)' }}>
             {loading ? 'Saving…' : 'Create Invoice'}

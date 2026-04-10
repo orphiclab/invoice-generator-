@@ -460,7 +460,7 @@ export default function InvoiceDetailPage() {
                 <span>Rs {amountPaid.toLocaleString('en-LK', { maximumFractionDigits: 0 })} paid</span>
                 <span>Rs {(invoice.total - amountPaid).toLocaleString('en-LK', { maximumFractionDigits: 0 })} remaining</span>
               </div>
-              <div className="h-2 rounded-full overflow-hidden" style={{ background: 'rgba(255,255,255,0.08)' }}>
+              <div className="h-2 rounded-full overflow-hidden" style={{ background: '#e5e7eb' }}>
                 <div className="h-full rounded-full transition-all duration-500"
                   style={{ width: `${Math.min(100, (amountPaid / invoice.total) * 100)}%`, background: 'linear-gradient(90deg, #10B981, #059669)' }} />
               </div>
@@ -559,7 +559,7 @@ export default function InvoiceDetailPage() {
                 <span style={{ color: '#6b7280' }}>Paid</span>
                 <span className="font-semibold" style={{ color: '#10B981' }}>Rs {amountPaid.toLocaleString('en-LK', { maximumFractionDigits: 0 })}</span>
               </div>
-              <div className="flex justify-between pt-2 border-t" style={{ borderColor: 'rgba(255,255,255,0.08)' }}>
+              <div className="flex justify-between pt-2 border-t" style={{ borderColor: '#e5e7eb' }}>
                 <span style={{ color: '#6b7280' }}>Balance</span>
                 <span className="font-bold" style={{ color: invoice.total - amountPaid > 0 ? '#F59E0B' : '#10B981' }}>
                   Rs {Math.max(0, invoice.total - amountPaid).toLocaleString('en-LK', { maximumFractionDigits: 0 })}

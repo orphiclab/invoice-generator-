@@ -144,8 +144,8 @@ export default function ReportsPage() {
                   return (
                     <div key={row.category}>
                       <div className="flex justify-between text-sm mb-1">
-                        <span style={{ color: 'rgba(255,255,255,0.5)' }}>{row.category}</span>
-                        <span className="text-gray-900" style={{ color: '#9ca3af' }}>({pct.toFixed(0)}%)</span></span>
+                        <span style={{ color: '#6b7280' }}>{row.category}</span>
+                        <span className="text-gray-900" style={{ color: '#9ca3af' }}>({pct.toFixed(0)}%)</span>
                       </div>
                       <div className="h-1.5 rounded-full" style={{ background: '#f9fafb' }}>
                         <div className="h-1.5 rounded-full transition-all" style={{ width: `${pct}%`, background: 'linear-gradient(90deg, #6B50EE, #3B82F6)' }} />

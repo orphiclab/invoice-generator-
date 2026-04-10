@@ -14,7 +14,7 @@ interface Client { id: string; name: string; company?: string }
 interface Item { description: string; quantity: number; unitPrice: number }
 
 const inputStyle = { background: '#ffffff', borderColor: '#e5e7eb' }
-const labelStyle = { color: 'rgba(255,255,255,0.55)' }
+const labelStyle = { color: '#6b7280' }
 
 export default function EditInvoicePage() {
   const { id } = useParams<{ id: string }>()
@@ -264,7 +264,7 @@ export default function EditInvoicePage() {
         {/* Actions */}
         <div className="flex justify-end gap-3">
           <Link href={`/invoices/${id}`}>
-            <Button variant="outline" className="border-border hover:bg-muted" style={{ color: 'rgba(255,255,255,0.5)' }}>Cancel</Button>
+            <Button variant="outline" className="border-border hover:bg-muted" style={{ color: '#6b7280' }}>Cancel</Button>
           </Link>
           <Button type="submit" disabled={loading} className="text-gray-900" style={{ background: 'linear-gradient(135deg, #6B50EE, #3B82F6)' }}>
             {loading ? <><Loader2 className="w-4 h-4 mr-2 animate-spin" />Saving…</> : 'Save Changes'}

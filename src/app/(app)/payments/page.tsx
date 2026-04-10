@@ -108,7 +108,7 @@ export default function PaymentsPage() {
                       {new Date(p.createdAt).toLocaleDateString('en-IN', { day: 'numeric', month: 'short', year: 'numeric' })}
                     </td>
                     <td className="text-gray-900">{p.invoice.invoiceNo}</td>
-                    <td className="px-4 py-3.5 text-sm" style={{ color: 'rgba(255,255,255,0.5)' }}>{p.invoice.client.name}</td>
+                    <td className="px-4 py-3.5 text-sm" style={{ color: '#6b7280' }}>{p.invoice.client.name}</td>
                     <td className="text-gray-900">{fmt(p.amount, p.currency)}</td>
                     <td className="px-4 py-3.5">
                       <div className="flex items-center gap-1.5">

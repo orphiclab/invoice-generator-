@@ -69,7 +69,7 @@ export default function InvoicesPage() {
           <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4" style={{ color: '#9ca3af' }} />
           <input placeholder="Search by invoice # or client…" value={search} onChange={(e) => setSearch(e.target.value)}
             className="text-gray-900"
-            style={{ background: '#f9fafb', border: '1px solid rgba(255,255,255,0.08)' }} />
+            style={{ background: '#f9fafb', border: '1px solid #e5e7eb' }} />
         </div>
         <div className="flex gap-2 flex-wrap">
           {ALL_STATUSES.map((s) => (
@@ -77,7 +77,7 @@ export default function InvoicesPage() {
               className="px-3 py-1.5 rounded-lg text-xs font-semibold transition-all"
               style={filter === s
                 ? { background: '#a28ef9', color: '#111827', boxShadow: '0 2px 8px rgba(124,58,237,0.4)' }
-                : { background: '#f9fafb', color: '#6b7280', border: '1px solid rgba(255,255,255,0.08)' }}>
+                : { background: '#f9fafb', color: '#6b7280', border: '1px solid #e5e7eb' }}>
               {s === 'ALL' ? 'All' : s.charAt(0) + s.slice(1).toLowerCase()}
             </button>
           ))}

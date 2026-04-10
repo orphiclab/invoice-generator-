@@ -11,7 +11,7 @@ import TeamSettingsPage from './team/page'
 interface Currency { id: string; code: string; symbol: string; name: string }
 
 const inputStyle = { background: '#f9fafb', borderColor: '#e5e7eb', color: '#111827' }
-const labelStyle = { color: 'rgba(255,255,255,0.55)' }
+const labelStyle = { color: '#6b7280' }
 
 const TABS = [
   { id: 'profile', label: 'Profile', icon: User },
@@ -300,7 +300,7 @@ function PortalSettings() {
         <div className="rounded-xl p-4 space-y-2" style={{ background: 'rgba(139,92,246,0.1)', border: '1px solid rgba(139,92,246,0.25)' }}>
           <p className="text-xs font-medium" style={{ color: '#9B8AFF' }}>Portal Link Ready</p>
           <div className="flex items-center gap-2">
-            <code className="text-gray-900" style={{ color: 'rgba(255,255,255,0.5)' }}>{generatedUrl}</code>
+            <code className="text-gray-900" style={{ color: '#6b7280' }}>{generatedUrl}</code>
             <Button onClick={copyUrl} variant="ghost" className="text-xs h-8 px-3 flex-shrink-0" style={{ color: copied ? '#16a34a' : '#9B8AFF' }}>
               {copied ? 'Copied!' : 'Copy'}
             </Button>

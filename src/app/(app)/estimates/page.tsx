@@ -105,7 +105,7 @@ export default function EstimatesPage() {
             className="px-3 py-1.5 rounded-lg text-xs font-semibold transition-all capitalize"
             style={filter === s
               ? { background: '#a28ef9', color: '#111827', boxShadow: '0 2px 8px rgba(124,58,237,0.4)' }
-              : { background: '#f9fafb', color: '#6b7280', border: '1px solid rgba(255,255,255,0.08)' }}>
+              : { background: '#f9fafb', color: '#6b7280', border: '1px solid #e5e7eb' }}>
             {s === 'ALL' ? 'All' : STATUS_CONFIG[s as keyof typeof STATUS_CONFIG]?.label}
           </button>
         ))}

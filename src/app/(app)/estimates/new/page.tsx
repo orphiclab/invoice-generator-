@@ -73,7 +73,7 @@ export default function NewEstimatePage() {
       </div>
 
       <form onSubmit={handleSubmit} className="space-y-6">
-        <div className="rounded-2xl p-6 space-y-4" style={{ background: '#f9fafb', border: '1px solid rgba(255,255,255,0.08)' }}>
+        <div className="rounded-2xl p-6 space-y-4" style={{ background: '#f9fafb', border: '1px solid #e5e7eb' }}>
           <h2 className="text-gray-900">Details</h2>
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div>
@@ -106,7 +106,7 @@ export default function NewEstimatePage() {
         </div>
 
         {/* Line Items */}
-        <div className="rounded-2xl p-6 space-y-3" style={{ background: '#f9fafb', border: '1px solid rgba(255,255,255,0.08)' }}>
+        <div className="rounded-2xl p-6 space-y-3" style={{ background: '#f9fafb', border: '1px solid #e5e7eb' }}>
           <div className="flex items-center justify-between">
             <h2 className="text-gray-900">Line Items</h2>
             <Button type="button" variant="ghost" size="sm" onClick={addItem} className="gap-1 text-xs h-7" style={{ color: '#9B8AFF' }}>
@@ -140,7 +140,7 @@ export default function NewEstimatePage() {
         </div>
 
         {/* Totals */}
-        <div className="rounded-2xl p-6" style={{ background: '#f9fafb', border: '1px solid rgba(255,255,255,0.08)' }}>
+        <div className="rounded-2xl p-6" style={{ background: '#f9fafb', border: '1px solid #e5e7eb' }}>
           <div className="max-w-xs ml-auto space-y-3">
             <div className="flex justify-between text-sm">
               <span style={{ color: '#6b7280' }}>Subtotal</span>

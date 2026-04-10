@@ -10,7 +10,7 @@ import { Label } from '@/components/ui/label'
 interface Client { id: string; name: string; email: string; phone?: string; company?: string; address?: string; _count?: { invoices: number } }
 
 const inputStyle = { background: '#f9fafb', borderColor: '#e5e7eb', color: '#111827' }
-const labelStyle = { color: 'rgba(255,255,255,0.55)' }
+const labelStyle = { color: '#6b7280' }
 const blank: Omit<Client, 'id'> = { name: '', email: '', phone: '', company: '', address: '' }
 
 export default function ClientsPage() {
@@ -73,14 +73,14 @@ export default function ClientsPage() {
 
       <div className="relative mb-6 max-w-md">
         <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4" style={{ color: '#9ca3af' }} />
-        <input placeholder="Search clients…" value={search} onChange={(e) => setSearch(e.target.value)} className="text-gray-900" style={{ background: '#f9fafb', border: '1px solid rgba(255,255,255,0.08)' }} />
+        <input placeholder="Search clients…" value={search} onChange={(e) => setSearch(e.target.value)} className="text-gray-900" style={{ background: '#f9fafb', border: '1px solid #e5e7eb' }} />
       </div>
 
       {/* Slide-out form */}
       {showForm && (
         <div className="fixed inset-0 z-50 flex justify-end">
           <div className="fixed inset-0 bg-black/30 backdrop-blur-sm" onClick={closeForm} />
-          <div className="relative w-full max-w-md h-full flex flex-col" style={{ background: '#ffffff', borderLeft: '1px solid rgba(255,255,255,0.08)' }}>
+          <div className="relative w-full max-w-md h-full flex flex-col" style={{ background: '#ffffff', borderLeft: '1px solid #e5e7eb' }}>
             <div className="p-6 border-b" style={{ borderColor: '#e5e7eb' }}>
               <h2 className="text-gray-900">{editing ? 'Edit Client' : 'New Client'}</h2>
             </div>

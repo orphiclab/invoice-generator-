@@ -47,10 +47,10 @@ const tt = {
 }
 
 const statCards = [
-  { key: 'revenue',     label: 'Total Revenue',  icon: DollarSign,  cls: 'stat-purple', trend: +12, sub: 'From paid invoices',  textColor: 'text-white' },
-  { key: 'outstanding', label: 'Outstanding',    icon: AlertCircle, cls: 'stat-amber',  sub: 'Sent & overdue',                   textColor: 'text-white' },
-  { key: 'invoices',    label: 'Invoices',       icon: FileText,    cls: 'stat-blue',   trend: +4,  sub: 'All time',             textColor: 'text-white' },
-  { key: 'clients',     label: 'Clients',        icon: Users,       cls: 'stat-emerald', sub: 'Active clients',                  textColor: 'text-white' },
+  { key: 'revenue',     label: 'Total Revenue',  icon: DollarSign,  cls: 'stat-purple', trend: +12, sub: 'From paid invoices',  textColor: 'text-gray-900' },
+  { key: 'outstanding', label: 'Outstanding',    icon: AlertCircle, cls: 'stat-amber',  sub: 'Sent & overdue',                   textColor: 'text-gray-900' },
+  { key: 'invoices',    label: 'Invoices',       icon: FileText,    cls: 'stat-blue',   trend: +4,  sub: 'All time',             textColor: 'text-gray-900' },
+  { key: 'clients',     label: 'Clients',        icon: Users,       cls: 'stat-emerald', sub: 'Active clients',                  textColor: 'text-gray-900' },
 ]
 
 export default function DashboardPage() {
@@ -109,7 +109,7 @@ export default function DashboardPage() {
         {statCards.map(card => (
           <div key={card.key} className={`${card.cls} rounded-2xl p-5 relative overflow-hidden`}>
             <div className="absolute -top-8 -right-8 w-32 h-32 rounded-full" style={{ background: '#e5e7eb', filter: 'blur(2px)' }} />
-            <div className="absolute top-2 right-2 w-16 h-16 rounded-full" style={{ background: 'rgba(255,255,255,0.08)', filter: 'blur(4px)' }} />
+            <div className="absolute top-2 right-2 w-16 h-16 rounded-full" style={{ background: '#e5e7eb', filter: 'blur(4px)' }} />
             <div className="relative">
               <div className="flex items-start justify-between mb-4">
                 <div className="w-10 h-10 rounded-xl flex items-center justify-center" style={{ background: '#9ca3af' }}>
@@ -125,7 +125,7 @@ export default function DashboardPage() {
               </div>
               <p className="text-gray-900">{statValues[card.key]}</p>
               <p className="text-xs mt-2 font-semibold" style={{ color: '#374151' }}>{card.label}</p>
-              <p className="text-[11px] mt-0.5" style={{ color: 'rgba(255,255,255,0.55)' }}>{card.sub}</p>
+              <p className="text-[11px] mt-0.5" style={{ color: '#6b7280' }}>{card.sub}</p>
             </div>
           </div>
         ))}
