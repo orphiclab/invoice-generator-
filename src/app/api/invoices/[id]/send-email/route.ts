@@ -26,7 +26,7 @@ export async function POST(req: NextRequest) {
 
     const appUrl = process.env.NEXT_PUBLIC_APP_URL ?? 'http://localhost:3000'
     const shareUrl = `${appUrl}/share/${invoice.shareToken ?? invoice.id}`
-    const sym = invoice.currency?.symbol ?? '₹'
+    const sym = invoice.currency?.symbol ?? 'Rs '
     const senderName = invoice.user.company ?? invoice.user.name
 
     const emailBody = `
@@ -59,15 +59,15 @@ export async function POST(req: NextRequest) {
         </tr>
         <tr style="border-bottom:1px solid #1e2a3a;">
           <td style="padding:10px 0;font-size:13px;color:#64748b;">Issue Date</td>
-          <td style="padding:10px 0;font-size:13px;color:white;text-align:right;">${new Date(invoice.issueDate).toLocaleDateString('en-IN', { day: 'numeric', month: 'long', year: 'numeric' })}</td>
+          <td style="padding:10px 0;font-size:13px;color:white;text-align:right;">${new Date(invoice.issueDate).toLocaleDateString('en-US', { day: 'numeric', month: 'long', year: 'numeric' })}</td>
         </tr>
         <tr style="border-bottom:1px solid #1e2a3a;">
           <td style="padding:10px 0;font-size:13px;color:#64748b;">Due Date</td>
-          <td style="padding:10px 0;font-size:13px;color:#f59e0b;text-align:right;font-weight:600;">${new Date(invoice.dueDate).toLocaleDateString('en-IN', { day: 'numeric', month: 'long', year: 'numeric' })}</td>
+          <td style="padding:10px 0;font-size:13px;color:#f59e0b;text-align:right;font-weight:600;">${new Date(invoice.dueDate).toLocaleDateString('en-US', { day: 'numeric', month: 'long', year: 'numeric' })}</td>
         </tr>
         <tr>
           <td style="padding:12px 0 0;font-size:16px;color:white;font-weight:700;">Total Due</td>
-          <td style="padding:12px 0 0;font-size:22px;color:#8b5cf6;text-align:right;font-weight:800;">${sym}${invoice.total.toLocaleString('en-IN', { maximumFractionDigits: 2 })}</td>
+          <td style="padding:12px 0 0;font-size:22px;color:#8b5cf6;text-align:right;font-weight:800;">${sym}${invoice.total.toLocaleString('en-US', { maximumFractionDigits: 2 })}</td>
         </tr>
       </table>
       
