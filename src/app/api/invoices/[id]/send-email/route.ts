@@ -33,55 +33,58 @@ export async function POST(req: NextRequest) {
 <!DOCTYPE html>
 <html>
 <head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Invoice ${invoice.invoiceNo}</title></head>
-<body style="margin:0;padding:0;background:#0d1117;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;">
+<body style="margin:0;padding:0;background:#f9fafb;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;">
   <div style="max-width:600px;margin:0 auto;padding:40px 20px;">
-    <!-- Header -->
-    <div style="text-align:center;margin-bottom:32px;">
-      <div style="display:inline-flex;align-items:center;gap:8px;margin-bottom:16px;">
-        <div style="width:36px;height:36px;border-radius:10px;background:linear-gradient(135deg,#8b5cf6,#3b82f6);display:flex;align-items:center;justify-content:center;">
-          <span style="color:white;font-size:16px;font-weight:bold;">⚡</span>
-        </div>
-        <span style="font-size:20px;font-weight:700;color:white;">InvoiceFlow</span>
-      </div>
-    </div>
     <!-- Card -->
-    <div style="background:#161b27;border-radius:16px;border:1px solid #1e2a3a;padding:32px;margin-bottom:24px;">
-      <h1 style="margin:0 0 8px;font-size:24px;font-weight:700;color:white;">Invoice ${invoice.invoiceNo}</h1>
-      <p style="margin:0 0 24px;color:#64748b;font-size:14px;">From ${senderName}</p>
+    <div style="background:#ffffff;border-radius:12px;border:1px solid #e5e7eb;padding:40px;margin-bottom:24px;box-shadow:0 4px 6px -1px rgba(0,0,0,0.05),0 2px 4px -1px rgba(0,0,0,0.03);">
       
-      ${message ? `<div style="background:#0d1117;border-radius:10px;padding:16px;margin-bottom:24px;"><p style="margin:0;font-size:14px;color:#94a3b8;line-height:1.6;">${message}</p></div>` : ''}
+      <!-- Header -->
+      <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:40px;">
+        <div style="display:flex;align-items:center;gap:12px;">
+          <div style="width:40px;height:40px;border-radius:10px;background:linear-gradient(135deg,#8b5cf6,#3b82f6);display:flex;align-items:center;justify-content:center;">
+            <span style="color:white;font-size:18px;font-weight:bold;">⚡</span>
+          </div>
+          <div>
+            <h2 style="margin:0;font-size:18px;font-weight:700;color:#111827;">${senderName}</h2>
+            <p style="margin:0;font-size:13px;color:#6b7280;">Secure Invoice</p>
+          </div>
+        </div>
+      </div>
+
+      <h1 style="margin:0 0 8px;font-size:28px;font-weight:800;color:#111827;letter-spacing:-0.5px;">Invoice ${invoice.invoiceNo}</h1>
+      <p style="margin:0 0 32px;color:#6b7280;font-size:15px;">Billed to ${invoice.client.name}</p>
+      
+      ${message ? `<div style="background:#f3f4f6;border-radius:8px;padding:16px;margin-bottom:32px;border-left:4px solid #8b5cf6;"><p style="margin:0;font-size:14px;color:#374151;line-height:1.6;">${message}</p></div>` : ''}
       
       <!-- Invoice Summary -->
-      <table style="width:100%;border-collapse:collapse;margin-bottom:24px;">
-        <tr style="border-bottom:1px solid #1e2a3a;">
-          <td style="padding:10px 0;font-size:13px;color:#64748b;">Invoice Number</td>
-          <td style="padding:10px 0;font-size:13px;color:white;text-align:right;font-weight:600;">${invoice.invoiceNo}</td>
-        </tr>
-        <tr style="border-bottom:1px solid #1e2a3a;">
-          <td style="padding:10px 0;font-size:13px;color:#64748b;">Issue Date</td>
-          <td style="padding:10px 0;font-size:13px;color:white;text-align:right;">${new Date(invoice.issueDate).toLocaleDateString('en-US', { day: 'numeric', month: 'long', year: 'numeric' })}</td>
-        </tr>
-        <tr style="border-bottom:1px solid #1e2a3a;">
-          <td style="padding:10px 0;font-size:13px;color:#64748b;">Due Date</td>
-          <td style="padding:10px 0;font-size:13px;color:#f59e0b;text-align:right;font-weight:600;">${new Date(invoice.dueDate).toLocaleDateString('en-US', { day: 'numeric', month: 'long', year: 'numeric' })}</td>
-        </tr>
-        <tr>
-          <td style="padding:12px 0 0;font-size:16px;color:white;font-weight:700;">Total Due</td>
-          <td style="padding:12px 0 0;font-size:22px;color:#8b5cf6;text-align:right;font-weight:800;">${sym}${invoice.total.toLocaleString('en-US', { maximumFractionDigits: 2 })}</td>
-        </tr>
-      </table>
+      <div style="border-top:1px solid #e5e7eb;padding-top:24px;margin-bottom:32px;">
+        <table style="width:100%;border-collapse:collapse;">
+          <tr>
+            <td style="padding:12px 0;font-size:14px;color:#4b5563;">Date Issued</td>
+            <td style="padding:12px 0;font-size:14px;color:#111827;text-align:right;font-weight:500;">${new Date(invoice.issueDate).toLocaleDateString('en-US', { day: 'numeric', month: 'short', year: 'numeric' })}</td>
+          </tr>
+          <tr>
+            <td style="padding:12px 0;font-size:14px;color:#4b5563;border-bottom:1px solid #e5e7eb;">Due Date</td>
+            <td style="padding:12px 0;font-size:14px;color:#ef4444;text-align:right;font-weight:600;border-bottom:1px solid #e5e7eb;">${new Date(invoice.dueDate).toLocaleDateString('en-US', { day: 'numeric', month: 'short', year: 'numeric' })}</td>
+          </tr>
+          <tr>
+            <td style="padding:20px 0 0;font-size:16px;color:#111827;font-weight:600;">Amount Due</td>
+            <td style="padding:20px 0 0;font-size:28px;color:#111827;text-align:right;font-weight:800;letter-spacing:-1px;">${sym}${invoice.total.toLocaleString('en-US', { maximumFractionDigits: 2 })}</td>
+          </tr>
+        </table>
+      </div>
       
       <!-- CTA -->
-      <div style="text-align:center;">
-        <a href="${shareUrl}" style="display:inline-block;background:linear-gradient(135deg,#8b5cf6,#3b82f6);color:white;text-decoration:none;padding:14px 32px;border-radius:12px;font-weight:600;font-size:15px;">
-          View & Pay Invoice →
+      <div style="text-align:center;margin-top:40px;">
+        <a href="${shareUrl}" style="display:inline-block;width:100%;background:#111827;color:white;text-decoration:none;padding:16px 0;border-radius:8px;font-weight:600;font-size:16px;text-align:center;">
+          Review and pay online
         </a>
       </div>
     </div>
     
     <!-- Footer -->
-    <p style="text-align:center;color:#334155;font-size:12px;margin:0;">
-      Powered by InvoiceFlow · <a href="${shareUrl}" style="color:#475569;text-decoration:none;">View in browser</a>
+    <p style="text-align:center;color:#6b7280;font-size:13px;margin:0;">
+      Powered securely by <strong>InvoiceFlow</strong>
     </p>
   </div>
 </body>
