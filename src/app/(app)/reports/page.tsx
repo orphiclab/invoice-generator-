@@ -56,7 +56,7 @@ export default function ReportsPage() {
     <div className="p-6 lg:p-8 max-w-6xl mx-auto space-y-6">
       <div className="flex items-start justify-between flex-wrap gap-4">
         <div>
-          <h1 className="text-gray-900">Tax Reports</h1>
+          <h1 className="text-2xl font-extrabold tracking-tight" style={{ color: '#111827' }}>Tax Reports</h1>
           <p className="text-xs mt-1" style={{ color: '#9ca3af' }}>Revenue, expense &amp; tax summary</p>
         </div>
         <div className="flex items-center gap-3 flex-wrap">
@@ -91,8 +91,8 @@ export default function ReportsPage() {
                   <div className="w-9 h-9 rounded-xl flex items-center justify-center mb-3" style={{ background: '#9ca3af' }}>
                     <Icon className="text-gray-900" />
                   </div>
-                  <p className="text-gray-900">{value}</p>
-                  <p className="text-gray-900">{label}</p>
+                  <p className="text-sm font-semibold" style={{ color: '#111827' }}>{value}</p>
+                  <p className="text-sm font-semibold" style={{ color: '#111827' }}>{label}</p>
                 </div>
               )
             })}
@@ -102,7 +102,7 @@ export default function ReportsPage() {
           {data && data.byMonth.length > 0 && (
             <div className="rounded-2xl overflow-hidden" style={{ background: '#ffffff', border: '1px solid rgba(0,0,0,0.06)' }}>
               <div className="px-5 py-4 border-b" style={{ borderColor: '#e5e7eb' }}>
-                <h2 className="text-gray-900">
+                <h2 className="text-base font-bold" style={{ color: '#111827' }}>
                   <Calendar className="w-4 h-4" style={{ color: '#a28ef9' }} /> Monthly Breakdown
                 </h2>
               </div>
@@ -137,7 +137,7 @@ export default function ReportsPage() {
           {/* Expense by Category */}
           {data && data.byCategory.length > 0 && (
             <div className="rounded-2xl p-6" style={{ background: '#ffffff', border: '1px solid rgba(0,0,0,0.06)' }}>
-              <h2 className="text-gray-900">Expenses by Category</h2>
+              <h2 className="text-base font-bold" style={{ color: '#111827' }}>Expenses by Category</h2>
               <div className="space-y-3">
                 {data.byCategory.map(row => {
                   const pct = data.totalExpenses > 0 ? (row.amount / data.totalExpenses) * 100 : 0
@@ -160,7 +160,7 @@ export default function ReportsPage() {
           {!data && (
             <div className="rounded-2xl p-12 flex flex-col items-center text-center" style={{ background: 'rgba(255,255,255,0.03)', border: '1px solid rgba(0,0,0,0.06)' }}>
               <FileText className="w-10 h-10 mb-3 opacity-20" style={{ color: '#6b7280' }} />
-              <p className="text-gray-900">No data for this period</p>
+              <p className="text-sm font-semibold" style={{ color: '#111827' }}>No data for this period</p>
             </div>
           )}
         </>

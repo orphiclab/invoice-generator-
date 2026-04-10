@@ -300,7 +300,7 @@ export default function InvoiceDetailPage() {
                 <Building2 className="text-gray-900" />
               </div>
               <div>
-                <p className="text-gray-900">{invoice.user.company || invoice.user.name}</p>
+                <p className="text-sm font-semibold" style={{ color: '#111827' }}>{invoice.user.company || invoice.user.name}</p>
                 {invoice.user.company && <p className="text-xs" style={{ color: '#6b7280' }}>{invoice.user.name}</p>}
               </div>
             </div>
@@ -324,7 +324,7 @@ export default function InvoiceDetailPage() {
           </div>
           <div className="text-right">
             <p className="text-xs font-bold uppercase tracking-[0.25em] mb-1" style={{ color: '#9B8AFF' }}>Invoice</p>
-            <p className="text-gray-900">{invoice.invoiceNo}</p>
+            <p className="text-sm font-semibold" style={{ color: '#111827' }}>{invoice.invoiceNo}</p>
             <div className="mt-3 flex justify-end">
               <StatusBadge status={invoice.status} />
             </div>
@@ -478,7 +478,7 @@ export default function InvoiceDetailPage() {
                       <Check className="w-3.5 h-3.5" style={{ color: '#10B981' }} />
                     </div>
                     <div>
-                      <p className="text-gray-900">{p.method.replace('_', ' ')} {p.paymentType === 'partial' ? '(Partial)' : ''}</p>
+                      <p className="text-sm font-semibold" style={{ color: '#111827' }}>{p.method.replace('_', ' ')} {p.paymentType === 'partial' ? '(Partial)' : ''}</p>
                       {p.note && <p className="text-[10px]" style={{ color: '#9ca3af' }}>{p.note}</p>}
                     </div>
                   </div>

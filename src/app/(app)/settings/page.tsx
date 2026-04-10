@@ -100,7 +100,7 @@ export default function SettingsPage() {
   return (
     <div className="p-6 lg:p-8 max-w-3xl mx-auto">
       <div className="mb-6">
-      <h1 className="text-gray-900">Settings</h1>
+      <h1 className="text-2xl font-extrabold tracking-tight" style={{ color: '#111827' }}>Settings</h1>
         <p className="text-xs mt-1" style={{ color: '#9ca3af' }}>Manage your account and workspace</p>
       </div>
 
@@ -118,7 +118,7 @@ export default function SettingsPage() {
       {tab === 'invoicing' && (
         <form onSubmit={saveInvSettings} className="space-y-6">
           <div className="rounded-2xl p-6" style={{ background: '#ffffff', border: '1px solid rgba(0,0,0,0.06)' }}>
-            <h2 className="text-gray-900">
+            <h2 className="text-base font-bold" style={{ color: '#111827' }}>
               <FileText className="w-4 h-4" style={{ color: '#a28ef9' }} />
               Invoice Defaults
             </h2>
@@ -170,7 +170,7 @@ export default function SettingsPage() {
       {tab === 'profile' && (
         <form onSubmit={handleSave} className="space-y-6">
           <div className="rounded-2xl p-6" style={{ background: '#ffffff', border: '1px solid rgba(0,0,0,0.06)' }}>
-            <h2 className="text-gray-900">
+            <h2 className="text-base font-bold" style={{ color: '#111827' }}>
               <User className="w-4 h-4" style={{ color: '#a28ef9' }} />
               Personal Information
             </h2>
@@ -187,7 +187,7 @@ export default function SettingsPage() {
           </div>
 
           <div className="rounded-2xl p-6" style={{ background: '#ffffff', border: '1px solid rgba(0,0,0,0.06)' }}>
-            <h2 className="text-gray-900">
+            <h2 className="text-base font-bold" style={{ color: '#111827' }}>
               <Building2 className="w-4 h-4" style={{ color: '#a28ef9' }} />
               Business Information
             </h2>
@@ -274,7 +274,7 @@ function PortalSettings() {
   return (
     <div className="glass rounded-2xl p-6 space-y-5">
       <div>
-        <h2 className="text-gray-900">
+        <h2 className="text-base font-bold" style={{ color: '#111827' }}>
           <Link2 className="w-4 h-4" style={{ color: '#a28ef9' }} /> Client Portal
         </h2>
         <p className="text-sm" style={{ color: '#6b7280' }}>Generate a shareable link for clients to view their invoices and estimates</p>
@@ -300,7 +300,7 @@ function PortalSettings() {
         <div className="rounded-xl p-4 space-y-2" style={{ background: 'rgba(139,92,246,0.1)', border: '1px solid rgba(139,92,246,0.25)' }}>
           <p className="text-xs font-medium" style={{ color: '#9B8AFF' }}>Portal Link Ready</p>
           <div className="flex items-center gap-2">
-            <code className="text-gray-900" style={{ color: '#6b7280' }}>{generatedUrl}</code>
+            <code className="text-sm font-mono"  style={{ color: '#6b7280' }}>{generatedUrl}</code>
             <Button onClick={copyUrl} variant="ghost" className="text-xs h-8 px-3 flex-shrink-0" style={{ color: copied ? '#16a34a' : '#9B8AFF' }}>
               {copied ? 'Copied!' : 'Copy'}
             </Button>

@@ -87,7 +87,7 @@ export default function TeamSettingsPage() {
     <div className="space-y-6">
       <div className="flex items-center justify-between">
         <div>
-          <h2 className="text-gray-900">Team Management</h2>
+          <h2 className="text-base font-bold" style={{ color: '#111827' }}>Team Management</h2>
           <p className="text-sm mt-0.5" style={{ color: '#6b7280' }}>Create teams and invite collaborators</p>
         </div>
         <Button onClick={() => setShowNewTeam(!showNewTeam)} className="text-gray-900" style={{ background: 'linear-gradient(135deg, #6B50EE, #3B82F6)' }}>
@@ -113,7 +113,7 @@ export default function TeamSettingsPage() {
       ) : teams.length === 0 ? (
         <div className="rounded-2xl p-10 flex flex-col items-center text-center" style={{ background: 'rgba(255,255,255,0.03)', border: '1px solid rgba(0,0,0,0.06)' }}>
           <Users className="w-8 h-8 mb-2 opacity-20" style={{ color: '#6b7280' }} />
-          <p className="text-gray-900">No teams yet</p>
+          <p className="text-sm font-semibold" style={{ color: '#111827' }}>No teams yet</p>
           <p className="text-xs mt-1" style={{ color: '#9ca3af' }}>Create a team to collaborate with others</p>
         </div>
       ) : (
@@ -136,7 +136,7 @@ export default function TeamSettingsPage() {
                         {member.user.name.slice(0, 2).toUpperCase()}
                       </div>
                       <div className="flex-1 min-w-0">
-                        <p className="text-gray-900">{member.user.name}</p>
+                        <p className="text-sm font-semibold" style={{ color: '#111827' }}>{member.user.name}</p>
                         <p className="text-xs" style={{ color: '#9ca3af' }}>{member.user.email}</p>
                       </div>
                       <div className="flex items-center gap-1.5" style={{ color: cfg.color }}>

@@ -91,7 +91,7 @@ export default function RecurringPage() {
     <div className="p-6 lg:p-8 max-w-5xl mx-auto space-y-6">
       <div className="flex items-center justify-between">
         <div>
-        <h1 className="text-gray-900">Recurring Invoices</h1>
+        <h1 className="text-2xl font-extrabold tracking-tight" style={{ color: '#111827' }}>Recurring Invoices</h1>
           <p className="text-xs mt-1" style={{ color: '#9ca3af' }}>Auto-generate invoices on a schedule</p>
         </div>
         <button onClick={() => setShowForm(!showForm)} className="btn-brand h-9 px-5 text-sm flex items-center gap-2">
@@ -108,8 +108,8 @@ export default function RecurringPage() {
         ].map(({ label, value, cls }) => (
           <div key={label} className={`${cls} rounded-2xl p-5 relative overflow-hidden`}>
             <div className="absolute -top-5 -right-5 w-20 h-20 rounded-full opacity-20" style={{ background: '#9ca3af' }} />
-            <p className="text-gray-900">{value}</p>
-            <p className="text-gray-900">{label}</p>
+            <p className="text-sm font-semibold" style={{ color: '#111827' }}>{value}</p>
+            <p className="text-sm font-semibold" style={{ color: '#111827' }}>{label}</p>
           </div>
         ))}
       </div>
@@ -117,7 +117,7 @@ export default function RecurringPage() {
       {/* Create Form */}
       {showForm && (
         <form onSubmit={handleSubmit} className="rounded-2xl p-6 space-y-4" style={{ background: '#ffffff', border: '1px solid rgba(124,58,237,0.25)' }}>
-          <h2 className="text-gray-900">New Recurring Invoice</h2>
+          <h2 className="text-base font-bold" style={{ color: '#111827' }}>New Recurring Invoice</h2>
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
             <input required placeholder="Title (e.g. Monthly Retainer)" value={form.title} onChange={e => setForm(p => ({ ...p, title: e.target.value }))}
               className="px-3 py-2 rounded-xl text-sm outline-none" style={inputStyle} />
@@ -152,7 +152,7 @@ export default function RecurringPage() {
       ) : recurring.length === 0 ? (
         <div className="rounded-2xl p-12 flex flex-col items-center text-center" style={{ background: 'rgba(255,255,255,0.03)', border: '1px solid rgba(0,0,0,0.06)' }}>
           <RefreshCw className="w-10 h-10 mb-3 opacity-20" style={{ color: '#6b7280' }} />
-          <p className="text-gray-900">No recurring invoices</p>
+          <p className="text-sm font-semibold" style={{ color: '#111827' }}>No recurring invoices</p>
           <p className="text-xs mb-4" style={{ color: '#9ca3af' }}>Set up automatic invoice generation for retainer clients</p>
           <Button onClick={() => setShowForm(true)} className="text-gray-900" style={{ background: 'linear-gradient(135deg, #6B50EE, #3B82F6)' }}>
             <Plus className="w-3 h-3" /> Create first schedule
@@ -166,7 +166,7 @@ export default function RecurringPage() {
                 <RefreshCw className="w-5 h-5" style={{ color: FREQ_COLORS[r.frequency] }} />
               </div>
               <div className="flex-1 min-w-0">
-                <p className="text-gray-900">{r.title}</p>
+                <p className="text-sm font-semibold" style={{ color: '#111827' }}>{r.title}</p>
                 <div className="flex items-center gap-3 mt-1">
                   <span className="text-xs px-2 py-0.5 rounded-full" style={{ background: `${FREQ_COLORS[r.frequency]}20`, color: FREQ_COLORS[r.frequency] }}>
                     {FREQ_LABELS[r.frequency]}
@@ -176,7 +176,7 @@ export default function RecurringPage() {
                   </span>
                 </div>
               </div>
-              <p className="text-gray-900">Rs {r.total.toLocaleString('en-IN', { maximumFractionDigits: 0 })}</p>
+              <p className="text-sm font-semibold" style={{ color: '#111827' }}>Rs {r.total.toLocaleString('en-IN', { maximumFractionDigits: 0 })}</p>
               <div className="flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
                 <button onClick={() => toggleActive(r.id, r.isActive)} className="p-1.5 rounded-lg hover:bg-gray-100 transition-colors" title={r.isActive ? 'Pause' : 'Resume'}>
                   {r.isActive ? <Pause className="w-4 h-4" style={{ color: 'hsl(38 92% 50%)' }} /> : <Play className="w-4 h-4" style={{ color: '#16a34a' }} />}

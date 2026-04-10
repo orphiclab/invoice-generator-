@@ -70,7 +70,7 @@ export default function EstimatesPage() {
       {/* Header */}
       <div className="flex items-center justify-between">
         <div>
-        <h1 className="text-gray-900">Estimates</h1>
+        <h1 className="text-2xl font-extrabold tracking-tight" style={{ color: '#111827' }}>Estimates</h1>
           <p className="text-xs mt-1" style={{ color: '#9ca3af' }}>Create quotes and convert them to invoices</p>
         </div>
         <Link href="/estimates/new">
@@ -92,8 +92,8 @@ export default function EstimatesPage() {
             <div className="w-9 h-9 rounded-xl flex items-center justify-center mb-3" style={{ background: '#9ca3af' }}>
               <Icon className="text-gray-900" />
             </div>
-            <p className="text-gray-900">{value}</p>
-            <p className="text-gray-900">{label}</p>
+            <p className="text-sm font-semibold" style={{ color: '#111827' }}>{value}</p>
+            <p className="text-sm font-semibold" style={{ color: '#111827' }}>{label}</p>
           </div>
         ))}
       </div>
@@ -119,7 +119,7 @@ export default function EstimatesPage() {
       ) : estimates.length === 0 ? (
         <div className="rounded-2xl p-12 flex flex-col items-center text-center" style={{ background: 'rgba(255,255,255,0.03)', border: '1px solid rgba(0,0,0,0.06)' }}>
           <FileText className="w-10 h-10 mb-3 opacity-20" style={{ color: '#6b7280' }} />
-          <p className="text-gray-900">No estimates yet</p>
+          <p className="text-sm font-semibold" style={{ color: '#111827' }}>No estimates yet</p>
           <p className="text-xs mb-4" style={{ color: '#9ca3af' }}>Create your first quote for a client</p>
           <Link href="/estimates/new">
             <Button className="text-gray-900" style={{ background: 'linear-gradient(135deg, #6B50EE, #3B82F6)' }}>
@@ -144,7 +144,7 @@ export default function EstimatesPage() {
                     <Link href={`/estimates/${est.id}`} className="text-gray-900">{est.estimateNo}</Link>
                   </td>
                   <td className="px-4 py-3.5">
-                    <p className="text-gray-900">{est.client.name}</p>
+                    <p className="text-sm font-semibold" style={{ color: '#111827' }}>{est.client.name}</p>
                     {est.client.company && <p className="text-xs" style={{ color: '#9ca3af' }}>{est.client.company}</p>}
                   </td>
                   <td className="px-4 py-3.5">

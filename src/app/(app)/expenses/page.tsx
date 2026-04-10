@@ -85,7 +85,7 @@ export default function ExpensesPage() {
       {/* Header */}
       <div className="flex items-center justify-between">
         <div>
-        <h1 className="text-gray-900">Expenses</h1>
+        <h1 className="text-2xl font-extrabold tracking-tight" style={{ color: '#111827' }}>Expenses</h1>
           <p className="text-xs mt-1" style={{ color: '#9ca3af' }}>Track your business expenses</p>
         </div>
         <button onClick={() => setShowForm(!showForm)} className="btn-brand h-9 px-5 text-sm flex items-center gap-2">
@@ -95,36 +95,36 @@ export default function ExpensesPage() {
 
       {/* Stats */}
       <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-        <div className="stat-rose rounded-2xl p-5 relative overflow-hidden">
-          <div className="absolute -top-5 -right-5 w-20 h-20 rounded-full opacity-20" style={{ background: '#9ca3af' }} />
-          <div className="w-9 h-9 rounded-xl flex items-center justify-center mb-3" style={{ background: '#9ca3af' }}>
-            <TrendingDown className="text-gray-900" />
+        <div className="rounded-2xl p-5 relative overflow-hidden" style={{ background: 'linear-gradient(135deg, #f87171 0%, #fda4af 100%)', boxShadow: '0 8px 24px rgba(248,113,113,0.3)' }}>
+          <div className="absolute -top-5 -right-5 w-20 h-20 rounded-full" style={{ background: 'rgba(255,255,255,0.12)' }} />
+          <div className="w-9 h-9 rounded-xl flex items-center justify-center mb-3" style={{ background: 'rgba(255,255,255,0.25)' }}>
+            <TrendingDown className="w-5 h-5 text-white" />
           </div>
-          <p className="text-gray-900">Rs {total.toLocaleString('en-IN', { maximumFractionDigits: 0 })}</p>
-          <p className="text-gray-900">Total Expenses</p>
+          <p className="text-xl font-extrabold text-white">Rs {total.toLocaleString('en-LK', { maximumFractionDigits: 0 })}</p>
+          <p className="text-xs mt-1 font-semibold" style={{ color: 'rgba(255,255,255,0.8)' }}>Total Expenses</p>
         </div>
-        <div className="stat-purple rounded-2xl p-5 relative overflow-hidden">
-          <div className="absolute -top-5 -right-5 w-20 h-20 rounded-full opacity-20" style={{ background: '#9ca3af' }} />
-          <div className="w-9 h-9 rounded-xl flex items-center justify-center mb-3" style={{ background: '#9ca3af' }}>
-            <Receipt className="text-gray-900" />
+        <div className="rounded-2xl p-5 relative overflow-hidden" style={{ background: 'linear-gradient(135deg, #a28ef9 0%, #7c5cfc 100%)', boxShadow: '0 8px 24px rgba(162,142,249,0.3)' }}>
+          <div className="absolute -top-5 -right-5 w-20 h-20 rounded-full" style={{ background: 'rgba(255,255,255,0.12)' }} />
+          <div className="w-9 h-9 rounded-xl flex items-center justify-center mb-3" style={{ background: 'rgba(255,255,255,0.25)' }}>
+            <Receipt className="w-5 h-5 text-white" />
           </div>
-          <p className="text-gray-900">{expenses.length}</p>
-          <p className="text-gray-900">Total Transactions</p>
+          <p className="text-xl font-extrabold text-white">{expenses.length}</p>
+          <p className="text-xs mt-1 font-semibold" style={{ color: 'rgba(255,255,255,0.8)' }}>Total Transactions</p>
         </div>
-        <div className="stat-blue rounded-2xl p-5 relative overflow-hidden">
-          <div className="absolute -top-5 -right-5 w-20 h-20 rounded-full opacity-20" style={{ background: '#9ca3af' }} />
-          <div className="w-9 h-9 rounded-xl flex items-center justify-center mb-3" style={{ background: '#9ca3af' }}>
-            <Filter className="text-gray-900" />
+        <div className="rounded-2xl p-5 relative overflow-hidden" style={{ background: 'linear-gradient(135deg, #60a5fa 0%, #93c5fd 100%)', boxShadow: '0 8px 24px rgba(96,165,250,0.3)' }}>
+          <div className="absolute -top-5 -right-5 w-20 h-20 rounded-full" style={{ background: 'rgba(255,255,255,0.12)' }} />
+          <div className="w-9 h-9 rounded-xl flex items-center justify-center mb-3" style={{ background: 'rgba(255,255,255,0.25)' }}>
+            <Filter className="w-5 h-5 text-white" />
           </div>
-          <p className="text-gray-900">{topCategory?.[0] ?? '—'}</p>
-          <p className="text-gray-900">Top Category</p>
+          <p className="text-xl font-extrabold text-white">{topCategory?.[0] ?? '—'}</p>
+          <p className="text-xs mt-1 font-semibold" style={{ color: 'rgba(255,255,255,0.8)' }}>Top Category</p>
         </div>
       </div>
 
       {/* Add Form */}
       {showForm && (
         <form onSubmit={handleSubmit} className="rounded-2xl p-6 space-y-4" style={{ background: '#ffffff', border: '1px solid rgba(124,58,237,0.25)' }}>
-          <h2 className="text-gray-900">New Expense</h2>
+          <h2 className="text-base font-bold" style={{ color: '#111827' }}>New Expense</h2>
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
             <input required placeholder="Title" value={form.title} onChange={e => setForm(p => ({ ...p, title: e.target.value }))}
               className="px-3 py-2 rounded-xl text-sm outline-none" style={inputStyle} />
@@ -150,19 +150,12 @@ export default function ExpensesPage() {
         </form>
       )}
 
-      {/* Filter */}
-      <div className="flex gap-2 flex-wrap">
-        <button onClick={() => setFilterCategory('')}
-          className="px-3 py-1.5 rounded-lg text-xs font-medium transition-all"
-          style={!filterCategory ? { background: 'rgba(139,92,246,0.2)', color: '#9B8AFF' } : { background: '#f9fafb', color: '#6b7280' }}>
-          All
-        </button>
+      {/* Category pill filters */}
+      <div className="pill-tab-bar flex-wrap">
+        <button onClick={() => setFilterCategory('')} className={`pill-tab${!filterCategory ? ' active' : ''}`}>All</button>
         {CATEGORIES.map(c => (
           <button key={c} onClick={() => setFilterCategory(c === filterCategory ? '' : c)}
-            className="px-3 py-1.5 rounded-lg text-xs font-medium transition-all"
-            style={filterCategory === c ? { background: 'rgba(139,92,246,0.2)', color: '#9B8AFF' } : { background: '#f9fafb', color: '#6b7280' }}>
-            {c}
-          </button>
+            className={`pill-tab${filterCategory === c ? ' active' : ''}`}>{c}</button>
         ))}
       </div>
 
@@ -172,34 +165,39 @@ export default function ExpensesPage() {
           <div className="w-7 h-7 rounded-full border-2 border-t-transparent animate-spin" style={{ borderColor: '#a28ef9', borderTopColor: 'transparent' }} />
         </div>
       ) : expenses.length === 0 ? (
-        <div className="rounded-2xl p-12 flex flex-col items-center text-center" style={{ background: 'rgba(255,255,255,0.03)', border: '1px solid rgba(0,0,0,0.06)' }}>
-          <Receipt className="w-10 h-10 mb-3 opacity-20" style={{ color: '#6b7280' }} />
-          <p className="text-gray-900">No expenses yet</p>
-          <p className="text-xs mb-4" style={{ color: '#9ca3af' }}>Start tracking your business expenses</p>
-          <Button onClick={() => setShowForm(true)} className="text-gray-900" style={{ background: 'linear-gradient(135deg, #6B50EE, #3B82F6)' }}>
-            <Plus className="w-3 h-3" /> Add first expense
-          </Button>
+        <div className="bg-white rounded-2xl p-12 flex flex-col items-center text-center" style={{ border: '1px solid #f0f2f0', boxShadow: '0 2px 8px rgba(0,0,0,0.05)' }}>
+          <div className="w-14 h-14 rounded-2xl flex items-center justify-center mb-3" style={{ background: '#f9fafb' }}>
+            <Receipt className="w-7 h-7" style={{ color: '#d1d5db' }} />
+          </div>
+          <p className="text-sm font-semibold" style={{ color: '#374151' }}>No expenses yet</p>
+          <p className="text-xs mt-1 mb-4" style={{ color: '#9ca3af' }}>Start tracking your business expenses</p>
+          <button onClick={() => setShowForm(true)} className="btn-brand h-8 px-4 text-xs flex items-center gap-1.5">
+            <Plus className="w-3.5 h-3.5" /> Add first expense
+          </button>
         </div>
       ) : (
-        <div className="space-y-2">
+        <div className="bg-white rounded-2xl overflow-hidden" style={{ border: '1px solid #f0f2f0', boxShadow: '0 2px 8px rgba(0,0,0,0.05)' }}>
+          <div className="divide-y" style={{ borderColor: '#f9fafb' }}>
           {expenses.map(exp => (
-            <div key={exp.id} className="flex items-center gap-4 p-4 rounded-2xl group hover:scale-[1.005] transition-all" style={{ background: '#ffffff', border: '1px solid rgba(0,0,0,0.06)' }}>
-              <div className="w-10 h-10 rounded-xl flex items-center justify-center flex-shrink-0 text-xs font-bold" style={{ background: `${CATEGORY_COLORS[exp.category] ?? '#9ca3af'}20`, color: CATEGORY_COLORS[exp.category] ?? '#6b7280' }}>
+                <div key={exp.id} className="flex items-center gap-4 px-5 py-4 group hover:bg-gray-50 transition-colors">
+              <div className="w-10 h-10 rounded-xl flex items-center justify-center flex-shrink-0 text-xs font-bold"
+                style={{ background: `${CATEGORY_COLORS[exp.category] ?? '#9ca3af'}18`, color: CATEGORY_COLORS[exp.category] ?? '#6b7280' }}>
                 {exp.category.slice(0, 2).toUpperCase()}
               </div>
               <div className="flex-1 min-w-0">
-                <p className="text-gray-900">{exp.title}</p>
+                <p className="text-sm font-semibold" style={{ color: '#111827' }}>{exp.title}</p>
                 <p className="text-xs" style={{ color: '#6b7280' }}>
-                  {exp.category} · {new Date(exp.date).toLocaleDateString('en-IN', { day: 'numeric', month: 'short', year: 'numeric' })}
+                  {exp.category} · {new Date(exp.date).toLocaleDateString('en-LK', { day: 'numeric', month: 'short', year: 'numeric' })}
                 </p>
                 {exp.description && <p className="text-xs mt-0.5 truncate" style={{ color: '#9ca3af' }}>{exp.description}</p>}
               </div>
-              <p className="text-base font-bold" style={{ color: 'hsl(0 84% 65%)' }}>-Rs {exp.amount.toLocaleString('en-IN', { maximumFractionDigits: 0 })}</p>
-              <button onClick={() => handleDelete(exp.id)} className="opacity-0 group-hover:opacity-100 transition-opacity p-1.5 rounded-lg hover:bg-red-500/20">
-                <Trash2 className="w-4 h-4" style={{ color: 'hsl(0 84% 60%)' }} />
+              <p className="text-sm font-bold" style={{ color: '#ef4444' }}>-Rs {exp.amount.toLocaleString('en-LK', { maximumFractionDigits: 0 })}</p>
+              <button onClick={() => handleDelete(exp.id)} className="opacity-0 group-hover:opacity-100 transition-opacity p-1.5 rounded-lg hover:bg-red-50">
+                <Trash2 className="w-4 h-4" style={{ color: '#ef4444' }} />
               </button>
             </div>
           ))}
+          </div>
         </div>
       )}
     </div>

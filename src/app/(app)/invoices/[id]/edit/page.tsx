@@ -110,7 +110,7 @@ export default function EditInvoicePage() {
           </button>
         </Link>
         <div>
-          <h1 className="text-gray-900">Edit Invoice</h1>
+          <h1 className="text-2xl font-extrabold tracking-tight" style={{ color: '#111827' }}>Edit Invoice</h1>
           <p className="text-sm font-mono" style={{ color: '#8B7AFF' }}>{form.invoiceNo}</p>
         </div>
       </div>
@@ -118,7 +118,7 @@ export default function EditInvoicePage() {
       <form onSubmit={handleSubmit} className="space-y-6">
         {/* Invoice details */}
         <div className="glass rounded-2xl p-6">
-          <h2 className="text-gray-900">Invoice Details</h2>
+          <h2 className="text-base font-bold" style={{ color: '#111827' }}>Invoice Details</h2>
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div className="space-y-2">
               <Label className="text-sm" style={labelStyle}>Client *</Label>
@@ -163,7 +163,7 @@ export default function EditInvoicePage() {
 
         {/* Line items */}
         <div className="glass rounded-2xl p-6">
-          <h2 className="text-gray-900">Line Items</h2>
+          <h2 className="text-base font-bold" style={{ color: '#111827' }}>Line Items</h2>
           <div className="space-y-3">
             {/* Header */}
             <div className="grid grid-cols-12 gap-2 px-1">
@@ -219,7 +219,7 @@ export default function EditInvoicePage() {
         {/* Totals + Notes */}
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
           <div className="glass rounded-2xl p-6">
-            <h2 className="text-gray-900">Notes</h2>
+            <h2 className="text-base font-bold" style={{ color: '#111827' }}>Notes</h2>
             <textarea
               value={form.notes}
               onChange={(e) => setForm({ ...form, notes: e.target.value })}
@@ -231,7 +231,7 @@ export default function EditInvoicePage() {
           </div>
 
           <div className="glass rounded-2xl p-6">
-            <h2 className="text-gray-900">
+            <h2 className="text-base font-bold" style={{ color: '#111827' }}>
               <Calculator className="w-4 h-4" style={{ color: '#a28ef9' }} /> Summary
             </h2>
             <div className="space-y-3">

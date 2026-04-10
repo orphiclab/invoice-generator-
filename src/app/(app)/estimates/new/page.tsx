@@ -68,13 +68,13 @@ export default function NewEstimatePage() {
   return (
     <div className="p-6 lg:p-8 max-w-4xl mx-auto">
       <div className="mb-8">
-        <h1 className="text-gray-900">New Estimate</h1>
+        <h1 className="text-2xl font-extrabold tracking-tight" style={{ color: '#111827' }}>New Estimate</h1>
         <p className="text-sm mt-1" style={{ color: '#6b7280' }}>Create a quote for your client</p>
       </div>
 
       <form onSubmit={handleSubmit} className="space-y-6">
         <div className="rounded-2xl p-6 space-y-4" style={{ background: '#f9fafb', border: '1px solid #e5e7eb' }}>
-          <h2 className="text-gray-900">Details</h2>
+          <h2 className="text-base font-bold" style={{ color: '#111827' }}>Details</h2>
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div>
               <label style={labelStyle}>Client *</label>
@@ -108,7 +108,7 @@ export default function NewEstimatePage() {
         {/* Line Items */}
         <div className="rounded-2xl p-6 space-y-3" style={{ background: '#f9fafb', border: '1px solid #e5e7eb' }}>
           <div className="flex items-center justify-between">
-            <h2 className="text-gray-900">Line Items</h2>
+            <h2 className="text-base font-bold" style={{ color: '#111827' }}>Line Items</h2>
             <Button type="button" variant="ghost" size="sm" onClick={addItem} className="gap-1 text-xs h-7" style={{ color: '#9B8AFF' }}>
               <Plus className="w-3 h-3" /> Add Item
             </Button>
