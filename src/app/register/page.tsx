@@ -77,9 +77,9 @@ function Shape({ t, c }: { t: string; c: string }) {
 
 function GeometricGrid() {
   return (
-    <div style={{ display: 'grid', gridTemplateColumns: 'repeat(8, 1fr)', width: '100%', height: '100%' }}>
+    <div style={{ display: 'grid', gridTemplateColumns: 'repeat(8, 1fr)', gridTemplateRows: 'repeat(6, 1fr)', width: '100%', height: '100%' }}>
       {TILES.map((tile, i) => (
-        <div key={i} style={{ background: tile.bg, aspectRatio: '1', overflow: 'hidden' }}>
+        <div key={i} style={{ background: tile.bg, overflow: 'hidden', width: '100%', height: '100%' }}>
           <Shape t={tile.sh} c={tile.c} />
         </div>
       ))}
@@ -186,7 +186,7 @@ export default function RegisterPage() {
       </div>
 
       {/* ── Right: geometric mosaic ── */}
-      <div style={{ flex: 1, overflow: 'hidden' }}>
+      <div style={{ flex: 1, overflow: 'hidden', minHeight: '100vh' }}>
         <GeometricGrid />
       </div>
     </div>
