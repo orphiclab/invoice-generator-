@@ -576,7 +576,7 @@ export default function InvoiceDetailPage() {
       <div className="fixed inset-0 z-50 flex items-center justify-center p-4" style={{ background: 'rgba(0,0,0,0.7)', backdropFilter: 'blur(4px)' }}>
         <div className="w-full max-w-sm rounded-2xl p-6 space-y-4" style={{ background: '#ffffff', border: '1px solid #e5e7eb' }}>
           <div className="flex items-center justify-between">
-            <h2 className="text-gray-900" style={{ color: '#10B981' }} /> Record Payment</h2>
+            <h2 className="text-sm font-bold flex items-center gap-2" style={{ color: '#111827' }}><DollarSign className="w-4 h-4" style={{ color: '#10B981' }} /> Record Payment</h2>
             <button onClick={() => setPaymentModal(false)} className="p-1 rounded hover:bg-gray-100"><X className="w-4 h-4" style={{ color: '#9ca3af' }} /></button>
           </div>
           <div className="space-y-3">
@@ -624,7 +624,7 @@ export default function InvoiceDetailPage() {
       <div className="fixed inset-0 z-50 flex items-center justify-center p-4" style={{ background: 'rgba(0,0,0,0.7)', backdropFilter: 'blur(4px)' }}>
         <div className="w-full max-w-md rounded-2xl p-6 space-y-4" style={{ background: '#ffffff', border: '1px solid #e5e7eb' }}>
           <div className="flex items-center justify-between">
-            <h2 className="text-gray-900" style={{ color: '#3b82f6' }} /> Send Invoice via Email</h2>
+            <h2 className="text-sm font-bold flex items-center gap-2" style={{ color: '#111827' }}><Mail className="w-4 h-4" style={{ color: '#3b82f6' }} /> Send Invoice via Email</h2>
             <button onClick={() => setEmailModal(false)} className="p-1 rounded hover:bg-gray-100"><X className="w-4 h-4" style={{ color: '#9ca3af' }} /></button>
           </div>
           <div className="space-y-3">
