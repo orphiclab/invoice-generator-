@@ -128,10 +128,21 @@ export default function RegisterPage() {
   }
 
   return (
-    <div style={{ display: 'flex', minHeight: '100vh', fontFamily: 'var(--font-fustat, system-ui, sans-serif)' }}>
+    <>
+      <style>{`
+        .auth-split { display: flex; flex-direction: row; min-height: 100vh; font-family: var(--font-fustat, system-ui, sans-serif); }
+        .auth-left  { flex: 0 0 48%; min-width: 420px; background: #fff; display: flex; flex-direction: column; padding: 36px 56px; }
+        .auth-right { flex: 1; background: ${B}; overflow: hidden; }
+        @media (max-width: 800px) {
+          .auth-split { flex-direction: column; }
+          .auth-left  { flex: 1; min-width: 100%; padding: 24px 20px; }
+          .auth-right { display: none; }
+        }
+      `}</style>
+      <div className="auth-split">
 
-      {/* ── Left: white form ── */}
-      <div style={{ flex: '0 0 48%', minWidth: 420, background: '#fff', display: 'flex', flexDirection: 'column', padding: '36px 56px' }}>
+        {/* ── Left: white form ── */}
+        <div className="auth-left">
         <Link href="/login" style={{ display: 'inline-flex', alignItems: 'center', gap: 6, fontSize: 13, color: '#6b7280', textDecoration: 'none', marginBottom: 'auto' }}>
           <ArrowLeft size={14} /> Back to sign in
         </Link>
@@ -197,9 +208,10 @@ export default function RegisterPage() {
       </div>
 
       {/* ── Right: geometric mosaic ── */}
-      <div style={{ flex: 1, background: B, overflow: 'hidden' }}>
+      <div className="auth-right">
         <GeometricGrid />
       </div>
     </div>
+    </>
   )
 }
