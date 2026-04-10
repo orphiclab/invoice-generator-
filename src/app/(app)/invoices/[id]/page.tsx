@@ -4,7 +4,7 @@ import { useEffect, useState, useCallback } from 'react'
 import { useParams, useRouter } from 'next/navigation'
 import Link from 'next/link'
 import { toast } from 'sonner'
-import { ArrowLeft, Download, MessageCircle, Share2, Edit2, Check, Clock, Building2, Mail, Phone, MapPin, Copy, Send, X, DollarSign, AlertTriangle, Bell, Plus, CreditCard } from 'lucide-react'
+import { ArrowLeft, Download, MessageCircle, Share2, Edit2, Check, Clock, Building2, Mail, Phone, MapPin, Copy, Send, X, DollarSign, AlertTriangle, Bell, Plus, CreditCard, ChevronDown } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import { StatusBadge } from '@/components/StatusBadge'
@@ -43,6 +43,8 @@ export default function InvoiceDetailPage() {
   const [sendingReminder, setSendingReminder] = useState(false)
   const [applyingLateFee, setApplyingLateFee] = useState(false)
   const [lateFeeRate, setLateFeeRate] = useState('2')
+  const [pdfTemplate, setPdfTemplate] = useState<'green' | 'classic'>('green')
+  const [showTemplateMenu, setShowTemplateMenu] = useState(false)
 
   const loadPayments = useCallback(async () => {
     const res = await fetch(`/api/invoices/${id}/record-payment`)
@@ -92,9 +94,15 @@ export default function InvoiceDetailPage() {
   async function downloadPDF() {
     toast.info('Generating PDF…')
     const { pdf } = await import('@react-pdf/renderer')
-    const { InvoicePDF } = await import('@/components/InvoicePDF')
     const { createElement } = await import('react')
-    const blob = await pdf(createElement(InvoicePDF, { invoice })).toBlob()
+    let blob: Blob
+    if (pdfTemplate === 'green') {
+      const { InvoicePDF } = await import('@/components/InvoicePDF')
+      blob = await pdf(createElement(InvoicePDF, { invoice })).toBlob()
+    } else {
+      const { InvoicePDFClassic } = await import('@/components/InvoicePDFClassic')
+      blob = await pdf(createElement(InvoicePDFClassic, { invoice })).toBlob()
+    }
     const url = URL.createObjectURL(blob)
     const a = document.createElement('a')
     a.href = url; a.download = `${invoice?.invoiceNo}.pdf`; a.click()
@@ -228,9 +236,35 @@ export default function InvoiceDetailPage() {
           <button onClick={copyShareLink} title="Copy share link" className="p-2 rounded-xl hover:bg-white/5 transition-colors" style={{ color: 'rgba(255,255,255,0.4)' }}>
             <Share2 className="w-4 h-4" />
           </button>
-          <button onClick={downloadPDF} title="Download PDF" className="p-2 rounded-xl hover:bg-white/5 transition-colors" style={{ color: '#7B61FF' }}>
-            <Download className="w-4 h-4" />
-          </button>
+          {/* Download with template picker */}
+          <div className="relative">
+            <div className="flex items-center rounded-xl overflow-hidden" style={{ border: '1px solid rgba(123,97,255,0.4)' }}>
+              <button onClick={downloadPDF} title="Download PDF"
+                className="flex items-center gap-1.5 px-3 py-1.5 text-xs font-semibold transition-all hover:bg-white/5"
+                style={{ color: '#7B61FF' }}>
+                <Download className="w-3.5 h-3.5" />
+                {pdfTemplate === 'green' ? 'Green' : 'Classic'}
+              </button>
+              <button onClick={() => setShowTemplateMenu(p => !p)}
+                className="px-1.5 py-1.5 border-l hover:bg-white/5 transition-all"
+                style={{ borderColor: 'rgba(123,97,255,0.4)', color: '#7B61FF' }}>
+                <ChevronDown className="w-3 h-3" />
+              </button>
+            </div>
+            {showTemplateMenu && (
+              <div className="absolute right-0 top-9 z-50 rounded-xl overflow-hidden shadow-2xl" style={{ background: '#1E2028', border: '1px solid rgba(255,255,255,0.1)', minWidth: 160 }}>
+                <p className="text-[10px] font-bold px-3 pt-2.5 pb-1" style={{ color: 'rgba(255,255,255,0.35)' }}>Choose Template</p>
+                {[{ id: 'green', label: '🌿 Green Modern' }, { id: 'classic', label: '🌌 Classic Dark' }].map(t => (
+                  <button key={t.id} onClick={() => { setPdfTemplate(t.id as 'green' | 'classic'); setShowTemplateMenu(false); downloadPDF() }}
+                    className="w-full text-left px-3 py-2.5 text-xs hover:bg-white/5 transition-all flex items-center justify-between"
+                    style={{ color: pdfTemplate === t.id ? '#7B61FF' : 'rgba(255,255,255,0.7)' }}>
+                    {t.label}
+                    {pdfTemplate === t.id && <Check className="w-3 h-3" />}
+                  </button>
+                ))}
+              </div>
+            )}
+          </div>
           <button onClick={() => { setEmailForm(f => ({ ...f, to: invoice.client.email, subject: `Invoice ${invoice.invoiceNo}` })); setEmailModal(true) }}
             title="Send email" className="p-2 rounded-xl hover:bg-blue-500/10 transition-colors" style={{ color: '#60A5FA' }}>
             <Mail className="w-4 h-4" />
