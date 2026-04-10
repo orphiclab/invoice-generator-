@@ -4,7 +4,7 @@ import { useEffect, useState } from 'react'
 import Link from 'next/link'
 import {
   FileText, Users, DollarSign, AlertCircle, Plus, ArrowRight,
-  TrendingUp, TrendingDown, BarChart3, ArrowUpRight,
+  TrendingUp, TrendingDown, ArrowUpRight,
 } from 'lucide-react'
 import { StatusBadge } from '@/components/StatusBadge'
 import {
@@ -12,6 +12,7 @@ import {
   XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Legend,
 } from 'recharts'
 
+// ── Types ────────────────────────────────────────────────────────
 interface Stats {
   totalInvoices: number; totalClients: number
   totalRevenue: number; outstanding: number
@@ -29,46 +30,27 @@ interface ChartData {
 }
 
 const STATUS_COLORS: Record<string, string> = {
-  DRAFT: '#64748B', SENT: '#3B82F6', PAID: '#10B981', OVERDUE: '#EF4444',
+  DRAFT: '#9ca3af', SENT: '#60a5fa', PAID: '#4ade80', OVERDUE: '#f87171',
 }
 
+// Light mode tooltip
 const tt = {
-  contentStyle: { background: '#16191F', border: '1px solid rgba(255,255,255,0.08)', borderRadius: '12px', color: '#fff', boxShadow: '0 8px 32px rgba(0,0,0,0.4)' },
-  itemStyle: { color: 'rgba(255,255,255,0.6)' },
-  labelStyle: { color: '#fff', fontWeight: 700 },
+  contentStyle: {
+    background: '#fff',
+    border: '1px solid #e5e7eb',
+    borderRadius: '12px',
+    color: '#111827',
+    boxShadow: '0 8px 24px rgba(0,0,0,0.1)',
+  },
+  itemStyle: { color: '#6b7280' },
+  labelStyle: { color: '#111827', fontWeight: 700 },
 }
 
 const statCards = [
-  {
-    key: 'revenue',
-    label: 'Total Revenue',
-    icon: DollarSign,
-    cls: 'stat-purple',
-    trend: +12,
-    sub: 'From paid invoices',
-  },
-  {
-    key: 'outstanding',
-    label: 'Outstanding',
-    icon: AlertCircle,
-    cls: 'stat-amber',
-    sub: 'Sent & overdue',
-  },
-  {
-    key: 'invoices',
-    label: 'Invoices',
-    icon: FileText,
-    cls: 'stat-blue',
-    trend: +4,
-    sub: 'All time',
-  },
-  {
-    key: 'clients',
-    label: 'Clients',
-    icon: Users,
-    cls: 'stat-emerald',
-    sub: 'Active clients',
-  },
+  { key: 'revenue',     label: 'Total Revenue',  icon: DollarSign,  cls: 'stat-purple', trend: +12, sub: 'From paid invoices',  textColor: 'text-white' },
+  { key: 'outstanding', label: 'Outstanding',    icon: AlertCircle, cls: 'stat-amber',  sub: 'Sent & overdue',                   textColor: 'text-white' },
+  { key: 'invoices',    label: 'Invoices',       icon: FileText,    cls: 'stat-blue',   trend: +4,  sub: 'All time',             textColor: 'text-white' },
+  { key: 'clients',     label: 'Clients',        icon: Users,       cls: 'stat-emerald', sub: 'Active clients',                  textColor: 'text-white' },
 ]
 
 export default function DashboardPage() {
@@ -84,32 +66,36 @@ export default function DashboardPage() {
       fetch('/api/invoices').then(r => r.json()),
       fetch('/api/dashboard/charts').then(r => r.json()),
     ]).then(([s, invs, c]) => {
-      setStats(s); setRecentInvoices(Array.isArray(invs) ? invs.slice(0, 6) : []); setCharts(c); setLoading(false)
+      setStats(s)
+      setRecentInvoices(Array.isArray(invs) ? invs.slice(0, 6) : [])
+      setCharts(c)
+      setLoading(false)
     })
   }, [])
 
   if (loading) return (
     <div className="flex items-center justify-center min-h-[60vh]">
-      <div className="w-8 h-8 rounded-full border-2 animate-spin" style={{ borderColor: '#7C3AED', borderTopColor: 'transparent' }} />
+      <div className="w-8 h-8 rounded-full border-2 animate-spin" style={{ borderColor: '#a28ef9', borderTopColor: 'transparent' }} />
     </div>
   )
 
   const statValues: Record<string, string> = {
-    revenue: `Rs ${(stats?.totalRevenue ?? 0).toLocaleString('en-LK', { maximumFractionDigits: 0 })}`,
-    outstanding: `Rs ${(stats?.outstanding ?? 0).toLocaleString('en-LK', { maximumFractionDigits: 0 })}`,
-    invoices: String(stats?.totalInvoices ?? 0),
-    clients: String(stats?.totalClients ?? 0),
+    revenue:     `Rs ${(stats?.totalRevenue  ?? 0).toLocaleString('en-LK', { maximumFractionDigits: 0 })}`,
+    outstanding: `Rs ${(stats?.outstanding   ?? 0).toLocaleString('en-LK', { maximumFractionDigits: 0 })}`,
+    invoices:    String(stats?.totalInvoices ?? 0),
+    clients:     String(stats?.totalClients  ?? 0),
   }
 
-  const today = new Date().toLocaleDateString('en-IN', { weekday: 'long', day: 'numeric', month: 'long' })
+  const today = new Date().toLocaleDateString('en-LK', { weekday: 'long', day: 'numeric', month: 'long' })
 
   return (
-    <div className="p-6 lg:p-8 space-y-7">
-      {/* Header */}
+    <div className="p-6 lg:p-8 space-y-6">
+
+      {/* ── Header ── */}
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-2xl font-bold tracking-tight text-white">Dashboard</h1>
-          <p className="text-xs mt-1" style={{ color: 'rgba(255,255,255,0.35)' }}>{today}</p>
+          <h1 className="text-2xl font-bold tracking-tight" style={{ color: '#111827' }}>Dashboard</h1>
+          <p className="text-xs mt-1" style={{ color: '#9ca3af' }}>{today}</p>
         </div>
         <Link href="/invoices/new">
           <button className="btn-brand h-9 px-5 text-sm flex items-center gap-2">
@@ -118,50 +104,50 @@ export default function DashboardPage() {
         </Link>
       </div>
 
-      {/* Stat Cards — pixel-matched gradient */}
+      {/* ── Stat Cards ── */}
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
         {statCards.map(card => (
           <div key={card.key} className={`${card.cls} rounded-2xl p-5 relative overflow-hidden`}>
-            {/* Large glowing orb — top right, matches reference */}
-            <div className="absolute -top-8 -right-8 w-32 h-32 rounded-full" style={{ background: 'rgba(255,255,255,0.12)', filter: 'blur(2px)' }} />
-            <div className="absolute top-2 right-2 w-16 h-16 rounded-full" style={{ background: 'rgba(255,255,255,0.07)', filter: 'blur(4px)' }} />
+            <div className="absolute -top-8 -right-8 w-32 h-32 rounded-full" style={{ background: 'rgba(255,255,255,0.15)', filter: 'blur(2px)' }} />
+            <div className="absolute top-2 right-2 w-16 h-16 rounded-full" style={{ background: 'rgba(255,255,255,0.08)', filter: 'blur(4px)' }} />
             <div className="relative">
               <div className="flex items-start justify-between mb-4">
-                <div className="w-10 h-10 rounded-xl flex items-center justify-center" style={{ background: 'rgba(255,255,255,0.18)', backdropFilter: 'blur(8px)' }}>
+                <div className="w-10 h-10 rounded-xl flex items-center justify-center" style={{ background: 'rgba(255,255,255,0.25)' }}>
                   <card.icon className="w-5 h-5 text-white" />
                 </div>
                 {card.trend !== undefined && (
                   <span className="flex items-center gap-0.5 text-[10px] font-bold px-2 py-1 rounded-full"
-                    style={{ background: 'rgba(255,255,255,0.18)', color: 'white' }}>
+                    style={{ background: 'rgba(255,255,255,0.25)', color: 'white' }}>
                     {card.trend > 0 ? <TrendingUp className="w-2.5 h-2.5" /> : <TrendingDown className="w-2.5 h-2.5" />}
                     {Math.abs(card.trend)}%
                   </span>
                 )}
               </div>
               <p className="text-[26px] font-extrabold text-white tracking-tight leading-none">{statValues[card.key]}</p>
-              <p className="text-xs mt-2 font-semibold" style={{ color: 'rgba(255,255,255,0.75)' }}>{card.label}</p>
-              <p className="text-[11px] mt-0.5" style={{ color: 'rgba(255,255,255,0.45)' }}>{card.sub}</p>
+              <p className="text-xs mt-2 font-semibold" style={{ color: 'rgba(255,255,255,0.85)' }}>{card.label}</p>
+              <p className="text-[11px] mt-0.5" style={{ color: 'rgba(255,255,255,0.55)' }}>{card.sub}</p>
             </div>
           </div>
         ))}
       </div>
 
-      {/* Chart + Sidebar */}
+      {/* ── Chart + Sidebar ── */}
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-5">
+
         {/* Revenue Chart */}
-        <div className="lg:col-span-2 rounded-2xl p-6" style={{ background: '#16191F', border: '1px solid rgba(255,255,255,0.07)' }}>
+        <div className="lg:col-span-2 rounded-2xl p-6 bg-white" style={{ border: '1px solid #e5e7eb', boxShadow: '0 1px 4px rgba(0,0,0,0.05)' }}>
           <div className="flex items-center justify-between mb-5">
             <div>
-              <h2 className="text-sm font-bold text-white">Financial Overview</h2>
-              <p className="text-xs mt-0.5" style={{ color: 'rgba(255,255,255,0.35)' }}>Revenue & expenses over time</p>
+              <h2 className="text-sm font-bold" style={{ color: '#111827' }}>Financial Overview</h2>
+              <p className="text-xs mt-0.5" style={{ color: '#9ca3af' }}>Revenue & expenses over time</p>
             </div>
-            <div className="flex gap-1 p-1 rounded-xl" style={{ background: 'rgba(255,255,255,0.05)' }}>
+            <div className="flex gap-1 p-1 rounded-xl" style={{ background: '#f3f4f6' }}>
               {(['revenue', 'profit'] as const).map(tab => (
                 <button key={tab} onClick={() => setActiveTab(tab)}
                   className="px-3 py-1 rounded-lg text-xs font-semibold transition-all"
                   style={activeTab === tab
-                    ? { background: '#7C3AED', color: 'white', boxShadow: '0 2px 8px rgba(124,58,237,0.4)' }
-                    : { color: 'rgba(255,255,255,0.4)' }}>
+                    ? { background: '#a28ef9', color: 'white', boxShadow: '0 2px 8px rgba(162,142,249,0.35)' }
+                    : { color: '#6b7280' }}>
                   {tab === 'revenue' ? 'Revenue' : 'P&L'}
                 </button>
               ))}
@@ -172,26 +158,26 @@ export default function DashboardPage() {
               <AreaChart data={charts?.monthlyRevenue ?? []}>
                 <defs>
                   <linearGradient id="revGrad" x1="0" y1="0" x2="0" y2="1">
-                    <stop offset="5%" stopColor="#7C3AED" stopOpacity={0.3} />
-                    <stop offset="95%" stopColor="#7C3AED" stopOpacity={0} />
+                    <stop offset="5%"  stopColor="#a28ef9" stopOpacity={0.25} />
+                    <stop offset="95%" stopColor="#a28ef9" stopOpacity={0}    />
                   </linearGradient>
                 </defs>
-                <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.04)" />
-                <XAxis dataKey="month" tick={{ fill: 'rgba(255,255,255,0.3)', fontSize: 11 }} axisLine={false} tickLine={false} />
-                <YAxis tick={{ fill: 'rgba(255,255,255,0.3)', fontSize: 11 }} axisLine={false} tickLine={false} tickFormatter={v => `Rs ${(v/1000).toFixed(0)}k`} />
-                <Tooltip {...tt} formatter={(v: number) => [`Rs ${v.toLocaleString('en-IN')}`, 'Revenue']} />
-                <Area type="monotone" dataKey="revenue" stroke="#8B5CF6" strokeWidth={2.5} fill="url(#revGrad)" dot={{ fill: '#8B5CF6', r: 3, strokeWidth: 0 }} />
+                <CartesianGrid strokeDasharray="3 3" stroke="#f0f0f0" />
+                <XAxis dataKey="month" tick={{ fill: '#9ca3af', fontSize: 11 }} axisLine={false} tickLine={false} />
+                <YAxis tick={{ fill: '#9ca3af', fontSize: 11 }} axisLine={false} tickLine={false} tickFormatter={v => `Rs ${(v/1000).toFixed(0)}k`} />
+                <Tooltip {...tt} formatter={(v: number) => [`Rs ${v.toLocaleString('en-LK')}`, 'Revenue']} />
+                <Area type="monotone" dataKey="revenue" stroke="#a28ef9" strokeWidth={2.5} fill="url(#revGrad)" dot={{ fill: '#a28ef9', r: 3, strokeWidth: 0 }} />
               </AreaChart>
             ) : (
               <BarChart data={charts?.profitLoss ?? []}>
-                <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.04)" />
-                <XAxis dataKey="month" tick={{ fill: 'rgba(255,255,255,0.3)', fontSize: 11 }} axisLine={false} tickLine={false} />
-                <YAxis tick={{ fill: 'rgba(255,255,255,0.3)', fontSize: 11 }} axisLine={false} tickLine={false} tickFormatter={v => `Rs ${(v/1000).toFixed(0)}k`} />
-                <Tooltip {...tt} formatter={(v: number) => `Rs ${v.toLocaleString('en-IN')}`} />
-                <Legend wrapperStyle={{ color: 'rgba(255,255,255,0.45)', fontSize: 12 }} />
-                <Bar dataKey="revenue" name="Revenue" fill="#8B5CF6" radius={[4.4,0,0]} />
-                <Bar dataKey="expenses" name="Expenses" fill="#F43F5E" radius={[4,4,0,0]} />
-                <Bar dataKey="profit" name="Profit" fill="#10B981" radius={[4,4,0,0]} />
+                <CartesianGrid strokeDasharray="3 3" stroke="#f0f0f0" />
+                <XAxis dataKey="month" tick={{ fill: '#9ca3af', fontSize: 11 }} axisLine={false} tickLine={false} />
+                <YAxis tick={{ fill: '#9ca3af', fontSize: 11 }} axisLine={false} tickLine={false} tickFormatter={v => `Rs ${(v/1000).toFixed(0)}k`} />
+                <Tooltip {...tt} formatter={(v: number) => `Rs ${v.toLocaleString('en-LK')}`} />
+                <Legend wrapperStyle={{ color: '#6b7280', fontSize: 12 }} />
+                <Bar dataKey="revenue"  name="Revenue"  fill="#a28ef9" radius={[4,4,0,0]} />
+                <Bar dataKey="expenses" name="Expenses" fill="#fda4af" radius={[4,4,0,0]} />
+                <Bar dataKey="profit"   name="Profit"   fill="#a4f5a6" radius={[4,4,0,0]} />
               </BarChart>
             )}
           </ResponsiveContainer>
@@ -199,16 +185,17 @@ export default function DashboardPage() {
 
         {/* Right column */}
         <div className="space-y-4">
+
           {/* Status Donut */}
-          <div className="rounded-2xl p-5" style={{ background: '#16191F', border: '1px solid rgba(255,255,255,0.07)' }}>
-            <h2 className="text-sm font-bold text-white mb-4">Invoice Status</h2>
+          <div className="rounded-2xl p-5 bg-white" style={{ border: '1px solid #e5e7eb', boxShadow: '0 1px 4px rgba(0,0,0,0.05)' }}>
+            <h2 className="text-sm font-bold mb-4" style={{ color: '#111827' }}>Invoice Status</h2>
             {(charts?.statusData ?? []).some(s => s.value > 0) ? (
               <>
                 <ResponsiveContainer width="100%" height={130}>
                   <PieChart>
                     <Pie data={charts?.statusData ?? []} cx="50%" cy="50%" innerRadius={38} outerRadius={58} paddingAngle={3} dataKey="value">
                       {(charts?.statusData ?? []).map(entry => (
-                        <Cell key={entry.name} fill={STATUS_COLORS[entry.name] ?? '#64748B'} />
+                        <Cell key={entry.name} fill={STATUS_COLORS[entry.name] ?? '#9ca3af'} />
                       ))}
                     </Pie>
                     <Tooltip {...tt} />
@@ -219,34 +206,34 @@ export default function DashboardPage() {
                     <div key={s.name} className="flex items-center justify-between">
                       <div className="flex items-center gap-2">
                         <div className="w-2 h-2 rounded-full" style={{ background: STATUS_COLORS[s.name] }} />
-                        <span className="text-xs capitalize" style={{ color: 'rgba(255,255,255,0.45)' }}>{s.name.toLowerCase()}</span>
+                        <span className="text-xs capitalize" style={{ color: '#6b7280' }}>{s.name.toLowerCase()}</span>
                       </div>
-                      <span className="text-xs font-bold text-white">{s.value}</span>
+                      <span className="text-xs font-bold" style={{ color: '#111827' }}>{s.value}</span>
                     </div>
                   ))}
                 </div>
               </>
             ) : (
-              <p className="text-xs text-center py-6" style={{ color: 'rgba(255,255,255,0.25)' }}>No invoices yet</p>
+              <p className="text-xs text-center py-6" style={{ color: '#d1d5db' }}>No invoices yet</p>
             )}
           </div>
 
-          {/* Quick Links */}
-          <div className="rounded-2xl p-5" style={{ background: '#16191F', border: '1px solid rgba(255,255,255,0.07)' }}>
-            <h2 className="text-sm font-bold text-white mb-3">Quick Actions</h2>
+          {/* Quick Actions */}
+          <div className="rounded-2xl p-5 bg-white" style={{ border: '1px solid #e5e7eb', boxShadow: '0 1px 4px rgba(0,0,0,0.05)' }}>
+            <h2 className="text-sm font-bold mb-3" style={{ color: '#111827' }}>Quick Actions</h2>
             <div className="space-y-1.5">
               {[
-                { label: 'New Invoice', href: '/invoices/new', color: '#8B5CF6' },
-                { label: 'Add Client', href: '/clients', color: '#3B82F6' },
-                { label: 'Log Expense', href: '/expenses', color: '#10B981' },
-                { label: 'View Reports', href: '/reports', color: '#F59E0B' },
+                { label: 'New Invoice',  href: '/invoices/new', color: '#a28ef9' },
+                { label: 'Add Client',   href: '/clients',      color: '#60a5fa' },
+                { label: 'Log Expense',  href: '/expenses',     color: '#4ade80' },
+                { label: 'View Reports', href: '/reports',      color: '#fcd34d' },
               ].map(item => (
                 <Link key={item.href} href={item.href}
-                  className="flex items-center justify-between px-3 py-2.5 rounded-xl transition-all group"
-                  style={{ background: 'rgba(255,255,255,0.03)', border: '1px solid rgba(255,255,255,0.05)' }}>
+                  className="flex items-center justify-between px-3 py-2.5 rounded-xl transition-all group hover:bg-gray-50"
+                  style={{ border: '1px solid #f3f4f6' }}>
                   <div className="flex items-center gap-2.5">
-                    <div className="w-1.5 h-1.5 rounded-full" style={{ background: item.color }} />
-                    <span className="text-xs font-semibold" style={{ color: 'rgba(255,255,255,0.65)' }}>{item.label}</span>
+                    <div className="w-2 h-2 rounded-full" style={{ background: item.color }} />
+                    <span className="text-xs font-semibold" style={{ color: '#374151' }}>{item.label}</span>
                   </div>
                   <ArrowUpRight className="w-3 h-3 opacity-0 group-hover:opacity-60 transition-opacity" style={{ color: item.color }} />
                 </Link>
@@ -256,48 +243,50 @@ export default function DashboardPage() {
         </div>
       </div>
 
-      {/* Recent Invoices table */}
-      <div className="rounded-2xl overflow-hidden" style={{ background: '#16191F', border: '1px solid rgba(255,255,255,0.07)' }}>
-        <div className="flex items-center justify-between px-6 py-4" style={{ borderBottom: '1px solid rgba(255,255,255,0.06)' }}>
-          <h2 className="text-sm font-bold text-white">Recent Invoices</h2>
-          <Link href="/invoices" className="flex items-center gap-1 text-xs font-semibold hover:opacity-80 transition-opacity" style={{ color: '#8B5CF6' }}>
+      {/* ── Recent Invoices ── */}
+      <div className="rounded-2xl overflow-hidden bg-white" style={{ border: '1px solid #e5e7eb', boxShadow: '0 1px 4px rgba(0,0,0,0.05)' }}>
+        <div className="flex items-center justify-between px-6 py-4" style={{ borderBottom: '1px solid #f3f4f6' }}>
+          <h2 className="text-sm font-bold" style={{ color: '#111827' }}>Recent Invoices</h2>
+          <Link href="/invoices" className="flex items-center gap-1 text-xs font-semibold hover:opacity-80 transition-opacity" style={{ color: '#a28ef9' }}>
             View all <ArrowRight className="w-3 h-3" />
           </Link>
         </div>
         {recentInvoices.length === 0 ? (
           <div className="flex flex-col items-center justify-center py-12">
-            <FileText className="w-8 h-8 mb-2" style={{ color: 'rgba(255,255,255,0.1)' }} />
-            <p className="text-xs" style={{ color: 'rgba(255,255,255,0.25)' }}>No invoices yet</p>
+            <FileText className="w-8 h-8 mb-2" style={{ color: '#e5e7eb' }} />
+            <p className="text-xs" style={{ color: '#9ca3af' }}>No invoices yet</p>
           </div>
         ) : (
           <div className="overflow-x-auto">
             <table className="w-full">
               <thead>
-                <tr style={{ borderBottom: '1px solid rgba(255,255,255,0.05)' }}>
+                <tr style={{ borderBottom: '1px solid #f3f4f6' }}>
                   {['Invoice #', 'Client', 'Amount', 'Due Date', 'Status'].map(h => (
                     <th key={h} className="text-left px-6 py-3 text-[10px] font-bold uppercase tracking-widest"
-                      style={{ color: 'rgba(255,255,255,0.25)' }}>{h}</th>
+                      style={{ color: '#9ca3af' }}>{h}</th>
                   ))}
                 </tr>
               </thead>
               <tbody>
                 {recentInvoices.map((inv, i) => (
-                  <tr key={inv.id} className="group hover:bg-white/[0.02] transition-colors"
-                    style={{ borderBottom: i < recentInvoices.length - 1 ? '1px solid rgba(255,255,255,0.04)' : 'none' }}>
+                  <tr key={inv.id} className="group hover:bg-gray-50 transition-colors"
+                    style={{ borderBottom: i < recentInvoices.length - 1 ? '1px solid #f9fafb' : 'none' }}>
                     <td className="px-6 py-3.5">
-                      <Link href={`/invoices/${inv.id}`} className="text-xs font-bold font-mono hover:opacity-80 transition-opacity" style={{ color: '#A78BFA' }}>
+                      <Link href={`/invoices/${inv.id}`}
+                        className="text-xs font-bold font-mono hover:opacity-80 transition-opacity"
+                        style={{ color: '#a28ef9' }}>
                         {inv.invoiceNo}
                       </Link>
                     </td>
                     <td className="px-6 py-3.5">
-                      <p className="text-xs font-semibold text-white">{inv.client?.name}</p>
-                      {inv.client?.company && <p className="text-[10px] mt-0.5" style={{ color: 'rgba(255,255,255,0.3)' }}>{inv.client.company}</p>}
+                      <p className="text-xs font-semibold" style={{ color: '#111827' }}>{inv.client?.name}</p>
+                      {inv.client?.company && <p className="text-[10px] mt-0.5" style={{ color: '#9ca3af' }}>{inv.client.company}</p>}
                     </td>
-                    <td className="px-6 py-3.5 text-xs font-bold text-white">
-                      Rs {inv.total.toLocaleString('en-IN', { maximumFractionDigits: 0 })}
+                    <td className="px-6 py-3.5 text-xs font-bold" style={{ color: '#111827' }}>
+                      Rs {inv.total.toLocaleString('en-LK', { maximumFractionDigits: 0 })}
                     </td>
-                    <td className="px-6 py-3.5 text-xs" style={{ color: 'rgba(255,255,255,0.4)' }}>
-                      {new Date(inv.dueDate).toLocaleDateString('en-IN', { day: 'numeric', month: 'short', year: 'numeric' })}
+                    <td className="px-6 py-3.5 text-xs" style={{ color: '#6b7280' }}>
+                      {new Date(inv.dueDate).toLocaleDateString('en-LK', { day: 'numeric', month: 'short', year: 'numeric' })}
                     </td>
                     <td className="px-6 py-3.5">
                       <StatusBadge status={inv.status} />

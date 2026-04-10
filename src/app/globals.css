@@ -1,34 +1,46 @@
 @import "tailwindcss";
 @import "tw-animate-css";
+@import url('https://fonts.googleapis.com/css2?family=Fustat:wght@200;300;400;500;600;700;800&display=swap');
 
 @custom-variant dark (&:is(.dark *));
 
 :root {
-  --background:     222 14% 8%;   /* #111318 - neutral dark */
-  --foreground:     220 20% 96%;
-  --card:           222 14% 11%;  /* #16191F - neutral dark card */
-  --card-foreground: 220 20% 96%;
-  --popover:        222 14% 10%;
-  --popover-foreground: 220 20% 96%;
-  --primary:        252 100% 68%;  /* #7B61FF - accent only */
+  /* ── Light theme — Fustat design system ─────────────────────── */
+  --background:     120 10% 93%;   /* #edf0ed — light sage page bg */
+  --foreground:     0 0% 13%;      /* #222222 — near black text */
+  --card:           0 0% 100%;     /* #ffffff — white cards */
+  --card-foreground: 0 0% 13%;
+  --popover:        0 0% 100%;
+  --popover-foreground: 0 0% 13%;
+  --primary:        258 84% 76%;   /* #a28ef9 — lavender purple */
   --primary-foreground: 0 0% 100%;
-  --secondary:      222 14% 15%;
-  --secondary-foreground: 220 20% 85%;
-  --muted:          222 14% 13%;
-  --muted-foreground: 220 10% 45%;
-  --accent:         252 100% 68%;
+  --secondary:      122 84% 80%;   /* #a4f5a6 — mint green */
+  --secondary-foreground: 0 0% 13%;
+  --muted:          220 14% 94%;   /* subtle grey */
+  --muted-foreground: 220 9% 46%; /* #6b7280 */
+  --accent:         258 84% 76%;
   --accent-foreground: 0 0% 100%;
   --destructive:    0 72% 60%;
   --destructive-foreground: 0 0% 100%;
-  --border:         222 14% 14%;  /* rgba(255,255,255,0.06) */
-  --input:          222 14% 13%;
-  --ring:           252 100% 68%;
+  --border:         220 13% 91%;   /* #e5e7eb */
+  --input:          220 13% 91%;
+  --ring:           258 84% 76%;
   --radius:         0.875rem;
 
-  --brand: 252 100% 68%;
-  --success: 160 84% 39%;
+  --brand: 258 84% 76%;
+  --brand-dark: 0 0% 13%;         /* #222222 — sidebar active */
+  --success: 122 84% 80%;         /* mint green */
   --warning: 38 92% 50%;
   --info: 199 89% 48%;
+
+  /* ── Sidebar specific ──────────────────────────────────────── */
+  --sidebar-bg:     0 0% 100%;
+  --sidebar-border: 220 13% 91%;
+  --sidebar-active-bg: 0 0% 13%;     /* #222222 dark pill */
+  --sidebar-active-text: 0 0% 100%;  /* white text on active */
+  --sidebar-inactive-text: 0 0% 40%; /* #666 */
+  --sidebar-label: 0 0% 60%;         /* group label */
+  --topbar-bg:      0 0% 100%;
 }
 
 * { border-color: hsl(var(--border)); box-sizing: border-box; }
@@ -37,7 +49,7 @@ html { scroll-behavior: smooth; }
 body {
   background-color: hsl(var(--background));
   color: hsl(var(--foreground));
-  font-family: var(--font-plus-jakarta), -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  font-family: 'Fustat', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   min-height: 100vh;
@@ -46,82 +58,109 @@ body {
 ::-webkit-scrollbar { width: 5px; height: 5px; }
 ::-webkit-scrollbar-track { background: hsl(var(--background)); }
 ::-webkit-scrollbar-thumb { background: hsl(var(--border)); border-radius: 3px; }
-::-webkit-scrollbar-thumb:hover { background: hsl(var(--muted-foreground)); }
+::-webkit-scrollbar-thumb:hover { background: #c0c4cc; }
 
-/* Glass card */
+/* ── Card ────────────────────────────────────────────────────── */
+.card {
+  background: #ffffff;
+  border: 1px solid hsl(var(--border));
+  border-radius: 16px;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.06), 0 4px 16px rgba(0,0,0,0.04);
+}
+
+/* ── Glass (light mode) ──────────────────────────────────────── */
 .glass {
-  background: rgba(255,255,255,0.04);
+  background: rgba(255,255,255,0.75);
   backdrop-filter: blur(16px);
   -webkit-backdrop-filter: blur(16px);
-  border: 1px solid rgba(255,255,255,0.07);
+  border: 1px solid rgba(255,255,255,0.9);
 }
 
-/* Solid dark card */
-.card {
-  background: hsl(224 40% 9%);
-  border: 1px solid hsl(224 35% 14%);
-  border-radius: 16px;
-}
-
-/* Brand button */
+/* ── Brand button — lavender purple ──────────────────────────── */
 .btn-brand {
-  background: linear-gradient(135deg, #7B61FF, #4F35CC);
+  background: #a28ef9;
   color: white;
   border-radius: 10px;
   font-weight: 600;
   letter-spacing: -0.01em;
+  transition: opacity 0.15s, transform 0.15s, box-shadow 0.15s;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 4px 14px rgba(162,142,249,0.4);
+}
+.btn-brand:hover { opacity: 0.92; transform: translateY(-1px); box-shadow: 0 6px 20px rgba(162,142,249,0.5); }
+
+/* ── Brand secondary — mint green ───────────────────────────── */
+.btn-secondary {
+  background: #a4f5a6;
+  color: #1a4a1b;
+  border-radius: 10px;
+  font-weight: 600;
   transition: opacity 0.15s, transform 0.15s;
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  box-shadow: 0 4px 20px rgba(123,97,255,0.35);
 }
-.btn-brand:hover { opacity: 0.9; transform: translateY(-1px); }
+.btn-secondary:hover { opacity: 0.9; transform: translateY(-1px); }
 
 .gradient-text {
-  background: linear-gradient(135deg, hsl(252,84%,75%) 0%, hsl(199,89%,68%) 100%);
+  background: linear-gradient(135deg, #a28ef9 0%, #a4f5a6 100%);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
 }
 
-.glow { box-shadow: 0 0 40px rgba(124,58,237,0.18); }
+.glow { box-shadow: 0 0 40px rgba(162,142,249,0.18); }
 
-/* Stat card gradient backgrounds — pixel-matched from reference */
+/* ── Stat cards ─────────────────────────────────────────────── */
 .stat-purple {
-  background: linear-gradient(135deg, #3E3764 0%, #7B63F6 100%);
-  border: 1px solid rgba(123,97,255,0.25);
-  box-shadow: 0 8px 32px rgba(62,55,100,0.45), inset 0 1px 0 rgba(255,255,255,0.1);
+  background: linear-gradient(135deg, #a28ef9 0%, #c4b5fd 100%);
+  border: none;
+  box-shadow: 0 8px 24px rgba(162,142,249,0.3), inset 0 1px 0 rgba(255,255,255,0.25);
 }
 .stat-blue {
-  background: linear-gradient(135deg, #1E3A6E 0%, #3B82F6 100%);
-  border: 1px solid rgba(59,130,246,0.25);
-  box-shadow: 0 8px 32px rgba(30,58,110,0.45), inset 0 1px 0 rgba(255,255,255,0.1);
+  background: linear-gradient(135deg, #60a5fa 0%, #93c5fd 100%);
+  border: none;
+  box-shadow: 0 8px 24px rgba(96,165,250,0.3), inset 0 1px 0 rgba(255,255,255,0.25);
 }
 .stat-emerald {
-  background: linear-gradient(135deg, #0D4A3A 0%, #10B981 100%);
-  border: 1px solid rgba(16,185,129,0.25);
-  box-shadow: 0 8px 32px rgba(13,74,58,0.45), inset 0 1px 0 rgba(255,255,255,0.1);
+  background: linear-gradient(135deg, #a4f5a6 0%, #6ee7b7 100%);
+  border: none;
+  box-shadow: 0 8px 24px rgba(164,245,166,0.35), inset 0 1px 0 rgba(255,255,255,0.25);
+}
+.stat-rise {
+  background: linear-gradient(135deg, #fda4af 0%, #fecdd3 100%);
+  border: none;
+  box-shadow: 0 8px 24px rgba(253,164,175,0.3), inset 0 1px 0 rgba(255,255,255,0.25);
 }
 .stat-rose {
-  background: linear-gradient(135deg, #6B1B35 0%, #F43F5E 100%);
-  border: 1px solid rgba(244,63,94,0.25);
-  box-shadow: 0 8px 32px rgba(107,27,53,0.45), inset 0 1px 0 rgba(255,255,255,0.1);
+  background: linear-gradient(135deg, #fda4af 0%, #fecdd3 100%);
+  border: none;
+  box-shadow: 0 8px 24px rgba(253,164,175,0.3), inset 0 1px 0 rgba(255,255,255,0.25);
 }
 .stat-amber {
-  background: linear-gradient(135deg, #6B3A0D 0%, #F59E0B 100%);
-  border: 1px solid rgba(245,158,11,0.25);
-  box-shadow: 0 8px 32px rgba(107,58,13,0.45), inset 0 1px 0 rgba(255,255,255,0.1);
+  background: linear-gradient(135deg, #fcd34d 0%, #fde68a 100%);
+  border: none;
+  box-shadow: 0 8px 24px rgba(252,211,77,0.3), inset 0 1px 0 rgba(255,255,255,0.25);
 }
 
-/* Status badges */
-.status-draft { background: rgba(100,116,139,0.18); color: #94A3B8; border: 1px solid rgba(100,116,139,0.3); }
-.status-sent  { background: rgba(59,130,246,0.18);  color: #60A5FA; border: 1px solid rgba(59,130,246,0.3);  }
-.status-paid  { background: rgba(16,185,129,0.18);  color: #34D399; border: 1px solid rgba(16,185,129,0.3);  }
-.status-overdue { background: rgba(239,68,68,0.18); color: #FCA5A5; border: 1px solid rgba(239,68,68,0.3);   }
-.status-accepted { background: rgba(16,185,129,0.18); color: #34D399; border: 1px solid rgba(16,185,129,0.3); }
-.status-rejected { background: rgba(239,68,68,0.18); color: #FCA5A5; border: 1px solid rgba(239,68,68,0.3); }
-.status-converted { background: rgba(139,92,246,0.18); color: #A78BFA; border: 1px solid rgba(139,92,246,0.3); }
+/* ── Status badges ──────────────────────────────────────────── */
+.status-draft    { background: #f3f4f6; color: #6b7280; border: 1px solid #e5e7eb; }
+.status-sent     { background: #eff6ff; color: #2563eb; border: 1px solid #bfdbfe; }
+.status-paid     { background: #f0fdf4; color: #16a34a; border: 1px solid #bbf7d0; }
+.status-overdue  { background: #fef2f2; color: #dc2626; border: 1px solid #fecaca; }
+.status-accepted { background: #f0fdf4; color: #16a34a; border: 1px solid #bbf7d0; }
+.status-rejected { background: #fef2f2; color: #dc2626; border: 1px solid #fecaca; }
+.status-converted { background: #f5f3ff; color: #7c3aed; border: 1px solid #ddd6fe; }
+
+/* ── Input overrides for light theme ─────────────────────────── */
+input, textarea, select {
+  color: #222222 !important;
+}
+input::placeholder, textarea::placeholder {
+  color: #9ca3af !important;
+}
 
 @theme inline {
   --color-background: hsl(var(--background));
