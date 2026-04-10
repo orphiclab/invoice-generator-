@@ -49,6 +49,16 @@ const TILES: T[] = [
   { bg: M,  sh: 'slash',   c: B  }, { bg: M,  sh: 'diamond', c: P  },
   { bg: La, sh: 'dots',    c: B  }, { bg: W,  sh: 'q-br',    c: La },
   { bg: B,  sh: 'none',    c: B  }, { bg: P,  sh: 'tri',     c: Gm },
+  // Row 7
+  { bg: P,  sh: 'half-t',  c: Gm }, { bg: B,  sh: 'none',    c: B  },
+  { bg: Gm, sh: 'circ',    c: P  }, { bg: B,  sh: 'q-tl',    c: M  },
+  { bg: M,  sh: 'slash',   c: P  }, { bg: B,  sh: 'none',    c: B  },
+  { bg: B,  sh: 'diamond', c: L  }, { bg: La, sh: 'square',  c: B  },
+  // Row 8
+  { bg: B,  sh: 'q-bl',    c: P  }, { bg: P,  sh: 'dots',    c: B  },
+  { bg: B,  sh: 'none',    c: B  }, { bg: M,  sh: 'ring',    c: Gm },
+  { bg: L,  sh: 'half-b',  c: P  }, { bg: B,  sh: 'big-circ',c: W  },
+  { bg: P,  sh: 'tri',     c: M  }, { bg: B,  sh: 'none',    c: B  },
 ]
 
 function Shape({ t, c }: { t: string; c: string }) {
@@ -188,7 +198,7 @@ export default function LoginPage() {
       </div>
 
       {/* ── Right: geometric mosaic ── */}
-      <div style={{ flex: 1, background: B, display: 'flex', alignItems: 'center', justifyContent: 'center', overflow: 'hidden' }}>
+      <div style={{ flex: 1, background: B, overflow: 'hidden' }}>
         <GeometricGrid />
       </div>
     </div>

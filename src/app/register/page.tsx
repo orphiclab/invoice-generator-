@@ -42,6 +42,16 @@ const TILES: T[] = [
   { bg: P,  sh: 'square', c: La }, { bg: B,  sh: 'half-l',  c: P  },
   { bg: M,  sh: 'dots',   c: B  }, { bg: B,  sh: 'none',    c: B  },
   { bg: P,  sh: 'ring',   c: Gm }, { bg: M,  sh: 'diamond', c: P  },
+
+  { bg: M,  sh: 'tri',     c: P  }, { bg: B,  sh: 'none',   c: B  },
+  { bg: P,  sh: 'q-tl',    c: L  }, { bg: B,  sh: 'square', c: M  },
+  { bg: La, sh: 'none',    c: B  }, { bg: Gm, sh: 'circ',   c: P  },
+  { bg: B,  sh: 'slash',   c: La }, { bg: P,  sh: 'big-circ',c: B },
+  
+  { bg: B,  sh: 'half-t',  c: M  }, { bg: P,  sh: 'ring',   c: Gm },
+  { bg: M,  sh: 'dots',    c: B  }, { bg: B,  sh: 'q-br',   c: La },
+  { bg: B,  sh: 'none',    c: B  }, { bg: L,  sh: 'diamond',c: P  },
+  { bg: Gm, sh: 'half-b',  c: B  }, { bg: B,  sh: 'none',   c: B  },
 ]
 
 function Shape({ t, c }: { t: string; c: string }) {
@@ -187,7 +197,7 @@ export default function RegisterPage() {
       </div>
 
       {/* ── Right: geometric mosaic ── */}
-      <div style={{ flex: 1, overflow: 'hidden', minHeight: '100vh' }}>
+      <div style={{ flex: 1, background: B, overflow: 'hidden' }}>
         <GeometricGrid />
       </div>
     </div>
