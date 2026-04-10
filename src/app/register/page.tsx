@@ -14,10 +14,7 @@ export default function RegisterPage() {
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault()
-    if (form.password.length < 6) {
-      toast.error('Password must be at least 6 characters')
-      return
-    }
+    if (form.password.length < 6) { toast.error('Password must be at least 6 characters'); return }
     setLoading(true)
     try {
       const res = await fetch('/api/auth/register', {
@@ -40,75 +37,68 @@ export default function RegisterPage() {
     }
   }
 
-  const inputBase = {
-    background: 'rgba(255,255,255,0.04)',
-    border: '1px solid rgba(255,255,255,0.08)',
-  }
-  const inputFocus = {
-    border: '1px solid rgba(162,142,249,0.5)',
-    background: 'rgba(162,142,249,0.05)',
-  }
+  const focusStyle = { border: '1px solid #a28ef9', boxShadow: '0 0 0 3px rgba(162,142,249,0.12)' }
+  const blurStyle  = { border: '1px solid #e5e7eb', boxShadow: 'none' }
 
   return (
-    <div className="min-h-screen flex" style={{ background: '#09090b', fontFamily: 'var(--font-fustat, sans-serif)' }}>
+    <div className="min-h-screen flex" style={{ fontFamily: 'var(--font-fustat, sans-serif)', background: '#edf0ed' }}>
 
-      {/* ── Left panel: geometric art ── */}
-      <div className="hidden lg:flex lg:w-1/2 relative overflow-hidden flex-col justify-between p-12"
-        style={{ background: 'linear-gradient(160deg, #09090b 0%, #13091f 60%, #1a0a2e 100%)' }}>
+      {/* ── Left panel: lavender gradient ── */}
+      <div className="hidden lg:flex lg:w-[45%] relative overflow-hidden flex-col justify-between p-12"
+        style={{ background: 'linear-gradient(145deg, #a4f5a6 0%, #6ee7b7 40%, #a28ef9 100%)' }}>
 
-        {/* Geometric grid dots */}
+        {/* Dot grid */}
         <div className="absolute inset-0" style={{
-          backgroundImage: 'radial-gradient(circle, rgba(162,142,249,0.12) 1px, transparent 1px)',
-          backgroundSize: '32px 32px',
+          backgroundImage: 'radial-gradient(circle, rgba(255,255,255,0.2) 1.5px, transparent 1.5px)',
+          backgroundSize: '28px 28px',
         }} />
 
-        {/* Large concentric rings + orb */}
-        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2">
-          <div className="w-[520px] h-[520px] rounded-full border border-purple-500/10 absolute -translate-x-1/2 -translate-y-1/2" />
-          <div className="w-[380px] h-[380px] rounded-full border border-purple-500/15 absolute -translate-x-1/2 -translate-y-1/2" />
-          <div className="w-[260px] h-[260px] rounded-full border border-purple-500/20 absolute -translate-x-1/2 -translate-y-1/2" />
-          <div className="w-[140px] h-[140px] rounded-full absolute -translate-x-1/2 -translate-y-1/2"
-            style={{ background: 'radial-gradient(circle, rgba(162,142,249,0.6) 0%, rgba(124,92,252,0.3) 50%, transparent 100%)', filter: 'blur(12px)' }} />
-          {/* Center icon */}
-          <div className="w-[80px] h-[80px] rounded-full absolute -translate-x-1/2 -translate-y-1/2 flex items-center justify-center"
-            style={{ background: 'linear-gradient(135deg, #a28ef9, #7c5cfc)' }}>
-            <Zap className="w-8 h-8 text-white" />
+        {/* Concentric rings */}
+        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 pointer-events-none">
+          <div className="w-[480px] h-[480px] rounded-full border border-white/15 absolute -translate-x-1/2 -translate-y-1/2" />
+          <div className="w-[350px] h-[350px] rounded-full border border-white/20 absolute -translate-x-1/2 -translate-y-1/2" />
+          <div className="w-[230px] h-[230px] rounded-full border border-white/25 absolute -translate-x-1/2 -translate-y-1/2" />
+          <div className="w-[110px] h-[110px] rounded-full absolute -translate-x-1/2 -translate-y-1/2"
+            style={{ background: 'rgba(255,255,255,0.2)', filter: 'blur(14px)' }} />
+          <div className="w-16 h-16 rounded-2xl absolute -translate-x-1/2 -translate-y-1/2 flex items-center justify-center"
+            style={{ background: 'rgba(255,255,255,0.3)', backdropFilter: 'blur(8px)' }}>
+            <Zap className="w-7 h-7 text-white" />
           </div>
         </div>
 
-        {/* Floating geometric decorations */}
-        <div className="absolute top-24 right-28 w-14 h-14 rotate-12 rounded-xl border border-purple-400/20" style={{ background: 'rgba(162,142,249,0.04)' }} />
-        <div className="absolute top-40 right-52 w-7 h-7 rotate-45 rounded-sm border border-purple-400/30" style={{ background: 'rgba(162,142,249,0.06)' }} />
-        <div className="absolute bottom-28 left-20 w-20 h-20 -rotate-6 rounded-2xl border border-purple-400/20" style={{ background: 'rgba(162,142,249,0.04)' }} />
-        <div className="absolute bottom-52 right-24 w-10 h-10 rotate-45 rounded border border-purple-400/25" style={{ background: 'rgba(162,142,249,0.06)' }} />
-        <div className="absolute top-1/3 left-16 w-5 h-5 rounded-full bg-purple-500/30" />
-        <div className="absolute bottom-1/4 right-1/3 w-3 h-3 rounded-full bg-purple-400/40" />
+        {/* Floating shapes */}
+        <div className="absolute top-20 left-16 w-12 h-12 rounded-2xl rotate-12 border border-white/25" style={{ background: 'rgba(255,255,255,0.1)' }} />
+        <div className="absolute top-36 left-40 w-7 h-7 rounded-lg rotate-45 border border-white/30" style={{ background: 'rgba(255,255,255,0.12)' }} />
+        <div className="absolute bottom-32 right-14 w-16 h-16 rounded-2xl -rotate-8 border border-white/20" style={{ background: 'rgba(255,255,255,0.08)' }} />
+        <div className="absolute bottom-48 left-20 w-9 h-9 rounded-xl rotate-20 border border-white/25" style={{ background: 'rgba(255,255,255,0.1)' }} />
+        <div className="absolute top-1/3 right-12 w-4 h-4 rounded-full bg-white/30" />
+        <div className="absolute bottom-1/3 left-1/3 w-3 h-3 rounded-full bg-white/35" />
 
-        {/* Top logo */}
+        {/* Logo */}
         <div className="relative z-10 flex items-center gap-2.5">
-          <div className="w-8 h-8 rounded-lg flex items-center justify-center" style={{ background: 'linear-gradient(135deg, #a28ef9, #7c5cfc)' }}>
+          <div className="w-8 h-8 rounded-xl flex items-center justify-center" style={{ background: 'rgba(255,255,255,0.3)' }}>
             <Zap className="w-4 h-4 text-white" />
           </div>
-          <span className="text-white font-bold text-lg">InvoiceFlow</span>
+          <span className="text-white font-extrabold text-xl tracking-tight">InvoiceFlow</span>
         </div>
 
         {/* Bottom copy */}
         <div className="relative z-10">
-          <p className="text-2xl font-bold text-white leading-snug mb-3">
+          <p className="text-3xl font-extrabold text-white leading-snug mb-2">
             Start invoicing<br />
-            <span style={{ color: '#a28ef9' }}>in 60 seconds.</span>
+            <span style={{ color: 'rgba(255,255,255,0.65)' }}>in 60 seconds.</span>
           </p>
-          <div className="flex flex-col gap-2.5 mt-5">
+          <div className="flex flex-col gap-3 mt-6">
             {[
               { icon: ShieldCheck, text: 'Free forever — no credit card required' },
               { icon: TrendingUp, text: 'Track revenue, expenses & tax in one place' },
               { icon: Clock, text: 'Invoice clients & get paid faster' },
             ].map(({ icon: Icon, text }) => (
-              <div key={text} className="flex items-center gap-2.5">
-                <div className="w-6 h-6 rounded-md flex items-center justify-center flex-shrink-0" style={{ background: 'rgba(162,142,249,0.15)' }}>
-                  <Icon className="w-3.5 h-3.5" style={{ color: '#a28ef9' }} />
+              <div key={text} className="flex items-center gap-3">
+                <div className="w-7 h-7 rounded-lg flex items-center justify-center flex-shrink-0" style={{ background: 'rgba(255,255,255,0.22)' }}>
+                  <Icon className="w-3.5 h-3.5 text-white" />
                 </div>
-                <span className="text-sm" style={{ color: 'rgba(255,255,255,0.55)' }}>{text}</span>
+                <span className="text-sm font-medium" style={{ color: 'rgba(255,255,255,0.85)' }}>{text}</span>
               </div>
             ))}
           </div>
@@ -116,110 +106,100 @@ export default function RegisterPage() {
       </div>
 
       {/* ── Right panel: form ── */}
-      <div className="flex-1 flex items-center justify-center p-8 lg:p-16 relative" style={{ background: '#09090b' }}>
+      <div className="flex-1 flex items-center justify-center p-8 lg:p-16" style={{ background: '#edf0ed' }}>
+        <div className="w-full max-w-sm">
 
-        {/* Subtle corner glow */}
-        <div className="absolute top-0 right-0 w-72 h-72 rounded-full opacity-10 pointer-events-none"
-          style={{ background: 'radial-gradient(circle, #a28ef9 0%, transparent 70%)', filter: 'blur(60px)' }} />
-
-        <div className="w-full max-w-sm relative z-10">
           {/* Mobile logo */}
-          <div className="flex items-center gap-2 mb-8 lg:hidden">
-            <div className="w-8 h-8 rounded-lg flex items-center justify-center" style={{ background: 'linear-gradient(135deg, #a28ef9, #7c5cfc)' }}>
+          <div className="flex items-center gap-2 mb-10 lg:hidden">
+            <div className="w-9 h-9 rounded-xl flex items-center justify-center"
+              style={{ background: 'linear-gradient(135deg, #a28ef9, #7c5cfc)' }}>
               <Zap className="w-4 h-4 text-white" />
             </div>
-            <span className="text-white font-bold text-lg">InvoiceFlow</span>
+            <span className="font-extrabold text-xl tracking-tight" style={{ color: '#111827' }}>InvoiceFlow</span>
           </div>
 
-          <h1 className="text-2xl font-bold text-white mb-1">Create your account</h1>
-          <p className="text-sm mb-8" style={{ color: 'rgba(255,255,255,0.4)' }}>
-            Free forever · No credit card required
-          </p>
+          <h1 className="text-3xl font-extrabold mb-1" style={{ color: '#111827' }}>Create your account</h1>
+          <p className="text-sm mb-8" style={{ color: '#9ca3af' }}>Free forever · No credit card required</p>
 
-          <form onSubmit={handleSubmit} className="space-y-4">
-            {/* Full Name */}
-            <div>
-              <label className="text-xs font-semibold uppercase tracking-widest mb-2 block" style={{ color: 'rgba(255,255,255,0.4)' }}>Full name</label>
-              <input
-                type="text"
-                placeholder="John Doe"
-                value={form.name}
-                onChange={e => setForm({ ...form, name: e.target.value })}
-                required
-                className="w-full h-11 px-4 rounded-xl text-sm text-white outline-none transition-all"
-                style={inputBase}
-                onFocus={e => Object.assign(e.currentTarget.style, inputFocus)}
-                onBlur={e => Object.assign(e.currentTarget.style, inputBase)}
-              />
-            </div>
+          {/* Card */}
+          <div className="bg-white rounded-2xl p-6 space-y-4" style={{ border: '1px solid #f0f2f0', boxShadow: '0 4px 24px rgba(0,0,0,0.06)' }}>
+            <form onSubmit={handleSubmit} className="space-y-4">
 
-            {/* Email */}
-            <div>
-              <label className="text-xs font-semibold uppercase tracking-widest mb-2 block" style={{ color: 'rgba(255,255,255,0.4)' }}>Email</label>
-              <input
-                type="email"
-                placeholder="you@company.com"
-                value={form.email}
-                onChange={e => setForm({ ...form, email: e.target.value })}
-                required
-                className="w-full h-11 px-4 rounded-xl text-sm text-white outline-none transition-all"
-                style={inputBase}
-                onFocus={e => Object.assign(e.currentTarget.style, inputFocus)}
-                onBlur={e => Object.assign(e.currentTarget.style, inputBase)}
-              />
-            </div>
-
-            {/* Password */}
-            <div>
-              <label className="text-xs font-semibold uppercase tracking-widest mb-2 block" style={{ color: 'rgba(255,255,255,0.4)' }}>Password</label>
-              <div className="relative">
+              {/* Full Name */}
+              <div className="space-y-1.5">
+                <label className="text-xs font-bold uppercase tracking-widest" style={{ color: '#9ca3af' }}>Full name</label>
                 <input
-                  type={showPassword ? 'text' : 'password'}
-                  placeholder="Min. 6 characters"
-                  value={form.password}
-                  onChange={e => setForm({ ...form, password: e.target.value })}
+                  type="text"
+                  placeholder="John Doe"
+                  value={form.name}
+                  onChange={e => setForm({ ...form, name: e.target.value })}
                   required
-                  className="w-full h-11 px-4 pr-10 rounded-xl text-sm text-white outline-none transition-all"
-                  style={inputBase}
-                  onFocus={e => Object.assign(e.currentTarget.style, inputFocus)}
-                  onBlur={e => Object.assign(e.currentTarget.style, inputBase)}
+                  className="w-full h-11 px-4 rounded-xl text-sm outline-none transition-all"
+                  style={{ background: '#f9fafb', border: '1px solid #e5e7eb', color: '#111827' }}
+                  onFocus={e => Object.assign(e.currentTarget.style, focusStyle)}
+                  onBlur={e => Object.assign(e.currentTarget.style, blurStyle)}
                 />
-                <button type="button" onClick={() => setShowPassword(!showPassword)}
-                  className="absolute right-3 top-1/2 -translate-y-1/2" style={{ color: 'rgba(255,255,255,0.3)' }}>
-                  {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
-                </button>
               </div>
-            </div>
 
-            {/* Submit */}
-            <button
-              type="submit"
-              disabled={loading}
-              className="w-full h-11 rounded-xl font-semibold text-sm text-white flex items-center justify-center gap-2 mt-2 transition-all duration-200 hover:opacity-90 hover:scale-[1.01] disabled:opacity-60"
-              style={{ background: 'linear-gradient(135deg, #a28ef9 0%, #7c5cfc 100%)', boxShadow: '0 4px 24px rgba(124,92,252,0.4)' }}
-            >
-              {loading ? 'Creating account…' : (
-                <><span>Create free account</span><ArrowRight className="w-4 h-4" /></>
-              )}
-            </button>
-          </form>
+              {/* Email */}
+              <div className="space-y-1.5">
+                <label className="text-xs font-bold uppercase tracking-widest" style={{ color: '#9ca3af' }}>Email</label>
+                <input
+                  type="email"
+                  placeholder="you@company.com"
+                  value={form.email}
+                  onChange={e => setForm({ ...form, email: e.target.value })}
+                  required
+                  className="w-full h-11 px-4 rounded-xl text-sm outline-none transition-all"
+                  style={{ background: '#f9fafb', border: '1px solid #e5e7eb', color: '#111827' }}
+                  onFocus={e => Object.assign(e.currentTarget.style, focusStyle)}
+                  onBlur={e => Object.assign(e.currentTarget.style, blurStyle)}
+                />
+              </div>
 
-          {/* Divider */}
-          <div className="flex items-center gap-3 my-6">
-            <div className="flex-1 h-px" style={{ background: 'rgba(255,255,255,0.07)' }} />
-            <span className="text-xs" style={{ color: 'rgba(255,255,255,0.2)' }}>or</span>
-            <div className="flex-1 h-px" style={{ background: 'rgba(255,255,255,0.07)' }} />
+              {/* Password */}
+              <div className="space-y-1.5">
+                <label className="text-xs font-bold uppercase tracking-widest" style={{ color: '#9ca3af' }}>Password</label>
+                <div className="relative">
+                  <input
+                    type={showPassword ? 'text' : 'password'}
+                    placeholder="Min. 6 characters"
+                    value={form.password}
+                    onChange={e => setForm({ ...form, password: e.target.value })}
+                    required
+                    className="w-full h-11 px-4 pr-10 rounded-xl text-sm outline-none transition-all"
+                    style={{ background: '#f9fafb', border: '1px solid #e5e7eb', color: '#111827' }}
+                    onFocus={e => Object.assign(e.currentTarget.style, focusStyle)}
+                    onBlur={e => Object.assign(e.currentTarget.style, blurStyle)}
+                  />
+                  <button type="button" onClick={() => setShowPassword(!showPassword)}
+                    className="absolute right-3 top-1/2 -translate-y-1/2" style={{ color: '#9ca3af' }}>
+                    {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
+                  </button>
+                </div>
+              </div>
+
+              {/* Submit */}
+              <button
+                type="submit"
+                disabled={loading}
+                className="w-full h-11 rounded-xl font-bold text-sm text-white flex items-center justify-center gap-2 transition-all duration-200 hover:opacity-90 hover:scale-[1.01] disabled:opacity-60 mt-1"
+                style={{ background: 'linear-gradient(135deg, #a28ef9 0%, #7c5cfc 100%)', boxShadow: '0 4px 16px rgba(124,92,252,0.35)' }}
+              >
+                {loading ? 'Creating account…' : <><span>Create free account</span><ArrowRight className="w-4 h-4" /></>}
+              </button>
+            </form>
           </div>
 
-          <p className="text-center text-sm" style={{ color: 'rgba(255,255,255,0.35)' }}>
+          <p className="text-center text-sm mt-5" style={{ color: '#9ca3af' }}>
             Already have an account?{' '}
-            <Link href="/login" className="font-semibold hover:opacity-80 transition-opacity" style={{ color: '#a28ef9' }}>
+            <Link href="/login" className="font-bold hover:opacity-80 transition-opacity" style={{ color: '#a28ef9' }}>
               Sign in
             </Link>
           </p>
 
-          <p className="text-center text-xs mt-4" style={{ color: 'rgba(255,255,255,0.18)' }}>
-            By creating an account, you agree to our Terms & Privacy Policy.
+          <p className="text-center text-xs mt-3" style={{ color: '#d1d5db' }}>
+            By creating an account, you agree to our Terms &amp; Privacy Policy.
           </p>
         </div>
       </div>
