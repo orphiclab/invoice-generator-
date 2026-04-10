@@ -4,183 +4,189 @@ import { useState } from 'react'
 import { useRouter } from 'next/navigation'
 import Link from 'next/link'
 import { toast } from 'sonner'
-import { Eye, EyeOff, Zap, ArrowRight, FileText, CreditCard, Users } from 'lucide-react'
+import { Eye, EyeOff, Zap, ArrowLeft } from 'lucide-react'
 
+// ─── Purple / black colour palette ───────────────────────────────────────────
+const B  = '#09090b'   // near-black
+const P  = '#1e0a4a'   // very dark purple
+const M  = '#4c1d95'   // medium dark purple
+const Gm = '#6d28d9'   // mid purple
+const L  = '#7c5cfc'   // lavender
+const La = '#a28ef9'   // light lavender
+const W  = '#ffffff'   // white
+const G  = '#ddd6fe'   // ghost lavender
+
+type T = { bg: string; sh: string; c: string }
+const TILES: T[] = [
+  // Row 1
+  { bg: B,  sh: 'big-circ',  c: W  }, { bg: P,  sh: 'q-tr',     c: M  },
+  { bg: M,  sh: 'q-bl',     c: L  }, { bg: B,  sh: 'none',     c: B  },
+  { bg: B,  sh: 'none',     c: B  }, { bg: B,  sh: 'none',     c: B  },
+  { bg: B,  sh: 'none',     c: B  }, { bg: P,  sh: 'half-l',   c: B  },
+  // Row 2
+  { bg: B,  sh: 'dots',     c: W  }, { bg: P,  sh: 'diamond',  c: La },
+  { bg: B,  sh: 'ring',     c: Gm }, { bg: B,  sh: 'none',     c: B  },
+  { bg: M,  sh: 'diamond',  c: P  }, { bg: P,  sh: 'slash',    c: Gm },
+  { bg: B,  sh: 'none',     c: B  }, { bg: Gm, sh: 'slash',    c: M  },
+  // Row 3
+  { bg: B,  sh: 'none',     c: B  }, { bg: M,  sh: 'none',     c: M  },
+  { bg: P,  sh: 'half-r',   c: B  }, { bg: B,  sh: 'big-circ', c: P  },
+  { bg: P,  sh: 'none',     c: P  }, { bg: G,  sh: 'q-br',     c: La },
+  { bg: B,  sh: 'plus',     c: W  }, { bg: M,  sh: 'circ',     c: P  },
+  // Row 4
+  { bg: P,  sh: 'tri',      c: M  }, { bg: B,  sh: 'square',   c: P  },
+  { bg: B,  sh: 'none',     c: B  }, { bg: M,  sh: 'q-tl',     c: L  },
+  { bg: B,  sh: 'none',     c: B  }, { bg: B,  sh: 'none',     c: B  },
+  { bg: P,  sh: 'none',     c: P  }, { bg: L,  sh: 'ring',     c: B  },
+  // Row 5
+  { bg: B,  sh: 'square',   c: W  }, { bg: M,  sh: 'none',     c: M  },
+  { bg: P,  sh: 'big-circ', c: M  }, { bg: B,  sh: 'q-tr',     c: P  },
+  { bg: L,  sh: 'none',     c: L  }, { bg: M,  sh: 'diamond',  c: B  },
+  { bg: G,  sh: 'q-bl',     c: La }, { bg: P,  sh: 'diamond',  c: M  },
+  // Row 6
+  { bg: B,  sh: 'big-circ', c: M  }, { bg: P,  sh: 'square',   c: La },
+  { bg: M,  sh: 'slash',    c: B  }, { bg: M,  sh: 'diamond',  c: P  },
+  { bg: La, sh: 'dots',     c: B  }, { bg: W,  sh: 'q-br',     c: La },
+  { bg: B,  sh: 'none',     c: B  }, { bg: P,  sh: 'tri',      c: Gm },
+]
+
+function Shape({ t, c }: { t: string; c: string }) {
+  if (t === 'none') return null
+  return (
+    <svg viewBox="0 0 100 100" style={{ width: '100%', height: '100%', display: 'block', overflow: 'visible' }}>
+      {t === 'big-circ'  && <circle cx="50" cy="50" r="50" fill={c} />}
+      {t === 'circ'      && <circle cx="50" cy="50" r="36" fill={c} />}
+      {t === 'ring'      && <circle cx="50" cy="50" r="34" fill="none" stroke={c} strokeWidth="12" />}
+      {t === 'half-t'    && <path d="M 0 50 A 50 50 0 0 1 100 50 Z" fill={c} />}
+      {t === 'half-b'    && <path d="M 0 50 A 50 50 0 0 0 100 50 Z" fill={c} />}
+      {t === 'half-l'    && <path d="M 50 0 A 50 50 0 0 0 50 100 Z" fill={c} />}
+      {t === 'half-r'    && <path d="M 50 0 A 50 50 0 0 1 50 100 Z" fill={c} />}
+      {t === 'q-tl'      && <circle cx="0"   cy="0"   r="100" fill={c} />}
+      {t === 'q-tr'      && <circle cx="100" cy="0"   r="100" fill={c} />}
+      {t === 'q-bl'      && <circle cx="0"   cy="100" r="100" fill={c} />}
+      {t === 'q-br'      && <circle cx="100" cy="100" r="100" fill={c} />}
+      {t === 'diamond'   && <polygon points="50,10 90,50 50,90 10,50" fill={c} />}
+      {t === 'slash'     && <polygon points="55,0 100,0 45,100 0,100" fill={c} />}
+      {t === 'square'    && <rect x="22" y="22" width="56" height="56" fill={c} />}
+      {t === 'tri'       && <polygon points="0,100 100,0 100,100" fill={c} />}
+      {t === 'dots'      && [22,50,78].flatMap(x => [22,50,78].map(y =>
+          <circle key={`${x}-${y}`} cx={x} cy={y} r="8" fill={c} />
+      ))}
+      {t === 'plus'      && <>
+        <line x1="28" y1="72" x2="72" y2="28" stroke={c} strokeWidth="9" strokeLinecap="round" />
+        <line x1="52" y1="28" x2="72" y2="28" stroke={c} strokeWidth="9" strokeLinecap="round" />
+        <line x1="72" y1="28" x2="72" y2="48" stroke={c} strokeWidth="9" strokeLinecap="round" />
+      </>}
+    </svg>
+  )
+}
+
+function GeometricGrid() {
+  return (
+    <div style={{ display: 'grid', gridTemplateColumns: 'repeat(8, 1fr)', width: '100%', height: '100%' }}>
+      {TILES.map((tile, i) => (
+        <div key={i} style={{ background: tile.bg, aspectRatio: '1', overflow: 'hidden' }}>
+          <Shape t={tile.sh} c={tile.c} />
+        </div>
+      ))}
+    </div>
+  )
+}
+
+// ─── Login page ───────────────────────────────────────────────────────────────
 export default function LoginPage() {
   const router = useRouter()
   const [loading, setLoading] = useState(false)
-  const [showPassword, setShowPassword] = useState(false)
-  const [form, setForm] = useState({ email: '', password: '' })
+  const [showPw, setShowPw]   = useState(false)
+  const [form, setForm]       = useState({ email: '', password: '' })
 
   async function handleSubmit(e: React.FormEvent) {
-    e.preventDefault()
-    setLoading(true)
+    e.preventDefault(); setLoading(true)
     try {
-      const res = await fetch('/api/auth/login', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+      const res  = await fetch('/api/auth/login', {
+        method: 'POST', headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(form),
       })
       const data = await res.json()
-      if (!res.ok) {
-        toast.error(data.error || 'Login failed')
-      } else {
-        toast.success('Welcome back!')
-        router.push('/dashboard')
-        router.refresh()
-      }
-    } catch {
-      toast.error('Something went wrong')
-    } finally {
-      setLoading(false)
-    }
+      if (!res.ok) toast.error(data.error || 'Login failed')
+      else { toast.success('Welcome back!'); router.push('/dashboard'); router.refresh() }
+    } catch { toast.error('Something went wrong') }
+    finally  { setLoading(false) }
+  }
+
+  const inp: React.CSSProperties = {
+    width: '100%', height: '42px', padding: '0 12px',
+    border: '1px solid #e5e7eb', borderRadius: '6px',
+    fontSize: '14px', color: '#111827', outline: 'none',
+    background: '#fff', display: 'block',
   }
 
   return (
-    <div className="min-h-screen flex" style={{ fontFamily: 'var(--font-fustat, sans-serif)', background: '#edf0ed' }}>
+    <div style={{ display: 'flex', minHeight: '100vh', fontFamily: 'var(--font-fustat, system-ui, sans-serif)' }}>
 
-      {/* ── Left panel: lavender gradient with geometry ── */}
-      <div className="hidden lg:flex lg:w-[45%] relative overflow-hidden flex-col justify-between p-12"
-        style={{ background: 'linear-gradient(145deg, #a28ef9 0%, #7c5cfc 55%, #6444e8 100%)' }}>
+      {/* ── Left: pure white form ── */}
+      <div style={{ flex: '0 0 38%', minWidth: 340, background: '#fff', display: 'flex', flexDirection: 'column', padding: '24px 32px' }}>
+        {/* Back link */}
+        <Link href="/" style={{ display: 'inline-flex', alignItems: 'center', gap: 6, fontSize: 13, color: '#6b7280', textDecoration: 'none', marginBottom: 'auto' }}>
+          <ArrowLeft size={14} /> Back to home
+        </Link>
 
-        {/* Dot grid */}
-        <div className="absolute inset-0" style={{
-          backgroundImage: 'radial-gradient(circle, rgba(255,255,255,0.18) 1.5px, transparent 1.5px)',
-          backgroundSize: '28px 28px',
-        }} />
-
-        {/* Concentric rings */}
-        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 pointer-events-none">
-          <div className="w-[480px] h-[480px] rounded-full border border-white/10 absolute -translate-x-1/2 -translate-y-1/2" />
-          <div className="w-[360px] h-[360px] rounded-full border border-white/15 absolute -translate-x-1/2 -translate-y-1/2" />
-          <div className="w-[240px] h-[240px] rounded-full border border-white/20 absolute -translate-x-1/2 -translate-y-1/2" />
-          {/* Glow orb */}
-          <div className="w-[120px] h-[120px] rounded-full absolute -translate-x-1/2 -translate-y-1/2"
-            style={{ background: 'rgba(255,255,255,0.15)', filter: 'blur(16px)' }} />
-          {/* Center icon */}
-          <div className="w-16 h-16 rounded-2xl absolute -translate-x-1/2 -translate-y-1/2 flex items-center justify-center"
-            style={{ background: 'rgba(255,255,255,0.25)', backdropFilter: 'blur(8px)' }}>
-            <Zap className="w-7 h-7 text-white" />
+        {/* Form body */}
+        <div style={{ flex: 1, display: 'flex', flexDirection: 'column', justifyContent: 'center', maxWidth: 300, width: '100%', margin: '0 auto', paddingBottom: 48 }}>
+          {/* Icon */}
+          <div style={{ width: 36, height: 36, border: '1.5px solid #111827', borderRadius: 8, display: 'flex', alignItems: 'center', justifyContent: 'center', marginBottom: 20 }}>
+            <Zap size={16} color="#111827" />
           </div>
-        </div>
 
-        {/* Floating shapes */}
-        <div className="absolute top-16 right-16 w-14 h-14 rounded-2xl rotate-12 border border-white/20" style={{ background: 'rgba(255,255,255,0.08)' }} />
-        <div className="absolute top-32 right-36 w-7 h-7 rounded-md rotate-45 border border-white/25" style={{ background: 'rgba(255,255,255,0.1)' }} />
-        <div className="absolute bottom-28 left-16 w-18 h-18 rounded-2xl -rotate-6 border border-white/20" style={{ background: 'rgba(255,255,255,0.06)' }} />
-        <div className="absolute bottom-44 right-20 w-10 h-10 rounded-xl rotate-12 border border-white/20" style={{ background: 'rgba(255,255,255,0.08)' }} />
-        <div className="absolute top-2/5 left-12 w-4 h-4 rounded-full bg-white/25" />
-        <div className="absolute bottom-1/3 right-1/3 w-3 h-3 rounded-full bg-white/30" />
+          <h1 style={{ fontSize: 22, fontWeight: 800, color: '#111827', margin: '0 0 6px' }}>Sign in to your account</h1>
+          <p style={{ fontSize: 13, color: '#9ca3af', margin: '0 0 28px' }}>Please continue to sign in to your business account</p>
 
-        {/* Logo */}
-        <div className="relative z-10 flex items-center gap-2.5">
-          <div className="w-8 h-8 rounded-xl flex items-center justify-center" style={{ background: 'rgba(255,255,255,0.25)' }}>
-            <Zap className="w-4 h-4 text-white" />
+          <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
+            <input
+              type="email" placeholder="Enter  your email" value={form.email} required
+              onChange={e => setForm({ ...form, email: e.target.value })}
+              style={inp}
+              onFocus={e => { e.currentTarget.style.border = '1px solid #a28ef9'; e.currentTarget.style.boxShadow = '0 0 0 3px rgba(162,142,249,.15)' }}
+              onBlur={e  => { e.currentTarget.style.border = '1px solid #e5e7eb'; e.currentTarget.style.boxShadow = 'none' }}
+            />
+
+            <div style={{ position: 'relative' }}>
+              <input
+                type={showPw ? 'text' : 'password'} placeholder="Password" value={form.password} required
+                onChange={e => setForm({ ...form, password: e.target.value })}
+                style={{ ...inp, paddingRight: 36 }}
+                onFocus={e => { e.currentTarget.style.border = '1px solid #a28ef9'; e.currentTarget.style.boxShadow = '0 0 0 3px rgba(162,142,249,.15)' }}
+                onBlur={e  => { e.currentTarget.style.border = '1px solid #e5e7eb'; e.currentTarget.style.boxShadow = 'none' }}
+              />
+              <button type="button" onClick={() => setShowPw(!showPw)}
+                style={{ position: 'absolute', right: 10, top: '50%', transform: 'translateY(-50%)', background: 'none', border: 'none', cursor: 'pointer', color: '#9ca3af', padding: 0, display: 'flex' }}>
+                {showPw ? <EyeOff size={15} /> : <Eye size={15} />}
+              </button>
+            </div>
+
+            <button type="submit" disabled={loading}
+              style={{ width: '100%', height: 42, borderRadius: 6, border: 'none', background: '#111827', color: '#fff', fontSize: 14, fontWeight: 700, cursor: 'pointer', marginTop: 4, opacity: loading ? 0.7 : 1, transition: 'opacity .2s' }}>
+              {loading ? 'Signing in…' : 'Continue'}
+            </button>
+          </form>
+
+          {/* OR */}
+          <div style={{ display: 'flex', alignItems: 'center', gap: 10, margin: '20px 0' }}>
+            <div style={{ flex: 1, height: 1, background: '#f3f4f6' }} />
+            <span style={{ fontSize: 11, color: '#9ca3af', fontWeight: 600, letterSpacing: 1 }}>OR</span>
+            <div style={{ flex: 1, height: 1, background: '#f3f4f6' }} />
           </div>
-          <span className="text-white font-extrabold text-xl tracking-tight">InvoiceFlow</span>
-        </div>
 
-        {/* Bottom copy */}
-        <div className="relative z-10">
-          <p className="text-3xl font-extrabold text-white leading-snug mb-2">
-            Professional<br />invoicing made<br />
-            <span style={{ color: 'rgba(255,255,255,0.65)' }}>simple.</span>
+          <p style={{ fontSize: 13, color: '#6b7280', textAlign: 'center', margin: 0 }}>
+            Don&apos;t have an account?{' '}
+            <Link href="/register" style={{ color: '#a28ef9', fontWeight: 700, textDecoration: 'none' }}>Create one free</Link>
           </p>
-          <div className="flex flex-col gap-3 mt-6">
-            {[
-              { icon: FileText, text: 'Create & send invoices in 60 seconds' },
-              { icon: CreditCard, text: 'Track payments & expenses effortlessly' },
-              { icon: Users, text: 'Manage clients from one place' },
-            ].map(({ icon: Icon, text }) => (
-              <div key={text} className="flex items-center gap-3">
-                <div className="w-7 h-7 rounded-lg flex items-center justify-center flex-shrink-0"
-                  style={{ background: 'rgba(255,255,255,0.2)' }}>
-                  <Icon className="w-3.5 h-3.5 text-white" />
-                </div>
-                <span className="text-sm font-medium" style={{ color: 'rgba(255,255,255,0.8)' }}>{text}</span>
-              </div>
-            ))}
-          </div>
         </div>
       </div>
 
-      {/* ── Right panel: form ── */}
-      <div className="flex-1 flex items-center justify-center p-8 lg:p-16" style={{ background: '#edf0ed' }}>
-        <div className="w-full max-w-sm">
-
-          {/* Mobile logo */}
-          <div className="flex items-center gap-2 mb-10 lg:hidden">
-            <div className="w-9 h-9 rounded-xl flex items-center justify-center"
-              style={{ background: 'linear-gradient(135deg, #a28ef9, #7c5cfc)' }}>
-              <Zap className="w-4 h-4 text-white" />
-            </div>
-            <span className="font-extrabold text-xl tracking-tight" style={{ color: '#111827' }}>InvoiceFlow</span>
-          </div>
-
-          <h1 className="text-3xl font-extrabold mb-1" style={{ color: '#111827' }}>Welcome back</h1>
-          <p className="text-sm mb-8" style={{ color: '#9ca3af' }}>Sign in to continue to InvoiceFlow</p>
-
-          {/* Card */}
-          <div className="bg-white rounded-2xl p-6 space-y-4" style={{ border: '1px solid #f0f2f0', boxShadow: '0 4px 24px rgba(0,0,0,0.06)' }}>
-            <form onSubmit={handleSubmit} className="space-y-4">
-
-              {/* Email */}
-              <div className="space-y-1.5">
-                <label className="text-xs font-bold uppercase tracking-widest" style={{ color: '#9ca3af' }}>Email</label>
-                <input
-                  type="email"
-                  placeholder="you@company.com"
-                  value={form.email}
-                  onChange={e => setForm({ ...form, email: e.target.value })}
-                  required
-                  className="w-full h-11 px-4 rounded-xl text-sm outline-none transition-all"
-                  style={{ background: '#f9fafb', border: '1px solid #e5e7eb', color: '#111827' }}
-                  onFocus={e => { e.currentTarget.style.border = '1px solid #a28ef9'; e.currentTarget.style.boxShadow = '0 0 0 3px rgba(162,142,249,0.12)' }}
-                  onBlur={e => { e.currentTarget.style.border = '1px solid #e5e7eb'; e.currentTarget.style.boxShadow = 'none' }}
-                />
-              </div>
-
-              {/* Password */}
-              <div className="space-y-1.5">
-                <label className="text-xs font-bold uppercase tracking-widest" style={{ color: '#9ca3af' }}>Password</label>
-                <div className="relative">
-                  <input
-                    type={showPassword ? 'text' : 'password'}
-                    placeholder="••••••••"
-                    value={form.password}
-                    onChange={e => setForm({ ...form, password: e.target.value })}
-                    required
-                    className="w-full h-11 px-4 pr-10 rounded-xl text-sm outline-none transition-all"
-                    style={{ background: '#f9fafb', border: '1px solid #e5e7eb', color: '#111827' }}
-                    onFocus={e => { e.currentTarget.style.border = '1px solid #a28ef9'; e.currentTarget.style.boxShadow = '0 0 0 3px rgba(162,142,249,0.12)' }}
-                    onBlur={e => { e.currentTarget.style.border = '1px solid #e5e7eb'; e.currentTarget.style.boxShadow = 'none' }}
-                  />
-                  <button type="button" onClick={() => setShowPassword(!showPassword)}
-                    className="absolute right-3 top-1/2 -translate-y-1/2" style={{ color: '#9ca3af' }}>
-                    {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
-                  </button>
-                </div>
-              </div>
-
-              {/* Submit */}
-              <button
-                type="submit"
-                disabled={loading}
-                className="w-full h-11 rounded-xl font-bold text-sm text-white flex items-center justify-center gap-2 transition-all duration-200 hover:opacity-90 hover:scale-[1.01] disabled:opacity-60 mt-1"
-                style={{ background: 'linear-gradient(135deg, #a28ef9 0%, #7c5cfc 100%)', boxShadow: '0 4px 16px rgba(124,92,252,0.35)' }}
-              >
-                {loading ? 'Signing in…' : <><span>Sign in</span><ArrowRight className="w-4 h-4" /></>}
-              </button>
-            </form>
-          </div>
-
-          <p className="text-center text-sm mt-5" style={{ color: '#9ca3af' }}>
-            Don&apos;t have an account?{' '}
-            <Link href="/register" className="font-bold hover:opacity-80 transition-opacity" style={{ color: '#a28ef9' }}>
-              Create one free
-            </Link>
-          </p>
-        </div>
+      {/* ── Right: geometric mosaic ── */}
+      <div style={{ flex: 1, overflow: 'hidden' }}>
+        <GeometricGrid />
       </div>
     </div>
   )
