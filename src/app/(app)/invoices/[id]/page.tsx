@@ -195,10 +195,10 @@ export default function InvoiceDetailPage() {
 
   if (loading) return (
     <div className="flex items-center justify-center h-full min-h-[60vh]">
-      <div className="w-7 h-7 rounded-full border-2 animate-spin" style={{ borderColor: '#7B61FF', borderTopColor: 'transparent' }} />
+      <div className="w-7 h-7 rounded-full border-2 animate-spin" style={{ borderColor: '#a28ef9', borderTopColor: 'transparent' }} />
     </div>
   )
-  if (!invoice) return <div className="p-8 text-center" style={{ color: 'rgba(255,255,255,0.4)' }}>Invoice not found</div>
+  if (!invoice) return <div className="p-8 text-center" style={{ color: '#6b7280' }}>Invoice not found</div>
 
   const taxAmt = (invoice.subtotal * invoice.tax) / 100
   const discountAmt = (invoice.subtotal * invoice.discount) / 100
@@ -218,7 +218,7 @@ export default function InvoiceDetailPage() {
             <h1 className="text-xl font-bold font-mono" style={{ color: '#1E293B' }}>{invoice.invoiceNo}</h1>
             <StatusBadge status={invoice.status} />
           </div>
-          <p className="text-xs mt-0.5" style={{ color: '#94A3B8' }}>
+          <p className="text-xs mt-0.5" style={{ color: '#6b7280' }}>
             <Clock className="w-3 h-3 inline mr-1" />Due {new Date(invoice.dueDate).toLocaleDateString('en-IN', { day: 'numeric', month: 'long', year: 'numeric' })}
           </p>
         </div>
@@ -226,20 +226,20 @@ export default function InvoiceDetailPage() {
         <div className="flex items-center gap-2">
           <div className="w-36">
             <Select value={invoice.status} onValueChange={updateStatus} disabled={updatingStatus}>
-              <SelectTrigger className="h-8 text-xs text-white" style={{ background: '#16191F', borderColor: 'rgba(255,255,255,0.1)' }}>
+              <SelectTrigger className="text-gray-900" style={{ background: '#ffffff', borderColor: '#e5e7eb' }}>
                 <SelectValue />
               </SelectTrigger>
-              <SelectContent style={{ background: '#16191F', borderColor: 'rgba(255,255,255,0.1)' }}>
+              <SelectContent style={{ background: '#ffffff', borderColor: '#e5e7eb' }}>
                 {['DRAFT', 'SENT', 'PAID', 'OVERDUE'].map((s) => (
                   <SelectItem key={s} value={s} className="text-xs">{s.charAt(0) + s.slice(1).toLowerCase()}</SelectItem>
                 ))}
               </SelectContent>
             </Select>
           </div>
-          <button onClick={shareWhatsApp} title="Send via WhatsApp" className="p-2 rounded-xl hover:bg-green-500/10 transition-colors" style={{ color: 'hsl(142 76% 46%)' }}>
+          <button onClick={shareWhatsApp} title="Send via WhatsApp" className="p-2 rounded-xl hover:bg-green-500/10 transition-colors" style={{ color: '#16a34a' }}>
             <MessageCircle className="w-4 h-4" />
           </button>
-          <button onClick={copyShareLink} title="Copy share link" className="p-2 rounded-xl hover:bg-white/5 transition-colors" style={{ color: 'rgba(255,255,255,0.4)' }}>
+          <button onClick={copyShareLink} title="Copy share link" className="p-2 rounded-xl hover:bg-gray-50 transition-colors" style={{ color: '#6b7280' }}>
             <Share2 className="w-4 h-4" />
           </button>
           {/* Preview button */}
@@ -252,24 +252,24 @@ export default function InvoiceDetailPage() {
           <div className="relative">
             <div className="flex items-center rounded-xl overflow-hidden" style={{ border: '1px solid rgba(123,97,255,0.4)' }}>
               <button onClick={downloadPDF} title="Download PDF"
-                className="flex items-center gap-1.5 px-3 py-1.5 text-xs font-semibold transition-all hover:bg-white/5"
-                style={{ color: '#7B61FF' }}>
+                className="flex items-center gap-1.5 px-3 py-1.5 text-xs font-semibold transition-all hover:bg-gray-50"
+                style={{ color: '#a28ef9' }}>
                 <Download className="w-3.5 h-3.5" />
                 {pdfTemplate === 'green' ? 'Green' : 'Classic'}
               </button>
               <button onClick={() => setShowTemplateMenu(p => !p)}
-                className="px-1.5 py-1.5 border-l hover:bg-white/5 transition-all"
-                style={{ borderColor: 'rgba(123,97,255,0.4)', color: '#7B61FF' }}>
+                className="px-1.5 py-1.5 border-l hover:bg-gray-50 transition-all"
+                style={{ borderColor: 'rgba(123,97,255,0.4)', color: '#a28ef9' }}>
                 <ChevronDown className="w-3 h-3" />
               </button>
             </div>
             {showTemplateMenu && (
-              <div className="absolute right-0 top-9 z-50 rounded-xl overflow-hidden shadow-2xl" style={{ background: '#1E2028', border: '1px solid rgba(255,255,255,0.1)', minWidth: 160 }}>
-                <p className="text-[10px] font-bold px-3 pt-2.5 pb-1" style={{ color: 'rgba(255,255,255,0.35)' }}>Choose Template</p>
+              <div className="absolute right-0 top-9 z-50 rounded-xl overflow-hidden shadow-2xl" style={{ background: '#ffffff', border: '1px solid #e5e7eb', minWidth: 160 }}>
+                <p className="text-[10px] font-bold px-3 pt-2.5 pb-1" style={{ color: '#9ca3af' }}>Choose Template</p>
                 {[{ id: 'green', label: '🌿 Green Modern' }, { id: 'classic', label: '🌌 Classic Dark' }].map(t => (
                   <button key={t.id} onClick={() => { setPdfTemplate(t.id as 'green' | 'classic'); setShowTemplateMenu(false); downloadPDF() }}
-                    className="w-full text-left px-3 py-2.5 text-xs hover:bg-white/5 transition-all flex items-center justify-between"
-                    style={{ color: pdfTemplate === t.id ? '#7B61FF' : 'rgba(255,255,255,0.7)' }}>
+                    className="w-full text-left px-3 py-2.5 text-xs hover:bg-gray-50 transition-all flex items-center justify-between"
+                    style={{ color: pdfTemplate === t.id ? '#a28ef9' : '#374151' }}>
                     {t.label}
                     {pdfTemplate === t.id && <Check className="w-3 h-3" />}
                   </button>
@@ -278,14 +278,14 @@ export default function InvoiceDetailPage() {
             )}
           </div>
           <button onClick={() => { setEmailForm(f => ({ ...f, to: invoice.client.email, subject: `Invoice ${invoice.invoiceNo}` })); setEmailModal(true) }}
-            title="Send email" className="p-2 rounded-xl hover:bg-blue-500/10 transition-colors" style={{ color: '#60A5FA' }}>
+            title="Send email" className="p-2 rounded-xl hover:bg-blue-500/10 transition-colors" style={{ color: '#3b82f6' }}>
             <Mail className="w-4 h-4" />
           </button>
-          <button onClick={duplicateInvoice} disabled={duplicating} title="Duplicate invoice" className="p-2 rounded-xl hover:bg-white/5 transition-colors" style={{ color: 'rgba(255,255,255,0.4)' }}>
+          <button onClick={duplicateInvoice} disabled={duplicating} title="Duplicate invoice" className="p-2 rounded-xl hover:bg-gray-50 transition-colors" style={{ color: '#6b7280' }}>
             <Copy className="w-4 h-4" />
           </button>
           <Link href={`/invoices/${id}/edit`}>
-            <button className="p-2 rounded-xl hover:bg-white/5 transition-colors" style={{ color: 'rgba(255,255,255,0.4)' }}><Edit2 className="w-4 h-4" /></button>
+            <button className="p-2 rounded-xl hover:bg-gray-50 transition-colors" style={{ color: '#6b7280' }}><Edit2 className="w-4 h-4" /></button>
           </Link>
         </div>
       </div>
@@ -296,27 +296,27 @@ export default function InvoiceDetailPage() {
         <div className="px-10 py-8 flex items-center justify-between" style={{ background: 'linear-gradient(135deg, #1a2744 0%, #0f172a 100%)' }}>
           <div>
             <div className="flex items-center gap-3 mb-3">
-              <div className="w-10 h-10 rounded-xl flex items-center justify-center flex-shrink-0" style={{ background: 'linear-gradient(135deg, #7B61FF, #60A5FA)' }}>
-                <Building2 className="w-5 h-5 text-white" />
+              <div className="w-10 h-10 rounded-xl flex items-center justify-center flex-shrink-0" style={{ background: 'linear-gradient(135deg, #a28ef9, #60A5FA)' }}>
+                <Building2 className="text-gray-900" />
               </div>
               <div>
-                <p className="font-bold text-white text-lg leading-tight">{invoice.user.company || invoice.user.name}</p>
-                {invoice.user.company && <p className="text-xs" style={{ color: 'rgba(255,255,255,0.45)' }}>{invoice.user.name}</p>}
+                <p className="text-gray-900">{invoice.user.company || invoice.user.name}</p>
+                {invoice.user.company && <p className="text-xs" style={{ color: '#6b7280' }}>{invoice.user.name}</p>}
               </div>
             </div>
             <div className="flex flex-col gap-1">
               {invoice.user.email && (
-                <p className="text-xs flex items-center gap-1.5" style={{ color: 'rgba(255,255,255,0.4)' }}>
+                <p className="text-xs flex items-center gap-1.5" style={{ color: '#6b7280' }}>
                   <Mail className="w-3 h-3" />{invoice.user.email}
                 </p>
               )}
               {invoice.user.phone && (
-                <p className="text-xs flex items-center gap-1.5" style={{ color: 'rgba(255,255,255,0.4)' }}>
+                <p className="text-xs flex items-center gap-1.5" style={{ color: '#6b7280' }}>
                   <Phone className="w-3 h-3" />{invoice.user.phone}
                 </p>
               )}
               {invoice.user.address && (
-                <p className="text-xs flex items-center gap-1.5" style={{ color: 'rgba(255,255,255,0.4)' }}>
+                <p className="text-xs flex items-center gap-1.5" style={{ color: '#6b7280' }}>
                   <MapPin className="w-3 h-3" />{invoice.user.address}
                 </p>
               )}
@@ -324,7 +324,7 @@ export default function InvoiceDetailPage() {
           </div>
           <div className="text-right">
             <p className="text-xs font-bold uppercase tracking-[0.25em] mb-1" style={{ color: '#9B8AFF' }}>Invoice</p>
-            <p className="text-3xl font-bold text-white font-mono tracking-tight">{invoice.invoiceNo}</p>
+            <p className="text-gray-900">{invoice.invoiceNo}</p>
             <div className="mt-3 flex justify-end">
               <StatusBadge status={invoice.status} />
             </div>
@@ -430,8 +430,8 @@ export default function InvoiceDetailPage() {
         {/* Paid stamp */}
         {invoice.status === 'PAID' && (
           <div className="mx-10 mb-8 flex items-center justify-center gap-2 py-3 rounded-xl" style={{ background: 'rgba(34,197,94,0.08)', border: '2px solid rgba(34,197,94,0.3)' }}>
-            <Check className="w-5 h-5" style={{ color: 'hsl(142 76% 46%)' }} />
-            <span className="font-bold text-lg tracking-widest uppercase" style={{ color: 'hsl(142 76% 46%)' }}>Paid</span>
+            <Check className="w-5 h-5" style={{ color: '#16a34a' }} />
+            <span className="font-bold text-lg tracking-widest uppercase" style={{ color: '#16a34a' }}>Paid</span>
           </div>
         )}
       </div>
@@ -440,10 +440,10 @@ export default function InvoiceDetailPage() {
       <div className="mt-6 grid grid-cols-1 lg:grid-cols-3 gap-4">
 
         {/* Payment History */}
-        <div className="lg:col-span-2 rounded-2xl p-5" style={{ background: '#16191F', border: '1px solid rgba(255,255,255,0.07)' }}>
+        <div className="lg:col-span-2 rounded-2xl p-5" style={{ background: '#ffffff', border: '1px solid rgba(0,0,0,0.06)' }}>
           <div className="flex items-center justify-between mb-4">
-            <h3 className="text-sm font-bold text-white flex items-center gap-2">
-              <CreditCard className="w-4 h-4" style={{ color: '#7B61FF' }} /> Payment History
+            <h3 className="text-gray-900">
+              <CreditCard className="w-4 h-4" style={{ color: '#a28ef9' }} /> Payment History
             </h3>
             {invoice.status !== 'PAID' && (
               <button onClick={() => setPaymentModal(true)}
@@ -456,7 +456,7 @@ export default function InvoiceDetailPage() {
           {/* Balance bar */}
           {invoice.total > 0 && (
             <div className="mb-4">
-              <div className="flex justify-between text-xs mb-1.5" style={{ color: 'rgba(255,255,255,0.4)' }}>
+              <div className="flex justify-between text-xs mb-1.5" style={{ color: '#6b7280' }}>
                 <span>Rs {amountPaid.toLocaleString('en-LK', { maximumFractionDigits: 0 })} paid</span>
                 <span>Rs {(invoice.total - amountPaid).toLocaleString('en-LK', { maximumFractionDigits: 0 })} remaining</span>
               </div>
@@ -468,23 +468,23 @@ export default function InvoiceDetailPage() {
           )}
 
           {payments.length === 0 ? (
-            <p className="text-xs text-center py-6" style={{ color: 'rgba(255,255,255,0.25)' }}>No payments recorded yet</p>
+            <p className="text-xs text-center py-6" style={{ color: '#9ca3af' }}>No payments recorded yet</p>
           ) : (
             <div className="space-y-2">
               {payments.map(p => (
-                <div key={p.id} className="flex items-center justify-between px-3 py-2.5 rounded-xl" style={{ background: 'rgba(255,255,255,0.04)' }}>
+                <div key={p.id} className="flex items-center justify-between px-3 py-2.5 rounded-xl" style={{ background: '#f9fafb' }}>
                   <div className="flex items-center gap-3">
                     <div className="w-7 h-7 rounded-lg flex items-center justify-center" style={{ background: 'rgba(16,185,129,0.15)' }}>
                       <Check className="w-3.5 h-3.5" style={{ color: '#10B981' }} />
                     </div>
                     <div>
-                      <p className="text-xs font-semibold text-white capitalize">{p.method.replace('_', ' ')} {p.paymentType === 'partial' ? '(Partial)' : ''}</p>
-                      {p.note && <p className="text-[10px]" style={{ color: 'rgba(255,255,255,0.35)' }}>{p.note}</p>}
+                      <p className="text-gray-900">{p.method.replace('_', ' ')} {p.paymentType === 'partial' ? '(Partial)' : ''}</p>
+                      {p.note && <p className="text-[10px]" style={{ color: '#9ca3af' }}>{p.note}</p>}
                     </div>
                   </div>
                   <div className="text-right">
                     <p className="text-sm font-bold" style={{ color: '#10B981' }}>Rs {p.amount.toLocaleString('en-LK', { maximumFractionDigits: 2 })}</p>
-                    <p className="text-[10px]" style={{ color: 'rgba(255,255,255,0.3)' }}>{new Date(p.paidAt ?? p.createdAt).toLocaleDateString('en-LK')}</p>
+                    <p className="text-[10px]" style={{ color: '#9ca3af' }}>{new Date(p.paidAt ?? p.createdAt).toLocaleDateString('en-LK')}</p>
                   </div>
                 </div>
               ))}
@@ -496,12 +496,12 @@ export default function InvoiceDetailPage() {
         <div className="space-y-4">
 
           {/* Payment Reminder */}
-          <div className="rounded-2xl p-4" style={{ background: '#16191F', border: '1px solid rgba(255,255,255,0.07)' }}>
-            <h3 className="text-xs font-bold text-white flex items-center gap-2 mb-3">
+          <div className="rounded-2xl p-4" style={{ background: '#ffffff', border: '1px solid rgba(0,0,0,0.06)' }}>
+            <h3 className="text-gray-900">
               <Bell className="w-3.5 h-3.5" style={{ color: '#F59E0B' }} /> Payment Reminder
             </h3>
             {invoice.remindersSent > 0 && (
-              <p className="text-[10px] mb-2" style={{ color: 'rgba(255,255,255,0.35)' }}>
+              <p className="text-[10px] mb-2" style={{ color: '#9ca3af' }}>
                 {invoice.remindersSent} reminder{invoice.remindersSent > 1 ? 's' : ''} sent
                 {invoice.lastReminderAt ? ` · Last: ${new Date(invoice.lastReminderAt).toLocaleDateString('en-LK')}` : ''}
               </p>
@@ -515,8 +515,8 @@ export default function InvoiceDetailPage() {
           </div>
 
           {/* Late Fee */}
-          <div className="rounded-2xl p-4" style={{ background: '#16191F', border: '1px solid rgba(255,255,255,0.07)' }}>
-            <h3 className="text-xs font-bold text-white flex items-center gap-2 mb-3">
+          <div className="rounded-2xl p-4" style={{ background: '#ffffff', border: '1px solid rgba(0,0,0,0.06)' }}>
+            <h3 className="text-gray-900">
               <AlertTriangle className="w-3.5 h-3.5" style={{ color: '#EF4444' }} /> Late Fee
             </h3>
             {invoice.lateFeeApplied ? (
@@ -530,10 +530,10 @@ export default function InvoiceDetailPage() {
                     type="number" min="0" max="100" step="0.5"
                     value={lateFeeRate}
                     onChange={e => setLateFeeRate(e.target.value)}
-                    className="h-7 text-xs text-white w-20"
-                    style={{ background: 'rgba(255,255,255,0.05)', borderColor: 'rgba(255,255,255,0.1)' }}
+                    className="text-gray-900"
+                    style={{ background: '#f9fafb', borderColor: '#e5e7eb' }}
                   />
-                  <span className="text-xs" style={{ color: 'rgba(255,255,255,0.4)' }}>% / month</span>
+                  <span className="text-xs" style={{ color: '#6b7280' }}>% / month</span>
                 </div>
                 <button onClick={applyLateFee} disabled={applyingLateFee || invoice.status === 'PAID' || invoice.lateFeeApplied}
                   className="w-full flex items-center justify-center gap-2 py-2 rounded-xl text-xs font-semibold transition-all disabled:opacity-40"
@@ -546,21 +546,21 @@ export default function InvoiceDetailPage() {
           </div>
 
           {/* Quick Stats */}
-          <div className="rounded-2xl p-4" style={{ background: '#16191F', border: '1px solid rgba(255,255,255,0.07)' }}>
-            <h3 className="text-xs font-bold text-white flex items-center gap-2 mb-3">
-              <DollarSign className="w-3.5 h-3.5" style={{ color: '#7B61FF' }} /> Summary
+          <div className="rounded-2xl p-4" style={{ background: '#ffffff', border: '1px solid rgba(0,0,0,0.06)' }}>
+            <h3 className="text-gray-900">
+              <DollarSign className="w-3.5 h-3.5" style={{ color: '#a28ef9' }} /> Summary
             </h3>
             <div className="space-y-2 text-xs">
               <div className="flex justify-between">
-                <span style={{ color: 'rgba(255,255,255,0.4)' }}>Invoice Total</span>
-                <span className="font-semibold text-white">Rs {invoice.total.toLocaleString('en-LK', { maximumFractionDigits: 0 })}</span>
+                <span style={{ color: '#6b7280' }}>Invoice Total</span>
+                <span className="text-gray-900">Rs {invoice.total.toLocaleString('en-LK', { maximumFractionDigits: 0 })}</span>
               </div>
               <div className="flex justify-between">
-                <span style={{ color: 'rgba(255,255,255,0.4)' }}>Paid</span>
+                <span style={{ color: '#6b7280' }}>Paid</span>
                 <span className="font-semibold" style={{ color: '#10B981' }}>Rs {amountPaid.toLocaleString('en-LK', { maximumFractionDigits: 0 })}</span>
               </div>
               <div className="flex justify-between pt-2 border-t" style={{ borderColor: 'rgba(255,255,255,0.08)' }}>
-                <span style={{ color: 'rgba(255,255,255,0.4)' }}>Balance</span>
+                <span style={{ color: '#6b7280' }}>Balance</span>
                 <span className="font-bold" style={{ color: invoice.total - amountPaid > 0 ? '#F59E0B' : '#10B981' }}>
                   Rs {Math.max(0, invoice.total - amountPaid).toLocaleString('en-LK', { maximumFractionDigits: 0 })}
                 </span>
@@ -574,25 +574,25 @@ export default function InvoiceDetailPage() {
     {/* Record Payment Modal */}
     {paymentModal && (
       <div className="fixed inset-0 z-50 flex items-center justify-center p-4" style={{ background: 'rgba(0,0,0,0.7)', backdropFilter: 'blur(4px)' }}>
-        <div className="w-full max-w-sm rounded-2xl p-6 space-y-4" style={{ background: '#16191F', border: '1px solid rgba(255,255,255,0.12)' }}>
+        <div className="w-full max-w-sm rounded-2xl p-6 space-y-4" style={{ background: '#ffffff', border: '1px solid #e5e7eb' }}>
           <div className="flex items-center justify-between">
-            <h2 className="text-base font-semibold text-white flex items-center gap-2"><CreditCard className="w-4 h-4" style={{ color: '#10B981' }} /> Record Payment</h2>
-            <button onClick={() => setPaymentModal(false)} className="p-1 rounded hover:bg-white/10"><X className="w-4 h-4" style={{ color: 'rgba(255,255,255,0.35)' }} /></button>
+            <h2 className="text-gray-900" style={{ color: '#10B981' }} /> Record Payment</h2>
+            <button onClick={() => setPaymentModal(false)} className="p-1 rounded hover:bg-gray-100"><X className="w-4 h-4" style={{ color: '#9ca3af' }} /></button>
           </div>
           <div className="space-y-3">
             <div>
-              <label className="text-xs font-medium block mb-1" style={{ color: 'rgba(255,255,255,0.4)' }}>Amount (Rs) *</label>
+              <label className="text-xs font-medium block mb-1" style={{ color: '#6b7280' }}>Amount (Rs) *</label>
               <Input type="number" min="0" step="0.01"
                 placeholder={`Max: ${(invoice.total - amountPaid).toFixed(2)}`}
                 value={paymentForm.amount}
                 onChange={e => setPaymentForm(f => ({ ...f, amount: e.target.value }))}
-                className="h-9 text-sm text-white" style={{ background: 'rgba(255,255,255,0.05)', borderColor: 'rgba(255,255,255,0.1)' }} />
+                className="text-gray-900" style={{ background: '#f9fafb', borderColor: '#e5e7eb' }} />
             </div>
             <div>
-              <label className="text-xs font-medium block mb-1" style={{ color: 'rgba(255,255,255,0.4)' }}>Payment Method</label>
+              <label className="text-xs font-medium block mb-1" style={{ color: '#6b7280' }}>Payment Method</label>
               <select value={paymentForm.method} onChange={e => setPaymentForm(f => ({ ...f, method: e.target.value }))}
-                className="w-full h-9 px-3 rounded-md text-sm text-white outline-none"
-                style={{ background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.1)', color: 'white' }}>
+                className="text-gray-900"
+                style={{ background: '#f9fafb', border: '1px solid #e5e7eb', color: '#111827' }}>
                 <option value="bank_transfer">Bank Transfer</option>
                 <option value="cash">Cash</option>
                 <option value="cheque">Cheque</option>
@@ -602,16 +602,16 @@ export default function InvoiceDetailPage() {
               </select>
             </div>
             <div>
-              <label className="text-xs font-medium block mb-1" style={{ color: 'rgba(255,255,255,0.4)' }}>Note (optional)</label>
+              <label className="text-xs font-medium block mb-1" style={{ color: '#6b7280' }}>Note (optional)</label>
               <Input placeholder="e.g. First deposit, Receipt #123"
                 value={paymentForm.note}
                 onChange={e => setPaymentForm(f => ({ ...f, note: e.target.value }))}
-                className="h-9 text-sm text-white" style={{ background: 'rgba(255,255,255,0.05)', borderColor: 'rgba(255,255,255,0.1)' }} />
+                className="text-gray-900" style={{ background: '#f9fafb', borderColor: '#e5e7eb' }} />
             </div>
           </div>
           <div className="flex gap-3 justify-end pt-1">
-            <Button variant="outline" onClick={() => setPaymentModal(false)} className="text-sm" style={{ color: 'rgba(255,255,255,0.4)' }}>Cancel</Button>
-            <Button onClick={recordPayment} disabled={recordingPayment} className="gap-2 text-sm font-semibold text-white" style={{ background: 'linear-gradient(135deg, #10B981, #059669)' }}>
+            <Button variant="outline" onClick={() => setPaymentModal(false)} className="text-sm" style={{ color: '#6b7280' }}>Cancel</Button>
+            <Button onClick={recordPayment} disabled={recordingPayment} className="text-gray-900" style={{ background: 'linear-gradient(135deg, #10B981, #059669)' }}>
               <Check className="w-3.5 h-3.5" />{recordingPayment ? 'Saving...' : 'Record Payment'}
             </Button>
           </div>
@@ -622,28 +622,28 @@ export default function InvoiceDetailPage() {
     {/* Email Modal */}
     {emailModal && (
       <div className="fixed inset-0 z-50 flex items-center justify-center p-4" style={{ background: 'rgba(0,0,0,0.7)', backdropFilter: 'blur(4px)' }}>
-        <div className="w-full max-w-md rounded-2xl p-6 space-y-4" style={{ background: '#16191F', border: '1px solid rgba(255,255,255,0.12)' }}>
+        <div className="w-full max-w-md rounded-2xl p-6 space-y-4" style={{ background: '#ffffff', border: '1px solid #e5e7eb' }}>
           <div className="flex items-center justify-between">
-            <h2 className="text-base font-semibold text-white flex items-center gap-2"><Mail className="w-4 h-4" style={{ color: '#60A5FA' }} /> Send Invoice via Email</h2>
-            <button onClick={() => setEmailModal(false)} className="p-1 rounded hover:bg-white/10"><X className="w-4 h-4" style={{ color: 'rgba(255,255,255,0.35)' }} /></button>
+            <h2 className="text-gray-900" style={{ color: '#3b82f6' }} /> Send Invoice via Email</h2>
+            <button onClick={() => setEmailModal(false)} className="p-1 rounded hover:bg-gray-100"><X className="w-4 h-4" style={{ color: '#9ca3af' }} /></button>
           </div>
           <div className="space-y-3">
             <div>
-              <label className="text-xs font-medium block mb-1" style={{ color: 'rgba(255,255,255,0.4)' }}>To *</label>
-              <Input value={emailForm.to} onChange={e => setEmailForm(f => ({ ...f, to: e.target.value }))} placeholder="client@company.com" className="h-9 text-sm text-white" style={{ background: '#16191F', borderColor: 'rgba(255,255,255,0.1)' }} />
+              <label className="text-xs font-medium block mb-1" style={{ color: '#6b7280' }}>To *</label>
+              <Input value={emailForm.to} onChange={e => setEmailForm(f => ({ ...f, to: e.target.value }))} placeholder="client@company.com" className="text-gray-900" style={{ background: '#ffffff', borderColor: '#e5e7eb' }} />
             </div>
             <div>
-              <label className="text-xs font-medium block mb-1" style={{ color: 'rgba(255,255,255,0.4)' }}>Subject</label>
-              <Input value={emailForm.subject} onChange={e => setEmailForm(f => ({ ...f, subject: e.target.value }))} className="h-9 text-sm text-white" style={{ background: '#16191F', borderColor: 'rgba(255,255,255,0.1)' }} />
+              <label className="text-xs font-medium block mb-1" style={{ color: '#6b7280' }}>Subject</label>
+              <Input value={emailForm.subject} onChange={e => setEmailForm(f => ({ ...f, subject: e.target.value }))} className="text-gray-900" style={{ background: '#ffffff', borderColor: '#e5e7eb' }} />
             </div>
             <div>
-              <label className="text-xs font-medium block mb-1" style={{ color: 'rgba(255,255,255,0.4)' }}>Personal message (optional)</label>
-              <textarea value={emailForm.message} onChange={e => setEmailForm(f => ({ ...f, message: e.target.value }))} rows={3} placeholder="Hi, please find your invoice attached..." className="w-full rounded-xl px-3 py-2 text-sm text-white resize-none outline-none placeholder:text-gray-600" style={{ background: '#16191F', border: '1px solid rgba(255,255,255,0.1)' }} />
+              <label className="text-xs font-medium block mb-1" style={{ color: '#6b7280' }}>Personal message (optional)</label>
+              <textarea value={emailForm.message} onChange={e => setEmailForm(f => ({ ...f, message: e.target.value }))} rows={3} placeholder="Hi, please find your invoice attached..." className="text-gray-900" style={{ background: '#ffffff', border: '1px solid #e5e7eb' }} />
             </div>
           </div>
           <div className="flex gap-3 justify-end pt-1">
-            <Button variant="outline" onClick={() => setEmailModal(false)} className="text-sm" style={{ color: 'rgba(255,255,255,0.4)' }}>Cancel</Button>
-            <Button onClick={sendEmail} disabled={sendingEmail} className="gap-2 text-sm font-semibold text-white" style={{ background: 'linear-gradient(135deg, #6B50EE, #3B82F6)' }}>
+            <Button variant="outline" onClick={() => setEmailModal(false)} className="text-sm" style={{ color: '#6b7280' }}>Cancel</Button>
+            <Button onClick={sendEmail} disabled={sendingEmail} className="text-gray-900" style={{ background: 'linear-gradient(135deg, #6B50EE, #3B82F6)' }}>
               <Send className="w-3.5 h-3.5" />{sendingEmail ? 'Sending...' : 'Send Invoice'}
             </Button>
           </div>

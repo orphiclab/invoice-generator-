@@ -108,23 +108,23 @@ export default function DashboardPage() {
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
         {statCards.map(card => (
           <div key={card.key} className={`${card.cls} rounded-2xl p-5 relative overflow-hidden`}>
-            <div className="absolute -top-8 -right-8 w-32 h-32 rounded-full" style={{ background: 'rgba(255,255,255,0.15)', filter: 'blur(2px)' }} />
+            <div className="absolute -top-8 -right-8 w-32 h-32 rounded-full" style={{ background: '#e5e7eb', filter: 'blur(2px)' }} />
             <div className="absolute top-2 right-2 w-16 h-16 rounded-full" style={{ background: 'rgba(255,255,255,0.08)', filter: 'blur(4px)' }} />
             <div className="relative">
               <div className="flex items-start justify-between mb-4">
-                <div className="w-10 h-10 rounded-xl flex items-center justify-center" style={{ background: 'rgba(255,255,255,0.25)' }}>
-                  <card.icon className="w-5 h-5 text-white" />
+                <div className="w-10 h-10 rounded-xl flex items-center justify-center" style={{ background: '#9ca3af' }}>
+                  <card.icon className="text-gray-900" />
                 </div>
                 {card.trend !== undefined && (
                   <span className="flex items-center gap-0.5 text-[10px] font-bold px-2 py-1 rounded-full"
-                    style={{ background: 'rgba(255,255,255,0.25)', color: 'white' }}>
+                    style={{ background: '#9ca3af', color: '#111827' }}>
                     {card.trend > 0 ? <TrendingUp className="w-2.5 h-2.5" /> : <TrendingDown className="w-2.5 h-2.5" />}
                     {Math.abs(card.trend)}%
                   </span>
                 )}
               </div>
-              <p className="text-[26px] font-extrabold text-white tracking-tight leading-none">{statValues[card.key]}</p>
-              <p className="text-xs mt-2 font-semibold" style={{ color: 'rgba(255,255,255,0.85)' }}>{card.label}</p>
+              <p className="text-gray-900">{statValues[card.key]}</p>
+              <p className="text-xs mt-2 font-semibold" style={{ color: '#374151' }}>{card.label}</p>
               <p className="text-[11px] mt-0.5" style={{ color: 'rgba(255,255,255,0.55)' }}>{card.sub}</p>
             </div>
           </div>
@@ -146,7 +146,7 @@ export default function DashboardPage() {
                 <button key={tab} onClick={() => setActiveTab(tab)}
                   className="px-3 py-1 rounded-lg text-xs font-semibold transition-all"
                   style={activeTab === tab
-                    ? { background: '#a28ef9', color: 'white', boxShadow: '0 2px 8px rgba(162,142,249,0.35)' }
+                    ? { background: '#a28ef9', color: '#111827', boxShadow: '0 2px 8px rgba(162,142,249,0.35)' }
                     : { color: '#6b7280' }}>
                   {tab === 'revenue' ? 'Revenue' : 'P&L'}
                 </button>

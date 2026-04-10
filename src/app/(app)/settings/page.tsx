@@ -10,7 +10,7 @@ import TeamSettingsPage from './team/page'
 
 interface Currency { id: string; code: string; symbol: string; name: string }
 
-const inputStyle = { background: 'rgba(255,255,255,0.05)', borderColor: 'rgba(255,255,255,0.1)', color: 'white' }
+const inputStyle = { background: '#f9fafb', borderColor: '#e5e7eb', color: '#111827' }
 const labelStyle = { color: 'rgba(255,255,255,0.55)' }
 
 const TABS = [
@@ -92,20 +92,20 @@ export default function SettingsPage() {
     display: 'flex', alignItems: 'center', gap: '6px', padding: '8px 16px',
     borderRadius: '10px', fontSize: '13px', fontWeight: 600, border: 'none', cursor: 'pointer',
     transition: 'all 0.15s',
-    background: active ? '#7C3AED' : 'transparent',
-    color: active ? 'white' : 'rgba(255,255,255,0.4)',
+    background: active ? '#a28ef9' : 'transparent',
+    color: active ? 'white' : '#6b7280',
     boxShadow: active ? '0 2px 8px rgba(124,58,237,0.4)' : 'none',
   })
 
   return (
     <div className="p-6 lg:p-8 max-w-3xl mx-auto">
       <div className="mb-6">
-      <h1 className="text-2xl font-bold tracking-tight text-white">Settings</h1>
-        <p className="text-xs mt-1" style={{ color: 'rgba(255,255,255,0.35)' }}>Manage your account and workspace</p>
+      <h1 className="text-gray-900">Settings</h1>
+        <p className="text-xs mt-1" style={{ color: '#9ca3af' }}>Manage your account and workspace</p>
       </div>
 
       {/* Tab Bar */}
-      <div className="flex gap-1 p-1 rounded-xl mb-6 w-fit" style={{ background: 'rgba(255,255,255,0.05)' }}>
+      <div className="flex gap-1 p-1 rounded-xl mb-6 w-fit" style={{ background: '#f9fafb' }}>
         {TABS.map(({ id, label, icon: Icon }) => (
           <button key={id} onClick={() => setTab(id)} style={tabStyle(tab === id)}>
             <Icon style={{ width: 14, height: 14 }} />
@@ -117,34 +117,34 @@ export default function SettingsPage() {
       {/* Invoicing Defaults Tab */}
       {tab === 'invoicing' && (
         <form onSubmit={saveInvSettings} className="space-y-6">
-          <div className="rounded-2xl p-6" style={{ background: '#16191F', border: '1px solid rgba(255,255,255,0.07)' }}>
-            <h2 className="text-base font-semibold text-white mb-5 flex items-center gap-2">
-              <FileText className="w-4 h-4" style={{ color: '#7B61FF' }} />
+          <div className="rounded-2xl p-6" style={{ background: '#ffffff', border: '1px solid rgba(0,0,0,0.06)' }}>
+            <h2 className="text-gray-900">
+              <FileText className="w-4 h-4" style={{ color: '#a28ef9' }} />
               Invoice Defaults
             </h2>
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <div className="space-y-2">
                 <Label className="text-sm" style={labelStyle}>Invoice Number Prefix</Label>
                 <div className="flex items-center gap-2">
-                  <Input value={invSettings.invoicePrefix} onChange={e => setInvSettings(s => ({ ...s, invoicePrefix: e.target.value.toUpperCase() }))} className="h-10 text-white font-mono" style={inputStyle} placeholder="INV" maxLength={6} />
-                  <span className="text-sm whitespace-nowrap" style={{ color: 'rgba(255,255,255,0.3)' }}>→ {invSettings.invoicePrefix}-0001</span>
+                  <Input value={invSettings.invoicePrefix} onChange={e => setInvSettings(s => ({ ...s, invoicePrefix: e.target.value.toUpperCase() }))} className="text-gray-900" maxLength={6} />
+                  <span className="text-sm whitespace-nowrap" style={{ color: '#9ca3af' }}>→ {invSettings.invoicePrefix}-0001</span>
                 </div>
               </div>
               <div className="space-y-2">
                 <Label className="text-sm" style={labelStyle}>Default Tax Rate (%)</Label>
-                <Input type="number" min={0} max={100} step={0.1} value={invSettings.defaultTaxRate} onChange={e => setInvSettings(s => ({ ...s, defaultTaxRate: parseFloat(e.target.value) || 0 }))} className="h-10 text-white" style={inputStyle} />
+                <Input type="number" min={0} max={100} step={0.1} value={invSettings.defaultTaxRate} onChange={e => setInvSettings(s => ({ ...s, defaultTaxRate: parseFloat(e.target.value) || 0 }))} className="text-gray-900" style={inputStyle} />
               </div>
               <div className="space-y-2">
                 <Label className="text-sm" style={labelStyle}>Default Due Days</Label>
-                <Input type="number" min={1} max={365} value={invSettings.defaultDueDays} onChange={e => setInvSettings(s => ({ ...s, defaultDueDays: parseInt(e.target.value) || 30 }))} className="h-10 text-white" style={inputStyle} />
+                <Input type="number" min={1} max={365} value={invSettings.defaultDueDays} onChange={e => setInvSettings(s => ({ ...s, defaultDueDays: parseInt(e.target.value) || 30 }))} className="text-gray-900" style={inputStyle} />
               </div>
               <div className="space-y-2">
                 <Label className="text-sm" style={labelStyle}>Default Currency</Label>
                 <select
                   value={invSettings.defaultCurrencyId}
                   onChange={e => setInvSettings(s => ({ ...s, defaultCurrencyId: e.target.value }))}
-                  className="w-full h-10 px-3 rounded-md text-sm text-white outline-none"
-                  style={{ background: 'rgba(255,255,255,0.05)', borderColor: 'rgba(255,255,255,0.1)', border: '1px solid rgba(255,255,255,0.1)', color: 'white' }}
+                  className="text-gray-900"
+                  style={{ background: '#f9fafb', borderColor: '#e5e7eb', border: '1px solid #e5e7eb', color: '#111827' }}
                 >
                   <option value="">Select currency…</option>
                   {currencies.map(c => (
@@ -154,7 +154,7 @@ export default function SettingsPage() {
               </div>
               <div className="sm:col-span-2 space-y-2">
                 <Label className="text-sm" style={labelStyle}>Default Notes / Payment Terms</Label>
-                <textarea value={invSettings.defaultNotes ?? ''} onChange={e => setInvSettings(s => ({ ...s, defaultNotes: e.target.value }))} rows={3} placeholder="Payment due within 30 days. Bank details: ..." className="w-full rounded-xl px-3 py-2.5 text-sm text-white resize-none outline-none" style={{ ...inputStyle, border: `1px solid rgba(255,255,255,0.1)` }} />
+                <textarea value={invSettings.defaultNotes ?? ''} onChange={e => setInvSettings(s => ({ ...s, defaultNotes: e.target.value }))} rows={3} placeholder="Payment due within 30 days. Bank details: ..." className="text-gray-900" style={{ ...inputStyle, border: `1px solid #e5e7eb` }} />
               </div>
             </div>
           </div>
@@ -169,40 +169,40 @@ export default function SettingsPage() {
       {/* Profile Tab */}
       {tab === 'profile' && (
         <form onSubmit={handleSave} className="space-y-6">
-          <div className="rounded-2xl p-6" style={{ background: '#16191F', border: '1px solid rgba(255,255,255,0.07)' }}>
-            <h2 className="text-base font-semibold text-white mb-5 flex items-center gap-2">
-              <User className="w-4 h-4" style={{ color: '#7B61FF' }} />
+          <div className="rounded-2xl p-6" style={{ background: '#ffffff', border: '1px solid rgba(0,0,0,0.06)' }}>
+            <h2 className="text-gray-900">
+              <User className="w-4 h-4" style={{ color: '#a28ef9' }} />
               Personal Information
             </h2>
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <div className="space-y-2">
                 <Label className="text-sm" style={labelStyle}>Full Name</Label>
-                <Input value={form.name} onChange={(e) => setForm({ ...form, name: e.target.value })} className="h-10 text-white" style={inputStyle} />
+                <Input value={form.name} onChange={(e) => setForm({ ...form, name: e.target.value })} className="text-gray-900" style={inputStyle} />
               </div>
               <div className="space-y-2">
                 <Label className="text-sm" style={labelStyle}>Email</Label>
-                <Input type="email" value={form.email} onChange={(e) => setForm({ ...form, email: e.target.value })} className="h-10 text-white" style={inputStyle} />
+                <Input type="email" value={form.email} onChange={(e) => setForm({ ...form, email: e.target.value })} className="text-gray-900" style={inputStyle} />
               </div>
             </div>
           </div>
 
-          <div className="rounded-2xl p-6" style={{ background: '#16191F', border: '1px solid rgba(255,255,255,0.07)' }}>
-            <h2 className="text-base font-semibold text-white mb-5 flex items-center gap-2">
-              <Building2 className="w-4 h-4" style={{ color: '#7B61FF' }} />
+          <div className="rounded-2xl p-6" style={{ background: '#ffffff', border: '1px solid rgba(0,0,0,0.06)' }}>
+            <h2 className="text-gray-900">
+              <Building2 className="w-4 h-4" style={{ color: '#a28ef9' }} />
               Business Information
             </h2>
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <div className="space-y-2">
                 <Label className="text-sm" style={labelStyle}><Building2 className="w-3 h-3 inline mr-1" />Company Name</Label>
-                <Input value={form.company} onChange={(e) => setForm({ ...form, company: e.target.value })} className="h-10 text-white" style={inputStyle} placeholder="Acme Inc." />
+                <Input value={form.company} onChange={(e) => setForm({ ...form, company: e.target.value })} className="text-gray-900" />
               </div>
               <div className="space-y-2">
                 <Label className="text-sm" style={labelStyle}><Phone className="w-3 h-3 inline mr-1" />Phone</Label>
-                <Input value={form.phone} onChange={(e) => setForm({ ...form, phone: e.target.value })} className="h-10 text-white" style={inputStyle} placeholder="+91 98765 43210" />
+                <Input value={form.phone} onChange={(e) => setForm({ ...form, phone: e.target.value })} className="text-gray-900" />
               </div>
               <div className="sm:col-span-2 space-y-2">
                 <Label className="text-sm" style={labelStyle}><MapPin className="w-3 h-3 inline mr-1" />Address</Label>
-                <Input value={form.address} onChange={(e) => setForm({ ...form, address: e.target.value })} className="h-10 text-white" style={inputStyle} placeholder="123 Business St, City, Country" />
+                <Input value={form.address} onChange={(e) => setForm({ ...form, address: e.target.value })} className="text-gray-900" />
               </div>
             </div>
           </div>
@@ -217,7 +217,7 @@ export default function SettingsPage() {
 
       {/* Team Tab */}
       {tab === 'team' && (
-        <div className="rounded-2xl p-6" style={{ background: '#16191F', border: '1px solid rgba(255,255,255,0.07)' }}>
+        <div className="rounded-2xl p-6" style={{ background: '#ffffff', border: '1px solid rgba(0,0,0,0.06)' }}>
           <TeamSettingsPage />
         </div>
       )}
@@ -269,30 +269,30 @@ function PortalSettings() {
     setTimeout(() => setCopied(false), 2000)
   }
 
-  const selectStyle = { background: '#16191F', border: '1px solid rgba(255,255,255,0.1)', color: 'white', padding: '10px 12px', borderRadius: '12px', fontSize: '14px', outline: 'none', width: '100%' }
+  const selectStyle = { background: '#ffffff', border: '1px solid #e5e7eb', color: '#111827', padding: '10px 12px', borderRadius: '12px', fontSize: '14px', outline: 'none', width: '100%' }
 
   return (
     <div className="glass rounded-2xl p-6 space-y-5">
       <div>
-        <h2 className="text-base font-semibold text-white flex items-center gap-2 mb-1">
-          <Link2 className="w-4 h-4" style={{ color: '#7B61FF' }} /> Client Portal
+        <h2 className="text-gray-900">
+          <Link2 className="w-4 h-4" style={{ color: '#a28ef9' }} /> Client Portal
         </h2>
-        <p className="text-sm" style={{ color: 'rgba(255,255,255,0.4)' }}>Generate a shareable link for clients to view their invoices and estimates</p>
+        <p className="text-sm" style={{ color: '#6b7280' }}>Generate a shareable link for clients to view their invoices and estimates</p>
       </div>
       <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
         <div className="sm:col-span-2">
-          <label className="text-xs font-medium block mb-1.5" style={{ color: 'rgba(255,255,255,0.4)' }}>Client</label>
+          <label className="text-xs font-medium block mb-1.5" style={{ color: '#6b7280' }}>Client</label>
           <select value={selectedClient} onChange={e => setSelectedClient(e.target.value)} style={selectStyle}>
             <option value="">Select client...</option>
             {clients.map(c => <option key={c.id} value={c.id}>{c.name}</option>)}
           </select>
         </div>
         <div>
-          <label className="text-xs font-medium block mb-1.5" style={{ color: 'rgba(255,255,255,0.4)' }}>Expires in (days)</label>
+          <label className="text-xs font-medium block mb-1.5" style={{ color: '#6b7280' }}>Expires in (days)</label>
           <input type="number" min="1" max="365" value={expiryDays} onChange={e => setExpiryDays(e.target.value)} style={selectStyle} />
         </div>
       </div>
-      <Button onClick={generate} disabled={generating} className="font-semibold text-white" style={{ background: 'linear-gradient(135deg, #6B50EE, #3B82F6)' }}>
+      <Button onClick={generate} disabled={generating} className="text-gray-900" style={{ background: 'linear-gradient(135deg, #6B50EE, #3B82F6)' }}>
         {generating ? 'Generating...' : 'Generate Portal Link'}
       </Button>
 
@@ -300,8 +300,8 @@ function PortalSettings() {
         <div className="rounded-xl p-4 space-y-2" style={{ background: 'rgba(139,92,246,0.1)', border: '1px solid rgba(139,92,246,0.25)' }}>
           <p className="text-xs font-medium" style={{ color: '#9B8AFF' }}>Portal Link Ready</p>
           <div className="flex items-center gap-2">
-            <code className="flex-1 text-xs text-white break-all" style={{ color: 'rgba(255,255,255,0.5)' }}>{generatedUrl}</code>
-            <Button onClick={copyUrl} variant="ghost" className="text-xs h-8 px-3 flex-shrink-0" style={{ color: copied ? 'hsl(142 76% 46%)' : '#9B8AFF' }}>
+            <code className="text-gray-900" style={{ color: 'rgba(255,255,255,0.5)' }}>{generatedUrl}</code>
+            <Button onClick={copyUrl} variant="ghost" className="text-xs h-8 px-3 flex-shrink-0" style={{ color: copied ? '#16a34a' : '#9B8AFF' }}>
               {copied ? 'Copied!' : 'Copy'}
             </Button>
           </div>

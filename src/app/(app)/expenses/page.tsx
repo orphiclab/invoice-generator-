@@ -21,9 +21,9 @@ const CATEGORIES = [
 ]
 
 const CATEGORY_COLORS: Record<string, string> = {
-  Software: '#7B61FF', Hardware: 'hsl(199 89% 48%)', Travel: 'hsl(38 92% 50%)',
-  'Food & Dining': 'hsl(142 76% 46%)', Marketing: 'hsl(311 70% 60%)', 'Office Supplies': '#60A5FA',
-  Utilities: 'hsl(30 80% 55%)', Salaries: 'hsl(0 84% 60%)', Freelancers: 'hsl(180 60% 50%)', Other: 'rgba(255,255,255,0.4)',
+  Software: '#a28ef9', Hardware: 'hsl(199 89% 48%)', Travel: 'hsl(38 92% 50%)',
+  'Food & Dining': '#16a34a', Marketing: 'hsl(311 70% 60%)', 'Office Supplies': '#60A5FA',
+  Utilities: 'hsl(30 80% 55%)', Salaries: 'hsl(0 84% 60%)', Freelancers: 'hsl(180 60% 50%)', Other: '#6b7280',
 }
 
 export default function ExpensesPage() {
@@ -78,15 +78,15 @@ export default function ExpensesPage() {
   }, {})
   const topCategory = Object.entries(byCategory).sort((a, b) => b[1] - a[1])[0]
 
-  const inputStyle = { background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.1)', color: 'white' }
+  const inputStyle = { background: '#f9fafb', border: '1px solid #e5e7eb', color: '#111827' }
 
   return (
     <div className="p-6 lg:p-8 max-w-6xl mx-auto space-y-6">
       {/* Header */}
       <div className="flex items-center justify-between">
         <div>
-        <h1 className="text-2xl font-bold tracking-tight text-white">Expenses</h1>
-          <p className="text-xs mt-1" style={{ color: 'rgba(255,255,255,0.35)' }}>Track your business expenses</p>
+        <h1 className="text-gray-900">Expenses</h1>
+          <p className="text-xs mt-1" style={{ color: '#9ca3af' }}>Track your business expenses</p>
         </div>
         <button onClick={() => setShowForm(!showForm)} className="btn-brand h-9 px-5 text-sm flex items-center gap-2">
           <Plus className="w-4 h-4" /> Add Expense
@@ -96,35 +96,35 @@ export default function ExpensesPage() {
       {/* Stats */}
       <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
         <div className="stat-rose rounded-2xl p-5 relative overflow-hidden">
-          <div className="absolute -top-5 -right-5 w-20 h-20 rounded-full opacity-20" style={{ background: 'rgba(255,255,255,0.3)' }} />
-          <div className="w-9 h-9 rounded-xl flex items-center justify-center mb-3" style={{ background: 'rgba(255,255,255,0.2)' }}>
-            <TrendingDown className="w-4 h-4 text-white" />
+          <div className="absolute -top-5 -right-5 w-20 h-20 rounded-full opacity-20" style={{ background: '#9ca3af' }} />
+          <div className="w-9 h-9 rounded-xl flex items-center justify-center mb-3" style={{ background: '#9ca3af' }}>
+            <TrendingDown className="text-gray-900" />
           </div>
-          <p className="text-2xl font-extrabold text-white">Rs {total.toLocaleString('en-IN', { maximumFractionDigits: 0 })}</p>
-          <p className="text-xs mt-1 text-white/70 font-semibold">Total Expenses</p>
+          <p className="text-gray-900">Rs {total.toLocaleString('en-IN', { maximumFractionDigits: 0 })}</p>
+          <p className="text-gray-900">Total Expenses</p>
         </div>
         <div className="stat-purple rounded-2xl p-5 relative overflow-hidden">
-          <div className="absolute -top-5 -right-5 w-20 h-20 rounded-full opacity-20" style={{ background: 'rgba(255,255,255,0.3)' }} />
-          <div className="w-9 h-9 rounded-xl flex items-center justify-center mb-3" style={{ background: 'rgba(255,255,255,0.2)' }}>
-            <Receipt className="w-4 h-4 text-white" />
+          <div className="absolute -top-5 -right-5 w-20 h-20 rounded-full opacity-20" style={{ background: '#9ca3af' }} />
+          <div className="w-9 h-9 rounded-xl flex items-center justify-center mb-3" style={{ background: '#9ca3af' }}>
+            <Receipt className="text-gray-900" />
           </div>
-          <p className="text-2xl font-extrabold text-white">{expenses.length}</p>
-          <p className="text-xs mt-1 text-white/70 font-semibold">Total Transactions</p>
+          <p className="text-gray-900">{expenses.length}</p>
+          <p className="text-gray-900">Total Transactions</p>
         </div>
         <div className="stat-blue rounded-2xl p-5 relative overflow-hidden">
-          <div className="absolute -top-5 -right-5 w-20 h-20 rounded-full opacity-20" style={{ background: 'rgba(255,255,255,0.3)' }} />
-          <div className="w-9 h-9 rounded-xl flex items-center justify-center mb-3" style={{ background: 'rgba(255,255,255,0.2)' }}>
-            <Filter className="w-4 h-4 text-white" />
+          <div className="absolute -top-5 -right-5 w-20 h-20 rounded-full opacity-20" style={{ background: '#9ca3af' }} />
+          <div className="w-9 h-9 rounded-xl flex items-center justify-center mb-3" style={{ background: '#9ca3af' }}>
+            <Filter className="text-gray-900" />
           </div>
-          <p className="text-2xl font-extrabold text-white">{topCategory?.[0] ?? '—'}</p>
-          <p className="text-xs mt-1 text-white/70 font-semibold">Top Category</p>
+          <p className="text-gray-900">{topCategory?.[0] ?? '—'}</p>
+          <p className="text-gray-900">Top Category</p>
         </div>
       </div>
 
       {/* Add Form */}
       {showForm && (
-        <form onSubmit={handleSubmit} className="rounded-2xl p-6 space-y-4" style={{ background: '#16191F', border: '1px solid rgba(124,58,237,0.25)' }}>
-          <h2 className="text-sm font-semibold text-white">New Expense</h2>
+        <form onSubmit={handleSubmit} className="rounded-2xl p-6 space-y-4" style={{ background: '#ffffff', border: '1px solid rgba(124,58,237,0.25)' }}>
+          <h2 className="text-gray-900">New Expense</h2>
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
             <input required placeholder="Title" value={form.title} onChange={e => setForm(p => ({ ...p, title: e.target.value }))}
               className="px-3 py-2 rounded-xl text-sm outline-none" style={inputStyle} />
@@ -143,7 +143,7 @@ export default function ExpensesPage() {
             <button type="submit" disabled={saving} className="btn-brand h-8 px-5 text-xs">
               {saving ? 'Saving...' : 'Add Expense'}
             </button>
-            <Button type="button" variant="ghost" onClick={() => setShowForm(false)} className="text-xs h-8 px-4" style={{ color: 'rgba(255,255,255,0.4)' }}>
+            <Button type="button" variant="ghost" onClick={() => setShowForm(false)} className="text-xs h-8 px-4" style={{ color: '#6b7280' }}>
               Cancel
             </Button>
           </div>
@@ -154,13 +154,13 @@ export default function ExpensesPage() {
       <div className="flex gap-2 flex-wrap">
         <button onClick={() => setFilterCategory('')}
           className="px-3 py-1.5 rounded-lg text-xs font-medium transition-all"
-          style={!filterCategory ? { background: 'rgba(139,92,246,0.2)', color: '#9B8AFF' } : { background: 'rgba(255,255,255,0.05)', color: 'rgba(255,255,255,0.4)' }}>
+          style={!filterCategory ? { background: 'rgba(139,92,246,0.2)', color: '#9B8AFF' } : { background: '#f9fafb', color: '#6b7280' }}>
           All
         </button>
         {CATEGORIES.map(c => (
           <button key={c} onClick={() => setFilterCategory(c === filterCategory ? '' : c)}
             className="px-3 py-1.5 rounded-lg text-xs font-medium transition-all"
-            style={filterCategory === c ? { background: 'rgba(139,92,246,0.2)', color: '#9B8AFF' } : { background: 'rgba(255,255,255,0.05)', color: 'rgba(255,255,255,0.4)' }}>
+            style={filterCategory === c ? { background: 'rgba(139,92,246,0.2)', color: '#9B8AFF' } : { background: '#f9fafb', color: '#6b7280' }}>
             {c}
           </button>
         ))}
@@ -169,30 +169,30 @@ export default function ExpensesPage() {
       {/* Expense List */}
       {loading ? (
         <div className="flex justify-center py-16">
-          <div className="w-7 h-7 rounded-full border-2 border-t-transparent animate-spin" style={{ borderColor: '#7B61FF', borderTopColor: 'transparent' }} />
+          <div className="w-7 h-7 rounded-full border-2 border-t-transparent animate-spin" style={{ borderColor: '#a28ef9', borderTopColor: 'transparent' }} />
         </div>
       ) : expenses.length === 0 ? (
-        <div className="rounded-2xl p-12 flex flex-col items-center text-center" style={{ background: 'rgba(255,255,255,0.03)', border: '1px solid rgba(255,255,255,0.07)' }}>
-          <Receipt className="w-10 h-10 mb-3 opacity-20" style={{ color: 'rgba(255,255,255,0.4)' }} />
-          <p className="text-sm font-medium text-white mb-1">No expenses yet</p>
-          <p className="text-xs mb-4" style={{ color: 'rgba(255,255,255,0.3)' }}>Start tracking your business expenses</p>
-          <Button onClick={() => setShowForm(true)} className="gap-2 text-white text-xs h-8" style={{ background: 'linear-gradient(135deg, #6B50EE, #3B82F6)' }}>
+        <div className="rounded-2xl p-12 flex flex-col items-center text-center" style={{ background: 'rgba(255,255,255,0.03)', border: '1px solid rgba(0,0,0,0.06)' }}>
+          <Receipt className="w-10 h-10 mb-3 opacity-20" style={{ color: '#6b7280' }} />
+          <p className="text-gray-900">No expenses yet</p>
+          <p className="text-xs mb-4" style={{ color: '#9ca3af' }}>Start tracking your business expenses</p>
+          <Button onClick={() => setShowForm(true)} className="text-gray-900" style={{ background: 'linear-gradient(135deg, #6B50EE, #3B82F6)' }}>
             <Plus className="w-3 h-3" /> Add first expense
           </Button>
         </div>
       ) : (
         <div className="space-y-2">
           {expenses.map(exp => (
-            <div key={exp.id} className="flex items-center gap-4 p-4 rounded-2xl group hover:scale-[1.005] transition-all" style={{ background: '#16191F', border: '1px solid rgba(255,255,255,0.07)' }}>
-              <div className="w-10 h-10 rounded-xl flex items-center justify-center flex-shrink-0 text-xs font-bold" style={{ background: `${CATEGORY_COLORS[exp.category] ?? 'rgba(255,255,255,0.3)'}20`, color: CATEGORY_COLORS[exp.category] ?? 'rgba(255,255,255,0.4)' }}>
+            <div key={exp.id} className="flex items-center gap-4 p-4 rounded-2xl group hover:scale-[1.005] transition-all" style={{ background: '#ffffff', border: '1px solid rgba(0,0,0,0.06)' }}>
+              <div className="w-10 h-10 rounded-xl flex items-center justify-center flex-shrink-0 text-xs font-bold" style={{ background: `${CATEGORY_COLORS[exp.category] ?? '#9ca3af'}20`, color: CATEGORY_COLORS[exp.category] ?? '#6b7280' }}>
                 {exp.category.slice(0, 2).toUpperCase()}
               </div>
               <div className="flex-1 min-w-0">
-                <p className="text-sm font-medium text-white">{exp.title}</p>
-                <p className="text-xs" style={{ color: 'rgba(255,255,255,0.4)' }}>
+                <p className="text-gray-900">{exp.title}</p>
+                <p className="text-xs" style={{ color: '#6b7280' }}>
                   {exp.category} · {new Date(exp.date).toLocaleDateString('en-IN', { day: 'numeric', month: 'short', year: 'numeric' })}
                 </p>
-                {exp.description && <p className="text-xs mt-0.5 truncate" style={{ color: 'rgba(255,255,255,0.25)' }}>{exp.description}</p>}
+                {exp.description && <p className="text-xs mt-0.5 truncate" style={{ color: '#9ca3af' }}>{exp.description}</p>}
               </div>
               <p className="text-base font-bold" style={{ color: 'hsl(0 84% 65%)' }}>-Rs {exp.amount.toLocaleString('en-IN', { maximumFractionDigits: 0 })}</p>
               <button onClick={() => handleDelete(exp.id)} className="opacity-0 group-hover:opacity-100 transition-opacity p-1.5 rounded-lg hover:bg-red-500/20">

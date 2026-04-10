@@ -11,9 +11,9 @@ interface Team { id: string; name: string; members: TeamMember[] }
 
 const ROLE_CONFIG: Record<string, { label: string; icon: React.ElementType; color: string }> = {
   OWNER: { label: 'Owner', icon: Crown, color: 'hsl(38 92% 50%)' },
-  ADMIN: { label: 'Admin', icon: Shield, color: '#7B61FF' },
+  ADMIN: { label: 'Admin', icon: Shield, color: '#a28ef9' },
   MEMBER: { label: 'Member', icon: User, color: 'hsl(199 89% 48%)' },
-  VIEWER: { label: 'Viewer', icon: Eye, color: 'rgba(255,255,255,0.4)' },
+  VIEWER: { label: 'Viewer', icon: Eye, color: '#6b7280' },
 }
 
 export default function TeamSettingsPage() {
@@ -81,16 +81,16 @@ export default function TeamSettingsPage() {
     else toast.error('Failed to remove')
   }
 
-  const inputStyle = { background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.1)', color: 'white' }
+  const inputStyle = { background: '#f9fafb', border: '1px solid #e5e7eb', color: '#111827' }
 
   return (
     <div className="space-y-6">
       <div className="flex items-center justify-between">
         <div>
-          <h2 className="text-lg font-semibold text-white">Team Management</h2>
-          <p className="text-sm mt-0.5" style={{ color: 'rgba(255,255,255,0.4)' }}>Create teams and invite collaborators</p>
+          <h2 className="text-gray-900">Team Management</h2>
+          <p className="text-sm mt-0.5" style={{ color: '#6b7280' }}>Create teams and invite collaborators</p>
         </div>
-        <Button onClick={() => setShowNewTeam(!showNewTeam)} className="gap-2 text-white text-xs h-8" style={{ background: 'linear-gradient(135deg, #6B50EE, #3B82F6)' }}>
+        <Button onClick={() => setShowNewTeam(!showNewTeam)} className="text-gray-900" style={{ background: 'linear-gradient(135deg, #6B50EE, #3B82F6)' }}>
           <Plus className="w-3.5 h-3.5" /> New Team
         </Button>
       </div>
@@ -99,30 +99,30 @@ export default function TeamSettingsPage() {
         <form onSubmit={createTeam} className="flex gap-3" >
           <input required placeholder="Team name..." value={newTeamName} onChange={e => setNewTeamName(e.target.value)}
             className="flex-1 px-3 py-2 rounded-xl text-sm outline-none" style={inputStyle} />
-          <Button type="submit" disabled={creatingTeam} className="text-white text-xs h-9 px-4" style={{ background: 'linear-gradient(135deg, #6B50EE, #3B82F6)' }}>
+          <Button type="submit" disabled={creatingTeam} className="text-gray-900" style={{ background: 'linear-gradient(135deg, #6B50EE, #3B82F6)' }}>
             {creatingTeam ? 'Creating...' : 'Create'}
           </Button>
-          <Button type="button" variant="ghost" onClick={() => setShowNewTeam(false)} className="text-xs h-9 px-3" style={{ color: 'rgba(255,255,255,0.4)' }}>Cancel</Button>
+          <Button type="button" variant="ghost" onClick={() => setShowNewTeam(false)} className="text-xs h-9 px-3" style={{ color: '#6b7280' }}>Cancel</Button>
         </form>
       )}
 
       {loading ? (
         <div className="flex justify-center py-12">
-          <div className="w-6 h-6 rounded-full border-2 border-t-transparent animate-spin" style={{ borderColor: '#7B61FF', borderTopColor: 'transparent' }} />
+          <div className="w-6 h-6 rounded-full border-2 border-t-transparent animate-spin" style={{ borderColor: '#a28ef9', borderTopColor: 'transparent' }} />
         </div>
       ) : teams.length === 0 ? (
-        <div className="rounded-2xl p-10 flex flex-col items-center text-center" style={{ background: 'rgba(255,255,255,0.03)', border: '1px solid rgba(255,255,255,0.07)' }}>
-          <Users className="w-8 h-8 mb-2 opacity-20" style={{ color: 'rgba(255,255,255,0.4)' }} />
-          <p className="text-sm text-white font-medium">No teams yet</p>
-          <p className="text-xs mt-1" style={{ color: 'rgba(255,255,255,0.3)' }}>Create a team to collaborate with others</p>
+        <div className="rounded-2xl p-10 flex flex-col items-center text-center" style={{ background: 'rgba(255,255,255,0.03)', border: '1px solid rgba(0,0,0,0.06)' }}>
+          <Users className="w-8 h-8 mb-2 opacity-20" style={{ color: '#6b7280' }} />
+          <p className="text-gray-900">No teams yet</p>
+          <p className="text-xs mt-1" style={{ color: '#9ca3af' }}>Create a team to collaborate with others</p>
         </div>
       ) : (
         <div className="space-y-4">
           {teams.map(team => (
-            <div key={team.id} className="rounded-2xl p-5 space-y-4" style={{ background: 'rgba(255,255,255,0.03)', border: '1px solid rgba(255,255,255,0.07)' }}>
+            <div key={team.id} className="rounded-2xl p-5 space-y-4" style={{ background: 'rgba(255,255,255,0.03)', border: '1px solid rgba(0,0,0,0.06)' }}>
               <div className="flex items-center justify-between">
-                <h3 className="font-semibold text-white">{team.name}</h3>
-                <span className="text-xs" style={{ color: 'rgba(255,255,255,0.3)' }}>{team.members.length} member{team.members.length !== 1 ? 's' : ''}</span>
+                <h3 className="text-gray-900">{team.name}</h3>
+                <span className="text-xs" style={{ color: '#9ca3af' }}>{team.members.length} member{team.members.length !== 1 ? 's' : ''}</span>
               </div>
 
               {/* Members List */}
@@ -131,13 +131,13 @@ export default function TeamSettingsPage() {
                   const cfg = ROLE_CONFIG[member.role] ?? ROLE_CONFIG.MEMBER
                   const Icon = cfg.icon
                   return (
-                    <div key={member.id} className="flex items-center gap-3 p-2.5 rounded-xl" style={{ background: 'rgba(255,255,255,0.04)' }}>
-                      <div className="w-8 h-8 rounded-full flex items-center justify-center text-xs font-bold text-white flex-shrink-0" style={{ background: `${cfg.color}30` }}>
+                    <div key={member.id} className="flex items-center gap-3 p-2.5 rounded-xl" style={{ background: '#f9fafb' }}>
+                      <div className="text-gray-900" style={{ background: `${cfg.color}30` }}>
                         {member.user.name.slice(0, 2).toUpperCase()}
                       </div>
                       <div className="flex-1 min-w-0">
-                        <p className="text-sm font-medium text-white">{member.user.name}</p>
-                        <p className="text-xs" style={{ color: 'rgba(255,255,255,0.35)' }}>{member.user.email}</p>
+                        <p className="text-gray-900">{member.user.name}</p>
+                        <p className="text-xs" style={{ color: '#9ca3af' }}>{member.user.email}</p>
                       </div>
                       <div className="flex items-center gap-1.5" style={{ color: cfg.color }}>
                         <Icon className="w-3.5 h-3.5" />
@@ -161,7 +161,7 @@ export default function TeamSettingsPage() {
                   className="px-2 py-1.5 rounded-xl text-sm outline-none" style={inputStyle}>
                   {['ADMIN', 'MEMBER', 'VIEWER'].map(r => <option key={r} value={r}>{r}</option>)}
                 </select>
-                <Button type="submit" disabled={inviting} className="text-white text-xs h-8 px-3" style={{ background: 'linear-gradient(135deg, #6B50EE, #3B82F6)' }}>
+                <Button type="submit" disabled={inviting} className="text-gray-900" style={{ background: 'linear-gradient(135deg, #6B50EE, #3B82F6)' }}>
                   Invite
                 </Button>
               </form>

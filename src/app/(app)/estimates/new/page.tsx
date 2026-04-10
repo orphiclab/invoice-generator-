@@ -62,19 +62,19 @@ export default function NewEstimatePage() {
     }
   }
 
-  const inputStyle = { background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.1)', color: 'white' }
-  const labelStyle = { color: 'rgba(255,255,255,0.4)', fontSize: '12px', fontWeight: 500, marginBottom: '6px', display: 'block' }
+  const inputStyle = { background: '#f9fafb', border: '1px solid #e5e7eb', color: '#111827' }
+  const labelStyle = { color: '#6b7280', fontSize: '12px', fontWeight: 500, marginBottom: '6px', display: 'block' }
 
   return (
     <div className="p-6 lg:p-8 max-w-4xl mx-auto">
       <div className="mb-8">
-        <h1 className="text-2xl font-bold text-white">New Estimate</h1>
-        <p className="text-sm mt-1" style={{ color: 'rgba(255,255,255,0.4)' }}>Create a quote for your client</p>
+        <h1 className="text-gray-900">New Estimate</h1>
+        <p className="text-sm mt-1" style={{ color: '#6b7280' }}>Create a quote for your client</p>
       </div>
 
       <form onSubmit={handleSubmit} className="space-y-6">
-        <div className="rounded-2xl p-6 space-y-4" style={{ background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(255,255,255,0.08)' }}>
-          <h2 className="text-sm font-semibold text-white">Details</h2>
+        <div className="rounded-2xl p-6 space-y-4" style={{ background: '#f9fafb', border: '1px solid rgba(255,255,255,0.08)' }}>
+          <h2 className="text-gray-900">Details</h2>
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div>
               <label style={labelStyle}>Client *</label>
@@ -106,16 +106,16 @@ export default function NewEstimatePage() {
         </div>
 
         {/* Line Items */}
-        <div className="rounded-2xl p-6 space-y-3" style={{ background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(255,255,255,0.08)' }}>
+        <div className="rounded-2xl p-6 space-y-3" style={{ background: '#f9fafb', border: '1px solid rgba(255,255,255,0.08)' }}>
           <div className="flex items-center justify-between">
-            <h2 className="text-sm font-semibold text-white">Line Items</h2>
+            <h2 className="text-gray-900">Line Items</h2>
             <Button type="button" variant="ghost" size="sm" onClick={addItem} className="gap-1 text-xs h-7" style={{ color: '#9B8AFF' }}>
               <Plus className="w-3 h-3" /> Add Item
             </Button>
           </div>
           <div className="grid grid-cols-12 gap-2 px-1">
             {['Description', 'Qty', 'Unit Price', 'Total', ''].map(h => (
-              <div key={h} className="text-xs font-medium" style={{ color: 'rgba(255,255,255,0.3)', gridColumn: h === 'Description' ? 'span 6' : h === '' ? 'span 1' : 'span 2' }}>{h}</div>
+              <div key={h} className="text-xs font-medium" style={{ color: '#9ca3af', gridColumn: h === 'Description' ? 'span 6' : h === '' ? 'span 1' : 'span 2' }}>{h}</div>
             ))}
           </div>
           {items.map((item, i) => {
@@ -128,7 +128,7 @@ export default function NewEstimatePage() {
                   className="col-span-2 px-3 py-2 rounded-xl text-sm outline-none text-center" style={inputStyle} />
                 <input type="number" min="0" step="0.01" placeholder="0.00" value={item.unitPrice} onChange={e => updateItem(i, 'unitPrice', e.target.value)}
                   className="col-span-2 px-3 py-2 rounded-xl text-sm outline-none" style={inputStyle} />
-                <div className="col-span-1 text-sm font-medium text-white">{currSymbol}{lineTotal.toFixed(0)}</div>
+                <div className="text-gray-900">{currSymbol}{lineTotal.toFixed(0)}</div>
                 {items.length > 1 && (
                   <button type="button" onClick={() => removeItem(i)} className="col-span-1 p-1.5 rounded-lg hover:bg-red-500/20 w-fit">
                     <Trash2 className="w-3.5 h-3.5" style={{ color: 'hsl(0 84% 60%)' }} />
@@ -140,11 +140,11 @@ export default function NewEstimatePage() {
         </div>
 
         {/* Totals */}
-        <div className="rounded-2xl p-6" style={{ background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(255,255,255,0.08)' }}>
+        <div className="rounded-2xl p-6" style={{ background: '#f9fafb', border: '1px solid rgba(255,255,255,0.08)' }}>
           <div className="max-w-xs ml-auto space-y-3">
             <div className="flex justify-between text-sm">
-              <span style={{ color: 'rgba(255,255,255,0.4)' }}>Subtotal</span>
-              <span className="text-white">{currSymbol}{subtotal.toFixed(2)}</span>
+              <span style={{ color: '#6b7280' }}>Subtotal</span>
+              <span className="text-gray-900">{currSymbol}{subtotal.toFixed(2)}</span>
             </div>
             <div className="flex items-center justify-between gap-4">
               <label style={{ ...labelStyle, margin: 0 }}>Tax %</label>
@@ -156,18 +156,18 @@ export default function NewEstimatePage() {
               <input type="number" min="0" step="0.01" value={form.discount} onChange={e => setForm(p => ({ ...p, discount: e.target.value }))}
                 className="w-24 px-3 py-1.5 rounded-xl text-sm outline-none text-right" style={inputStyle} />
             </div>
-            <div className="pt-3 border-t flex justify-between" style={{ borderColor: 'rgba(255,255,255,0.1)' }}>
-              <span className="font-semibold text-white">Total</span>
+            <div className="pt-3 border-t flex justify-between" style={{ borderColor: '#e5e7eb' }}>
+              <span className="text-gray-900">Total</span>
               <span className="text-lg font-bold" style={{ color: '#9B8AFF' }}>{currSymbol}{total.toFixed(2)}</span>
             </div>
           </div>
         </div>
 
         <div className="flex gap-3">
-          <Button type="submit" disabled={saving} className="font-semibold text-white px-8" style={{ background: 'linear-gradient(135deg, #6B50EE, #3B82F6)' }}>
+          <Button type="submit" disabled={saving} className="text-gray-900" style={{ background: 'linear-gradient(135deg, #6B50EE, #3B82F6)' }}>
             {saving ? 'Creating...' : 'Create Estimate'}
           </Button>
-          <Button type="button" variant="ghost" onClick={() => router.back()} style={{ color: 'rgba(255,255,255,0.4)' }}>Cancel</Button>
+          <Button type="button" variant="ghost" onClick={() => router.back()} style={{ color: '#6b7280' }}>Cancel</Button>
         </div>
       </form>
     </div>

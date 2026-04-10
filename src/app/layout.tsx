@@ -1,9 +1,14 @@
 import type { Metadata } from 'next'
-import { Plus_Jakarta_Sans } from 'next/font/google'
+import { Fustat } from 'next/font/google'
 import './globals.css'
 import { Toaster } from '@/components/ui/sonner'
 
-const plusJakarta = Plus_Jakarta_Sans({ subsets: ['latin'], variable: '--font-plus-jakarta', display: 'swap' })
+const fustat = Fustat({
+  subsets: ['latin'],
+  weight: ['200', '300', '400', '500', '600', '700', '800'],
+  variable: '--font-fustat',
+  display: 'swap',
+})
 
 export const metadata: Metadata = {
   title: 'InvoiceFlow — Send Invoices in 60 Seconds',
@@ -13,7 +18,7 @@ export const metadata: Metadata = {
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="en" className={plusJakarta.variable}>
+    <html lang="en" className={fustat.variable}>
       <body className="antialiased">
         {children}
         <Toaster richColors position="top-right" />

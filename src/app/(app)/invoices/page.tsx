@@ -53,8 +53,8 @@ export default function InvoicesPage() {
       {/* Header */}
       <div className="flex items-center justify-between mb-8">
         <div>
-        <h1 className="text-2xl font-bold tracking-tight text-white">Invoices</h1>
-          <p className="text-xs mt-1" style={{ color: 'rgba(255,255,255,0.35)' }}>{invoices.length} total invoices</p>
+        <h1 className="text-gray-900">Invoices</h1>
+          <p className="text-xs mt-1" style={{ color: '#9ca3af' }}>{invoices.length} total invoices</p>
         </div>
         <Link href="/invoices/new">
           <button className="btn-brand h-9 px-5 text-sm flex items-center gap-2">
@@ -66,18 +66,18 @@ export default function InvoicesPage() {
       {/* Filters */}
       <div className="flex flex-col sm:flex-row gap-3 mb-6">
         <div className="relative flex-1">
-          <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4" style={{ color: 'rgba(255,255,255,0.25)' }} />
+          <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4" style={{ color: '#9ca3af' }} />
           <input placeholder="Search by invoice # or client…" value={search} onChange={(e) => setSearch(e.target.value)}
-            className="pl-9 h-10 w-full rounded-xl text-sm text-white outline-none"
-            style={{ background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.08)' }} />
+            className="text-gray-900"
+            style={{ background: '#f9fafb', border: '1px solid rgba(255,255,255,0.08)' }} />
         </div>
         <div className="flex gap-2 flex-wrap">
           {ALL_STATUSES.map((s) => (
             <button key={s} onClick={() => setFilter(s)}
               className="px-3 py-1.5 rounded-lg text-xs font-semibold transition-all"
               style={filter === s
-                ? { background: '#7C3AED', color: 'white', boxShadow: '0 2px 8px rgba(124,58,237,0.4)' }
-                : { background: 'rgba(255,255,255,0.05)', color: 'rgba(255,255,255,0.45)', border: '1px solid rgba(255,255,255,0.08)' }}>
+                ? { background: '#a28ef9', color: '#111827', boxShadow: '0 2px 8px rgba(124,58,237,0.4)' }
+                : { background: '#f9fafb', color: '#6b7280', border: '1px solid rgba(255,255,255,0.08)' }}>
               {s === 'ALL' ? 'All' : s.charAt(0) + s.slice(1).toLowerCase()}
             </button>
           ))}
@@ -85,15 +85,15 @@ export default function InvoicesPage() {
       </div>
 
       {/* Table */}
-      <div className="rounded-2xl overflow-hidden" style={{ background: '#16191F', border: '1px solid rgba(255,255,255,0.07)' }}>
+      <div className="rounded-2xl overflow-hidden" style={{ background: '#ffffff', border: '1px solid rgba(0,0,0,0.06)' }}>
         {loading ? (
           <div className="flex justify-center py-16">
-            <div className="w-7 h-7 rounded-full border-2 animate-spin" style={{ borderColor: '#7B61FF', borderTopColor: 'transparent' }} />
+            <div className="w-7 h-7 rounded-full border-2 animate-spin" style={{ borderColor: '#a28ef9', borderTopColor: 'transparent' }} />
           </div>
         ) : filtered.length === 0 ? (
           <div className="flex flex-col items-center justify-center py-16 text-center">
-            <FileText className="w-12 h-12 mb-4 opacity-20" style={{ color: 'rgba(255,255,255,0.4)' }} />
-            <p className="text-sm font-medium" style={{ color: 'rgba(255,255,255,0.4)' }}>No invoices found</p>
+            <FileText className="w-12 h-12 mb-4 opacity-20" style={{ color: '#6b7280' }} />
+            <p className="text-sm font-medium" style={{ color: '#6b7280' }}>No invoices found</p>
             <Link href="/invoices/new">
               <Button variant="outline" size="sm" className="mt-4 text-xs border-border">Create first invoice</Button>
             </Link>
@@ -102,36 +102,36 @@ export default function InvoicesPage() {
           <div className="overflow-x-auto">
             <table className="w-full">
               <thead>
-                <tr className="border-b" style={{ borderColor: 'rgba(255,255,255,0.07)' }}>
+                <tr className="border-b" style={{ borderColor: '#e5e7eb' }}>
                   {['Invoice #', 'Client', 'Issue Date', 'Due Date', 'Amount', 'Status', ''].map((h) => (
-                    <th key={h} className="text-left px-5 py-3.5 text-xs font-semibold uppercase tracking-wider" style={{ color: 'rgba(255,255,255,0.3)' }}>{h}</th>
+                    <th key={h} className="text-left px-5 py-3.5 text-xs font-semibold uppercase tracking-wider" style={{ color: '#9ca3af' }}>{h}</th>
                   ))}
                 </tr>
               </thead>
-              <tbody className="divide-y" style={{ borderColor: '#16191F' }}>
+              <tbody className="divide-y" style={{ borderColor: '#ffffff' }}>
                 {filtered.map((inv) => (
-                  <tr key={inv.id} className="group hover:bg-white/[0.02] transition-colors">
+                  <tr key={inv.id} className="group hover:bg-gray-50 transition-colors">
                     <td className="px-5 py-4">
                       <Link href={`/invoices/${inv.id}`} className="font-mono font-medium hover:opacity-80 transition-opacity" style={{ color: '#A89AFF' }}>{inv.invoiceNo}</Link>
                     </td>
                     <td className="px-5 py-4">
-                      <p className="text-sm font-medium text-white">{inv.client?.name}</p>
-                      {inv.client?.company && <p className="text-xs" style={{ color: 'rgba(255,255,255,0.35)' }}>{inv.client.company}</p>}
+                      <p className="text-gray-900">{inv.client?.name}</p>
+                      {inv.client?.company && <p className="text-xs" style={{ color: '#9ca3af' }}>{inv.client.company}</p>}
                     </td>
-                    <td className="px-5 py-4 text-sm" style={{ color: 'rgba(255,255,255,0.4)' }}>
+                    <td className="px-5 py-4 text-sm" style={{ color: '#6b7280' }}>
                       {new Date(inv.issueDate).toLocaleDateString('en-IN', { day: 'numeric', month: 'short', year: 'numeric' })}
                     </td>
-                    <td className="px-5 py-4 text-sm" style={{ color: 'rgba(255,255,255,0.4)' }}>
+                    <td className="px-5 py-4 text-sm" style={{ color: '#6b7280' }}>
                       {new Date(inv.dueDate).toLocaleDateString('en-IN', { day: 'numeric', month: 'short', year: 'numeric' })}
                     </td>
-                    <td className="px-5 py-4 font-semibold text-white text-sm">
+                    <td className="text-gray-900">
                       Rs {inv.total.toLocaleString('en-IN', { maximumFractionDigits: 0 })}
                     </td>
                     <td className="px-5 py-4"><StatusBadge status={inv.status} /></td>
                     <td className="px-5 py-4">
                       <div className="flex items-center gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
                         <Link href={`/invoices/${inv.id}`}>
-                          <button className="p-1.5 rounded-lg hover:bg-white/10 transition-colors" style={{ color: 'rgba(255,255,255,0.4)' }}>
+                          <button className="p-1.5 rounded-lg hover:bg-gray-100 transition-colors" style={{ color: '#6b7280' }}>
                             <Eye className="w-4 h-4" />
                           </button>
                         </Link>

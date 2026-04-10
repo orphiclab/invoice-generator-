@@ -36,31 +36,31 @@ export default function ReportsPage() {
   }, [year, periodType, quarter])
 
   const statCards = data ? [
-    { label: 'Total Revenue', value: `Rs ${data.totalRevenue.toLocaleString('en-IN', { maximumFractionDigits: 0 })}`, color: 'hsl(142 76% 46%)', icon: TrendingUp },
+    { label: 'Total Revenue', value: `Rs ${data.totalRevenue.toLocaleString('en-IN', { maximumFractionDigits: 0 })}`, color: '#16a34a', icon: TrendingUp },
     { label: 'Total Expenses', value: `Rs ${data.totalExpenses.toLocaleString('en-IN', { maximumFractionDigits: 0 })}`, color: 'hsl(0 84% 60%)', icon: TrendingDown },
-    { label: 'Net Profit', value: `Rs ${data.profit.toLocaleString('en-IN', { maximumFractionDigits: 0 })}`, color: data.profit >= 0 ? 'hsl(142 76% 46%)' : 'hsl(0 84% 60%)', icon: DollarSign },
+    { label: 'Net Profit', value: `Rs ${data.profit.toLocaleString('en-IN', { maximumFractionDigits: 0 })}`, color: data.profit >= 0 ? '#16a34a' : 'hsl(0 84% 60%)', icon: DollarSign },
     { label: 'Tax Collected', value: `Rs ${data.taxCollected.toLocaleString('en-IN', { maximumFractionDigits: 0 })}`, color: 'hsl(38 92% 50%)', icon: FileText },
   ] : []
 
   const tabStyle = (active: boolean) => ({
     padding: '6px 14px', borderRadius: '8px', fontSize: '12px', fontWeight: 600,
-    background: active ? '#7C3AED' : 'rgba(255,255,255,0.05)',
-    color: active ? 'white' : 'rgba(255,255,255,0.4)',
+    background: active ? '#a28ef9' : 'rgba(0,0,0,0.04)',
+    color: active ? 'white' : '#6b7280',
     boxShadow: active ? '0 2px 8px rgba(124,58,237,0.4)' : 'none',
     border: 'none', cursor: 'pointer', transition: 'all 0.15s',
   })
 
-  const selectStyle = { background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.1)', color: 'white', padding: '6px 12px', borderRadius: '10px', fontSize: '13px', outline: 'none' }
+  const selectStyle = { background: '#f9fafb', border: '1px solid #e5e7eb', color: '#111827', padding: '6px 12px', borderRadius: '10px', fontSize: '13px', outline: 'none' }
 
   return (
     <div className="p-6 lg:p-8 max-w-6xl mx-auto space-y-6">
       <div className="flex items-start justify-between flex-wrap gap-4">
         <div>
-          <h1 className="text-2xl font-bold tracking-tight text-white">Tax Reports</h1>
-          <p className="text-xs mt-1" style={{ color: 'rgba(255,255,255,0.35)' }}>Revenue, expense &amp; tax summary</p>
+          <h1 className="text-gray-900">Tax Reports</h1>
+          <p className="text-xs mt-1" style={{ color: '#9ca3af' }}>Revenue, expense &amp; tax summary</p>
         </div>
         <div className="flex items-center gap-3 flex-wrap">
-          <div className="flex gap-1 p-1 rounded-lg" style={{ background: 'rgba(255,255,255,0.05)' }}>
+          <div className="flex gap-1 p-1 rounded-lg" style={{ background: '#f9fafb' }}>
             <button style={tabStyle(periodType === 'yearly')} onClick={() => setPeriodType('yearly')}>Yearly</button>
             <button style={tabStyle(periodType === 'quarterly')} onClick={() => setPeriodType('quarterly')}>Quarterly</button>
           </div>
@@ -77,7 +77,7 @@ export default function ReportsPage() {
 
       {loading ? (
         <div className="flex justify-center py-24">
-          <div className="w-8 h-8 rounded-full border-2 border-t-transparent animate-spin" style={{ borderColor: '#7B61FF', borderTopColor: 'transparent' }} />
+          <div className="w-8 h-8 rounded-full border-2 border-t-transparent animate-spin" style={{ borderColor: '#a28ef9', borderTopColor: 'transparent' }} />
         </div>
       ) : (
         <>
@@ -87,12 +87,12 @@ export default function ReportsPage() {
               const cls = ['stat-emerald','stat-rose','stat-purple','stat-amber'][i]
               return (
                 <div key={label} className={`${cls} rounded-2xl p-5 relative overflow-hidden`}>
-                  <div className="absolute -top-5 -right-5 w-20 h-20 rounded-full opacity-20" style={{ background: 'rgba(255,255,255,0.3)' }} />
-                  <div className="w-9 h-9 rounded-xl flex items-center justify-center mb-3" style={{ background: 'rgba(255,255,255,0.2)' }}>
-                    <Icon className="w-4 h-4 text-white" />
+                  <div className="absolute -top-5 -right-5 w-20 h-20 rounded-full opacity-20" style={{ background: '#9ca3af' }} />
+                  <div className="w-9 h-9 rounded-xl flex items-center justify-center mb-3" style={{ background: '#9ca3af' }}>
+                    <Icon className="text-gray-900" />
                   </div>
-                  <p className="text-xl font-extrabold text-white">{value}</p>
-                  <p className="text-xs mt-1 font-semibold text-white/70">{label}</p>
+                  <p className="text-gray-900">{value}</p>
+                  <p className="text-gray-900">{label}</p>
                 </div>
               )
             })}
@@ -100,17 +100,17 @@ export default function ReportsPage() {
 
           {/* Monthly Breakdown */}
           {data && data.byMonth.length > 0 && (
-            <div className="rounded-2xl overflow-hidden" style={{ background: '#16191F', border: '1px solid rgba(255,255,255,0.07)' }}>
-              <div className="px-5 py-4 border-b" style={{ borderColor: 'rgba(255,255,255,0.07)' }}>
-                <h2 className="text-sm font-semibold text-white flex items-center gap-2">
-                  <Calendar className="w-4 h-4" style={{ color: '#7B61FF' }} /> Monthly Breakdown
+            <div className="rounded-2xl overflow-hidden" style={{ background: '#ffffff', border: '1px solid rgba(0,0,0,0.06)' }}>
+              <div className="px-5 py-4 border-b" style={{ borderColor: '#e5e7eb' }}>
+                <h2 className="text-gray-900">
+                  <Calendar className="w-4 h-4" style={{ color: '#a28ef9' }} /> Monthly Breakdown
                 </h2>
               </div>
               <table className="w-full">
                 <thead>
-                  <tr style={{ borderBottom: '1px solid rgba(255,255,255,0.07)' }}>
+                  <tr style={{ borderBottom: '1px solid #f3f4f6' }}>
                     {['Month', 'Revenue', 'Expenses', 'Tax', 'Profit'].map(h => (
-                      <th key={h} className="text-left px-5 py-3 text-xs font-semibold" style={{ color: 'rgba(255,255,255,0.3)' }}>{h}</th>
+                      <th key={h} className="text-left px-5 py-3 text-xs font-semibold" style={{ color: '#9ca3af' }}>{h}</th>
                     ))}
                   </tr>
                 </thead>
@@ -118,12 +118,12 @@ export default function ReportsPage() {
                   {data.byMonth.map(row => {
                     const profit = row.revenue - row.expenses
                     return (
-                      <tr key={row.month} className="hover:bg-white/5" style={{ borderBottom: '1px solid rgba(255,255,255,0.04)' }}>
-                        <td className="px-5 py-3 text-sm text-white">{row.month}</td>
-                        <td className="px-5 py-3 text-sm" style={{ color: 'hsl(142 76% 46%)' }}>Rs {row.revenue.toLocaleString('en-IN', { maximumFractionDigits: 0 })}</td>
+                      <tr key={row.month} className="hover:bg-gray-50" style={{ borderBottom: '1px solid #f9fafb' }}>
+                        <td className="text-gray-900">{row.month}</td>
+                        <td className="px-5 py-3 text-sm" style={{ color: '#16a34a' }}>Rs {row.revenue.toLocaleString('en-IN', { maximumFractionDigits: 0 })}</td>
                         <td className="px-5 py-3 text-sm" style={{ color: 'hsl(0 84% 60%)' }}>Rs {row.expenses.toLocaleString('en-IN', { maximumFractionDigits: 0 })}</td>
                         <td className="px-5 py-3 text-sm" style={{ color: 'hsl(38 92% 50%)' }}>Rs {row.tax.toLocaleString('en-IN', { maximumFractionDigits: 0 })}</td>
-                        <td className="px-5 py-3 text-sm font-semibold" style={{ color: profit >= 0 ? 'hsl(142 76% 46%)' : 'hsl(0 84% 60%)' }}>
+                        <td className="px-5 py-3 text-sm font-semibold" style={{ color: profit >= 0 ? '#16a34a' : 'hsl(0 84% 60%)' }}>
                           {profit >= 0 ? '+' : ''}Rs {profit.toLocaleString('en-IN', { maximumFractionDigits: 0 })}
                         </td>
                       </tr>
@@ -136,8 +136,8 @@ export default function ReportsPage() {
 
           {/* Expense by Category */}
           {data && data.byCategory.length > 0 && (
-            <div className="rounded-2xl p-6" style={{ background: '#16191F', border: '1px solid rgba(255,255,255,0.07)' }}>
-              <h2 className="text-sm font-semibold text-white mb-4">Expenses by Category</h2>
+            <div className="rounded-2xl p-6" style={{ background: '#ffffff', border: '1px solid rgba(0,0,0,0.06)' }}>
+              <h2 className="text-gray-900">Expenses by Category</h2>
               <div className="space-y-3">
                 {data.byCategory.map(row => {
                   const pct = data.totalExpenses > 0 ? (row.amount / data.totalExpenses) * 100 : 0
@@ -145,9 +145,9 @@ export default function ReportsPage() {
                     <div key={row.category}>
                       <div className="flex justify-between text-sm mb-1">
                         <span style={{ color: 'rgba(255,255,255,0.5)' }}>{row.category}</span>
-                        <span className="text-white font-medium">Rs {row.amount.toLocaleString('en-IN', { maximumFractionDigits: 0 })} <span className="text-xs" style={{ color: 'rgba(255,255,255,0.3)' }}>({pct.toFixed(0)}%)</span></span>
+                        <span className="text-gray-900" style={{ color: '#9ca3af' }}>({pct.toFixed(0)}%)</span></span>
                       </div>
-                      <div className="h-1.5 rounded-full" style={{ background: 'rgba(255,255,255,0.06)' }}>
+                      <div className="h-1.5 rounded-full" style={{ background: '#f9fafb' }}>
                         <div className="h-1.5 rounded-full transition-all" style={{ width: `${pct}%`, background: 'linear-gradient(90deg, #6B50EE, #3B82F6)' }} />
                       </div>
                     </div>
@@ -158,9 +158,9 @@ export default function ReportsPage() {
           )}
 
           {!data && (
-            <div className="rounded-2xl p-12 flex flex-col items-center text-center" style={{ background: 'rgba(255,255,255,0.03)', border: '1px solid rgba(255,255,255,0.07)' }}>
-              <FileText className="w-10 h-10 mb-3 opacity-20" style={{ color: 'rgba(255,255,255,0.4)' }} />
-              <p className="text-sm text-white">No data for this period</p>
+            <div className="rounded-2xl p-12 flex flex-col items-center text-center" style={{ background: 'rgba(255,255,255,0.03)', border: '1px solid rgba(0,0,0,0.06)' }}>
+              <FileText className="w-10 h-10 mb-3 opacity-20" style={{ color: '#6b7280' }} />
+              <p className="text-gray-900">No data for this period</p>
             </div>
           )}
         </>

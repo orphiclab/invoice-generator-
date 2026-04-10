@@ -13,7 +13,7 @@ import Link from 'next/link'
 interface Client { id: string; name: string; company?: string }
 interface Item { description: string; quantity: number; unitPrice: number }
 
-const inputStyle = { background: '#16191F', borderColor: 'rgba(255,255,255,0.1)' }
+const inputStyle = { background: '#ffffff', borderColor: '#e5e7eb' }
 const labelStyle = { color: 'rgba(255,255,255,0.55)' }
 
 export default function EditInvoicePage() {
@@ -96,7 +96,7 @@ export default function EditInvoicePage() {
   if (fetching) {
     return (
       <div className="flex items-center justify-center h-full min-h-[60vh]">
-        <div className="w-8 h-8 rounded-full border-2 border-t-transparent animate-spin" style={{ borderColor: '#7B61FF', borderTopColor: 'transparent' }} />
+        <div className="w-8 h-8 rounded-full border-2 border-t-transparent animate-spin" style={{ borderColor: '#a28ef9', borderTopColor: 'transparent' }} />
       </div>
     )
   }
@@ -105,12 +105,12 @@ export default function EditInvoicePage() {
     <div className="p-6 lg:p-8 max-w-4xl mx-auto">
       <div className="flex items-center gap-3 mb-8">
         <Link href={`/invoices/${id}`}>
-          <button className="p-2 rounded-xl hover:bg-white/5 transition-colors" style={{ color: 'rgba(255,255,255,0.4)' }}>
+          <button className="p-2 rounded-xl hover:bg-gray-50 transition-colors" style={{ color: '#6b7280' }}>
             <ArrowLeft className="w-5 h-5" />
           </button>
         </Link>
         <div>
-          <h1 className="text-2xl font-bold text-white">Edit Invoice</h1>
+          <h1 className="text-gray-900">Edit Invoice</h1>
           <p className="text-sm font-mono" style={{ color: '#8B7AFF' }}>{form.invoiceNo}</p>
         </div>
       </div>
@@ -118,15 +118,15 @@ export default function EditInvoicePage() {
       <form onSubmit={handleSubmit} className="space-y-6">
         {/* Invoice details */}
         <div className="glass rounded-2xl p-6">
-          <h2 className="text-base font-semibold text-white mb-5">Invoice Details</h2>
+          <h2 className="text-gray-900">Invoice Details</h2>
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div className="space-y-2">
               <Label className="text-sm" style={labelStyle}>Client *</Label>
               <Select value={form.clientId} onValueChange={(v) => setForm({ ...form, clientId: v })}>
-                <SelectTrigger className="h-10 text-white" style={inputStyle}>
+                <SelectTrigger className="text-gray-900" style={inputStyle}>
                   <SelectValue placeholder="Select client" />
                 </SelectTrigger>
-                <SelectContent style={{ background: '#16191F', borderColor: 'rgba(255,255,255,0.1)' }}>
+                <SelectContent style={{ background: '#ffffff', borderColor: '#e5e7eb' }}>
                   {clients.map((c) => (
                     <SelectItem key={c.id} value={c.id}>{c.name}{c.company ? ` · ${c.company}` : ''}</SelectItem>
                   ))}
@@ -135,23 +135,23 @@ export default function EditInvoicePage() {
             </div>
             <div className="space-y-2">
               <Label className="text-sm" style={labelStyle}>Invoice Number *</Label>
-              <Input value={form.invoiceNo} onChange={(e) => setForm({ ...form, invoiceNo: e.target.value })} className="h-10 text-white font-mono" style={inputStyle} required />
+              <Input value={form.invoiceNo} onChange={(e) => setForm({ ...form, invoiceNo: e.target.value })} className="text-gray-900" style={inputStyle} required />
             </div>
             <div className="space-y-2">
               <Label className="text-sm" style={labelStyle}>Issue Date</Label>
-              <Input type="date" value={form.issueDate} onChange={(e) => setForm({ ...form, issueDate: e.target.value })} className="h-10 text-white" style={inputStyle} />
+              <Input type="date" value={form.issueDate} onChange={(e) => setForm({ ...form, issueDate: e.target.value })} className="text-gray-900" style={inputStyle} />
             </div>
             <div className="space-y-2">
               <Label className="text-sm" style={labelStyle}>Due Date *</Label>
-              <Input type="date" value={form.dueDate} onChange={(e) => setForm({ ...form, dueDate: e.target.value })} className="h-10 text-white" style={inputStyle} required />
+              <Input type="date" value={form.dueDate} onChange={(e) => setForm({ ...form, dueDate: e.target.value })} className="text-gray-900" style={inputStyle} required />
             </div>
             <div className="space-y-2">
               <Label className="text-sm" style={labelStyle}>Status</Label>
               <Select value={form.status} onValueChange={(v) => setForm({ ...form, status: v })}>
-                <SelectTrigger className="h-10 text-white" style={inputStyle}>
+                <SelectTrigger className="text-gray-900" style={inputStyle}>
                   <SelectValue />
                 </SelectTrigger>
-                <SelectContent style={{ background: '#16191F', borderColor: 'rgba(255,255,255,0.1)' }}>
+                <SelectContent style={{ background: '#ffffff', borderColor: '#e5e7eb' }}>
                   {['DRAFT', 'SENT', 'PAID', 'OVERDUE'].map((s) => (
                     <SelectItem key={s} value={s}>{s.charAt(0) + s.slice(1).toLowerCase()}</SelectItem>
                   ))}
@@ -163,18 +163,18 @@ export default function EditInvoicePage() {
 
         {/* Line items */}
         <div className="glass rounded-2xl p-6">
-          <h2 className="text-base font-semibold text-white mb-5">Line Items</h2>
+          <h2 className="text-gray-900">Line Items</h2>
           <div className="space-y-3">
             {/* Header */}
             <div className="grid grid-cols-12 gap-2 px-1">
               {['Description', 'Qty', 'Unit Price', 'Total', ''].map((h, i) => (
-                <div key={i} className={`text-xs font-semibold uppercase tracking-wider ${i === 0 ? 'col-span-5' : i === 1 ? 'col-span-2' : i === 2 ? 'col-span-2' : i === 3 ? 'col-span-2' : 'col-span-1'}`} style={{ color: 'rgba(255,255,255,0.3)' }}>{h}</div>
+                <div key={i} className={`text-xs font-semibold uppercase tracking-wider ${i === 0 ? 'col-span-5' : i === 1 ? 'col-span-2' : i === 2 ? 'col-span-2' : i === 3 ? 'col-span-2' : 'col-span-1'}`} style={{ color: '#9ca3af' }}>{h}</div>
               ))}
             </div>
             {items.map((item, idx) => (
               <div key={idx} className="grid grid-cols-12 gap-2 items-center">
                 <Input
-                  className="col-span-5 h-9 text-sm text-white"
+                  className="text-gray-900"
                   style={inputStyle}
                   placeholder="Service or product description"
                   value={item.description}
@@ -182,7 +182,7 @@ export default function EditInvoicePage() {
                   required
                 />
                 <Input
-                  className="col-span-2 h-9 text-sm text-white text-center"
+                  className="text-gray-900"
                   style={inputStyle}
                   type="number"
                   min={0.01}
@@ -191,7 +191,7 @@ export default function EditInvoicePage() {
                   onChange={(e) => updateItem(idx, 'quantity', parseFloat(e.target.value) || 0)}
                 />
                 <Input
-                  className="col-span-2 h-9 text-sm text-white"
+                  className="text-gray-900"
                   style={inputStyle}
                   type="number"
                   min={0}
@@ -200,7 +200,7 @@ export default function EditInvoicePage() {
                   value={item.unitPrice}
                   onChange={(e) => updateItem(idx, 'unitPrice', parseFloat(e.target.value) || 0)}
                 />
-                <div className="col-span-2 text-sm font-medium text-white px-2">
+                <div className="text-gray-900">
                   Rs {(item.quantity * item.unitPrice).toLocaleString('en-IN', { maximumFractionDigits: 0 })}
                 </div>
                 <div className="col-span-1">
@@ -210,7 +210,7 @@ export default function EditInvoicePage() {
                 </div>
               </div>
             ))}
-            <Button type="button" variant="outline" size="sm" onClick={addItem} className="mt-2 gap-2 text-xs border-border hover:bg-white/5" style={{ color: '#9B8AFF' }}>
+            <Button type="button" variant="outline" size="sm" onClick={addItem} className="mt-2 gap-2 text-xs border-border hover:bg-gray-50" style={{ color: '#9B8AFF' }}>
               <Plus className="w-3.5 h-3.5" /> Add Item
             </Button>
           </div>
@@ -219,41 +219,41 @@ export default function EditInvoicePage() {
         {/* Totals + Notes */}
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
           <div className="glass rounded-2xl p-6">
-            <h2 className="text-base font-semibold text-white mb-4">Notes</h2>
+            <h2 className="text-gray-900">Notes</h2>
             <textarea
               value={form.notes}
               onChange={(e) => setForm({ ...form, notes: e.target.value })}
               rows={4}
               placeholder="Payment terms, thank you notes, bank details…"
-              className="w-full rounded-xl px-3 py-2.5 text-sm text-white resize-none outline-none focus:ring-1 placeholder:text-muted-foreground"
-              style={{ ...inputStyle, '--tw-ring-color': '#7B61FF' } as React.CSSProperties}
+              className="text-gray-900"
+              style={{ ...inputStyle, '--tw-ring-color': '#a28ef9' } as React.CSSProperties}
             />
           </div>
 
           <div className="glass rounded-2xl p-6">
-            <h2 className="text-base font-semibold text-white mb-4 flex items-center gap-2">
-              <Calculator className="w-4 h-4" style={{ color: '#7B61FF' }} /> Summary
+            <h2 className="text-gray-900">
+              <Calculator className="w-4 h-4" style={{ color: '#a28ef9' }} /> Summary
             </h2>
             <div className="space-y-3">
-              <div className="flex justify-between text-sm" style={{ color: 'rgba(255,255,255,0.4)' }}>
+              <div className="flex justify-between text-sm" style={{ color: '#6b7280' }}>
                 <span>Subtotal</span>
-                <span className="text-white font-medium">Rs {subtotal.toLocaleString('en-IN', { maximumFractionDigits: 2 })}</span>
+                <span className="text-gray-900">Rs {subtotal.toLocaleString('en-IN', { maximumFractionDigits: 2 })}</span>
               </div>
               <div className="flex items-center gap-2">
-                <span className="text-sm flex-1" style={{ color: 'rgba(255,255,255,0.4)' }}>Tax (%)</span>
+                <span className="text-sm flex-1" style={{ color: '#6b7280' }}>Tax (%)</span>
                 <Input type="number" min={0} max={100} step={0.1} value={form.tax} onChange={(e) => setForm({ ...form, tax: parseFloat(e.target.value) || 0 })}
-                  className="w-20 h-8 text-sm text-white text-right" style={inputStyle} />
-                <span className="text-sm text-white font-medium w-24 text-right">Rs {taxAmt.toLocaleString('en-IN', { maximumFractionDigits: 2 })}</span>
+                  className="text-gray-900" style={inputStyle} />
+                <span className="text-gray-900">Rs {taxAmt.toLocaleString('en-IN', { maximumFractionDigits: 2 })}</span>
               </div>
               <div className="flex items-center gap-2">
-                <span className="text-sm flex-1" style={{ color: 'rgba(255,255,255,0.4)' }}>Discount (%)</span>
+                <span className="text-sm flex-1" style={{ color: '#6b7280' }}>Discount (%)</span>
                 <Input type="number" min={0} max={100} step={0.1} value={form.discount} onChange={(e) => setForm({ ...form, discount: parseFloat(e.target.value) || 0 })}
-                  className="w-20 h-8 text-sm text-white text-right" style={inputStyle} />
-                <span className="text-sm text-white font-medium w-24 text-right">-Rs {discountAmt.toLocaleString('en-IN', { maximumFractionDigits: 2 })}</span>
+                  className="text-gray-900" style={inputStyle} />
+                <span className="text-gray-900">-Rs {discountAmt.toLocaleString('en-IN', { maximumFractionDigits: 2 })}</span>
               </div>
-              <div className="pt-3 border-t" style={{ borderColor: 'rgba(255,255,255,0.1)' }}>
+              <div className="pt-3 border-t" style={{ borderColor: '#e5e7eb' }}>
                 <div className="flex justify-between items-center">
-                  <span className="font-semibold text-white">Total</span>
+                  <span className="text-gray-900">Total</span>
                   <span className="text-xl font-bold gradient-text">Rs {total.toLocaleString('en-IN', { maximumFractionDigits: 2 })}</span>
                 </div>
               </div>
@@ -266,7 +266,7 @@ export default function EditInvoicePage() {
           <Link href={`/invoices/${id}`}>
             <Button variant="outline" className="border-border hover:bg-muted" style={{ color: 'rgba(255,255,255,0.5)' }}>Cancel</Button>
           </Link>
-          <Button type="submit" disabled={loading} className="font-semibold text-white px-8" style={{ background: 'linear-gradient(135deg, #6B50EE, #3B82F6)' }}>
+          <Button type="submit" disabled={loading} className="text-gray-900" style={{ background: 'linear-gradient(135deg, #6B50EE, #3B82F6)' }}>
             {loading ? <><Loader2 className="w-4 h-4 mr-2 animate-spin" />Saving…</> : 'Save Changes'}
           </Button>
         </div>
