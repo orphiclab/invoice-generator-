@@ -102,14 +102,14 @@ export default function RecurringPage() {
       {/* Stats */}
       <div className="grid grid-cols-3 gap-4">
         {[
-          { label: 'Total Schedules', value: recurring.length, cls: 'stat-purple' },
-          { label: 'Active', value: recurring.filter(r => r.isActive).length, cls: 'stat-emerald' },
-          { label: 'Paused', value: recurring.filter(r => !r.isActive).length, cls: 'stat-blue' },
-        ].map(({ label, value, cls }) => (
-          <div key={label} className={`${cls} rounded-2xl p-5 relative overflow-hidden`}>
-            <div className="absolute -top-5 -right-5 w-20 h-20 rounded-full opacity-20" style={{ background: '#9ca3af' }} />
-            <p className="text-sm font-semibold" style={{ color: '#111827' }}>{value}</p>
-            <p className="text-sm font-semibold" style={{ color: '#111827' }}>{label}</p>
+          { label: 'Total Schedules', value: recurring.length, grad: 'linear-gradient(135deg, #a28ef9 0%, #7c5cfc 100%)', shadow: 'rgba(162,142,249,0.3)', light: false },
+          { label: 'Active', value: recurring.filter(r => r.isActive).length, grad: 'linear-gradient(135deg, #a4f5a6 0%, #6ee7b7 100%)', shadow: 'rgba(164,245,166,0.35)', light: true },
+          { label: 'Paused', value: recurring.filter(r => !r.isActive).length, grad: 'linear-gradient(135deg, #60a5fa 0%, #93c5fd 100%)', shadow: 'rgba(96,165,250,0.3)', light: false },
+        ].map(({ label, value, grad, shadow, light }) => (
+          <div key={label} className="rounded-2xl p-5 relative overflow-hidden" style={{ background: grad, boxShadow: `0 8px 24px ${shadow}` }}>
+            <div className="absolute -top-5 -right-5 w-20 h-20 rounded-full" style={{ background: 'rgba(255,255,255,0.12)' }} />
+            <p className="text-2xl font-extrabold" style={{ color: light ? '#166534' : 'white' }}>{value}</p>
+            <p className="text-xs mt-1 font-semibold" style={{ color: light ? 'rgba(22,101,52,0.75)' : 'rgba(255,255,255,0.8)' }}>{label}</p>
           </div>
         ))}
       </div>
@@ -150,43 +150,47 @@ export default function RecurringPage() {
           <div className="w-7 h-7 rounded-full border-2 border-t-transparent animate-spin" style={{ borderColor: '#a28ef9', borderTopColor: 'transparent' }} />
         </div>
       ) : recurring.length === 0 ? (
-        <div className="rounded-2xl p-12 flex flex-col items-center text-center" style={{ background: 'rgba(255,255,255,0.03)', border: '1px solid rgba(0,0,0,0.06)' }}>
-          <RefreshCw className="w-10 h-10 mb-3 opacity-20" style={{ color: '#6b7280' }} />
-          <p className="text-sm font-semibold" style={{ color: '#111827' }}>No recurring invoices</p>
-          <p className="text-xs mb-4" style={{ color: '#9ca3af' }}>Set up automatic invoice generation for retainer clients</p>
-          <Button onClick={() => setShowForm(true)} className="text-gray-900" style={{ background: 'linear-gradient(135deg, #6B50EE, #3B82F6)' }}>
-            <Plus className="w-3 h-3" /> Create first schedule
-          </Button>
+        <div className="bg-white rounded-2xl p-12 flex flex-col items-center text-center" style={{ border: '1px solid #f0f2f0', boxShadow: '0 2px 8px rgba(0,0,0,0.05)' }}>
+          <div className="w-14 h-14 rounded-2xl flex items-center justify-center mb-3" style={{ background: '#f9fafb' }}>
+            <RefreshCw className="w-7 h-7" style={{ color: '#d1d5db' }} />
+          </div>
+          <p className="text-sm font-semibold" style={{ color: '#374151' }}>No recurring invoices</p>
+          <p className="text-xs mt-1 mb-4" style={{ color: '#9ca3af' }}>Set up automatic invoice generation for retainer clients</p>
+          <button onClick={() => setShowForm(true)} className="btn-brand h-8 px-4 text-xs flex items-center gap-1.5">
+            <Plus className="w-3.5 h-3.5" /> Create first schedule
+          </button>
         </div>
       ) : (
-        <div className="space-y-3">
+        <div className="bg-white rounded-2xl overflow-hidden" style={{ border: '1px solid #f0f2f0', boxShadow: '0 2px 8px rgba(0,0,0,0.05)' }}>
+          <div className="divide-y" style={{ borderColor: '#f9fafb' }}>
           {recurring.map(r => (
-            <div key={r.id} className="flex items-center gap-4 p-5 rounded-2xl group" style={{ background: '#ffffff', border: '1px solid rgba(0,0,0,0.06)', opacity: r.isActive ? 1 : 0.6 }}>
-              <div className="p-3 rounded-xl flex-shrink-0" style={{ background: `${FREQ_COLORS[r.frequency]}20` }}>
+            <div key={r.id} className="flex items-center gap-4 px-5 py-4 group hover:bg-gray-50 transition-colors" style={{ opacity: r.isActive ? 1 : 0.55 }}>
+              <div className="p-2.5 rounded-xl flex-shrink-0" style={{ background: `${FREQ_COLORS[r.frequency]}18` }}>
                 <RefreshCw className="w-5 h-5" style={{ color: FREQ_COLORS[r.frequency] }} />
               </div>
               <div className="flex-1 min-w-0">
                 <p className="text-sm font-semibold" style={{ color: '#111827' }}>{r.title}</p>
                 <div className="flex items-center gap-3 mt-1">
-                  <span className="text-xs px-2 py-0.5 rounded-full" style={{ background: `${FREQ_COLORS[r.frequency]}20`, color: FREQ_COLORS[r.frequency] }}>
+                  <span className="text-[11px] px-2 py-0.5 rounded-full font-semibold" style={{ background: `${FREQ_COLORS[r.frequency]}18`, color: FREQ_COLORS[r.frequency] }}>
                     {FREQ_LABELS[r.frequency]}
                   </span>
-                  <span className="flex items-center gap-1 text-xs" style={{ color: '#9ca3af' }}>
-                    <Calendar className="w-3 h-3" /> Next: {new Date(r.nextRunDate).toLocaleDateString('en-IN', { day: 'numeric', month: 'short', year: 'numeric' })}
+                  <span className="flex items-center gap-1 text-[11px]" style={{ color: '#9ca3af' }}>
+                    <Calendar className="w-3 h-3" /> Next: {new Date(r.nextRunDate).toLocaleDateString('en-LK', { day: 'numeric', month: 'short', year: 'numeric' })}
                   </span>
                 </div>
               </div>
-              <p className="text-sm font-semibold" style={{ color: '#111827' }}>Rs {r.total.toLocaleString('en-IN', { maximumFractionDigits: 0 })}</p>
+              <p className="text-sm font-bold" style={{ color: '#111827' }}>Rs {r.total.toLocaleString('en-LK', { maximumFractionDigits: 0 })}</p>
               <div className="flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
                 <button onClick={() => toggleActive(r.id, r.isActive)} className="p-1.5 rounded-lg hover:bg-gray-100 transition-colors" title={r.isActive ? 'Pause' : 'Resume'}>
-                  {r.isActive ? <Pause className="w-4 h-4" style={{ color: 'hsl(38 92% 50%)' }} /> : <Play className="w-4 h-4" style={{ color: '#16a34a' }} />}
+                  {r.isActive ? <Pause className="w-4 h-4" style={{ color: '#f59e0b' }} /> : <Play className="w-4 h-4" style={{ color: '#16a34a' }} />}
                 </button>
-                <button onClick={() => handleDelete(r.id)} className="p-1.5 rounded-lg hover:bg-red-500/20 transition-colors">
-                  <Trash2 className="w-4 h-4" style={{ color: 'hsl(0 84% 60%)' }} />
+                <button onClick={() => handleDelete(r.id)} className="p-1.5 rounded-lg hover:bg-red-50 transition-colors">
+                  <Trash2 className="w-4 h-4" style={{ color: '#ef4444' }} />
                 </button>
               </div>
             </div>
           ))}
+          </div>
         </div>
       )}
     </div>

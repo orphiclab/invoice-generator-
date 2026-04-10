@@ -83,29 +83,25 @@ export default function EstimatesPage() {
       {/* Stats */}
       <div className="grid grid-cols-3 gap-4">
         {[
-          { label: 'Total Value', value: `Rs ${total.toLocaleString('en-LK', { maximumFractionDigits: 0 })}`, cls: 'stat-purple', icon: FileText },
-          { label: 'Sent', value: String(sent), cls: 'stat-blue', icon: Send },
-          { label: 'Accepted', value: String(accepted), cls: 'stat-emerald', icon: CheckCircle },
-        ].map(({ label, value, cls, icon: Icon }) => (
-          <div key={label} className={`${cls} rounded-2xl p-5 relative overflow-hidden`}>
-            <div className="absolute -top-5 -right-5 w-20 h-20 rounded-full opacity-20" style={{ background: '#9ca3af' }} />
-            <div className="w-9 h-9 rounded-xl flex items-center justify-center mb-3" style={{ background: '#9ca3af' }}>
-              <Icon className="text-gray-900" />
+          { label: 'Total Value', value: `Rs ${total.toLocaleString('en-LK', { maximumFractionDigits: 0 })}`, grad: 'linear-gradient(135deg, #a28ef9 0%, #7c5cfc 100%)', shadow: 'rgba(162,142,249,0.3)', icon: FileText, dark: false },
+          { label: 'Sent', value: String(sent), grad: 'linear-gradient(135deg, #60a5fa 0%, #93c5fd 100%)', shadow: 'rgba(96,165,250,0.3)', icon: Send, dark: true },
+          { label: 'Accepted', value: String(accepted), grad: 'linear-gradient(135deg, #a4f5a6 0%, #6ee7b7 100%)', shadow: 'rgba(164,245,166,0.35)', icon: CheckCircle, dark: true },
+        ].map(({ label, value, grad, shadow, icon: Icon, dark }) => (
+          <div key={label} className="rounded-2xl p-5 relative overflow-hidden" style={{ background: grad, boxShadow: `0 8px 24px ${shadow}` }}>
+            <div className="absolute -top-5 -right-5 w-20 h-20 rounded-full" style={{ background: 'rgba(255,255,255,0.12)' }} />
+            <div className="w-9 h-9 rounded-xl flex items-center justify-center mb-3" style={{ background: 'rgba(255,255,255,0.25)' }}>
+              <Icon className="w-5 h-5" style={{ color: dark ? '#166534' : 'white' }} />
             </div>
-            <p className="text-sm font-semibold" style={{ color: '#111827' }}>{value}</p>
-            <p className="text-sm font-semibold" style={{ color: '#111827' }}>{label}</p>
+            <p className="text-xl font-extrabold" style={{ color: dark ? '#166534' : 'white' }}>{value}</p>
+            <p className="text-xs mt-1 font-semibold" style={{ color: dark ? 'rgba(22,101,52,0.75)' : 'rgba(255,255,255,0.8)' }}>{label}</p>
           </div>
         ))}
       </div>
 
       {/* Filters */}
-      <div className="flex gap-2 flex-wrap">
+      <div className="pill-tab-bar">
         {['ALL', 'DRAFT', 'SENT', 'ACCEPTED', 'REJECTED', 'CONVERTED'].map(s => (
-          <button key={s} onClick={() => setFilter(s)}
-            className="px-3 py-1.5 rounded-lg text-xs font-semibold transition-all capitalize"
-            style={filter === s
-              ? { background: '#a28ef9', color: '#111827', boxShadow: '0 2px 8px rgba(124,58,237,0.4)' }
-              : { background: '#f9fafb', color: '#6b7280', border: '1px solid #e5e7eb' }}>
+          <button key={s} onClick={() => setFilter(s)} className={`pill-tab${filter === s ? ' active' : ''}`}>
             {s === 'ALL' ? 'All' : STATUS_CONFIG[s as keyof typeof STATUS_CONFIG]?.label}
           </button>
         ))}
@@ -117,65 +113,66 @@ export default function EstimatesPage() {
           <div className="w-7 h-7 rounded-full border-2 border-t-transparent animate-spin" style={{ borderColor: '#a28ef9', borderTopColor: 'transparent' }} />
         </div>
       ) : estimates.length === 0 ? (
-        <div className="rounded-2xl p-12 flex flex-col items-center text-center" style={{ background: 'rgba(255,255,255,0.03)', border: '1px solid rgba(0,0,0,0.06)' }}>
-          <FileText className="w-10 h-10 mb-3 opacity-20" style={{ color: '#6b7280' }} />
-          <p className="text-sm font-semibold" style={{ color: '#111827' }}>No estimates yet</p>
-          <p className="text-xs mb-4" style={{ color: '#9ca3af' }}>Create your first quote for a client</p>
+        <div className="bg-white rounded-2xl p-12 flex flex-col items-center text-center" style={{ border: '1px solid #f0f2f0', boxShadow: '0 2px 8px rgba(0,0,0,0.05)' }}>
+          <div className="w-14 h-14 rounded-2xl flex items-center justify-center mb-3" style={{ background: '#f9fafb' }}>
+            <FileText className="w-7 h-7" style={{ color: '#d1d5db' }} />
+          </div>
+          <p className="text-sm font-semibold" style={{ color: '#374151' }}>No estimates yet</p>
+          <p className="text-xs mt-1 mb-4" style={{ color: '#9ca3af' }}>Create your first quote for a client</p>
           <Link href="/estimates/new">
-            <Button className="text-gray-900" style={{ background: 'linear-gradient(135deg, #6B50EE, #3B82F6)' }}>
-              <Plus className="w-3 h-3" /> Create estimate
-            </Button>
+            <button className="btn-brand h-8 px-4 text-xs flex items-center gap-1.5">
+              <Plus className="w-3.5 h-3.5" /> Create estimate
+            </button>
           </Link>
         </div>
       ) : (
-        <div className="rounded-2xl overflow-hidden" style={{ background: '#ffffff', border: '1px solid rgba(0,0,0,0.06)' }}>
+        <div className="bg-white rounded-2xl overflow-hidden" style={{ border: '1px solid #f0f2f0', boxShadow: '0 2px 8px rgba(0,0,0,0.05)' }}>
           <table className="w-full">
             <thead>
               <tr style={{ borderBottom: '1px solid #f3f4f6' }}>
                 {['Estimate #', 'Client', 'Amount', 'Expires', 'Status', 'Actions'].map(h => (
-                  <th key={h} className="text-left px-4 py-3 text-xs font-semibold" style={{ color: '#9ca3af' }}>{h}</th>
+                  <th key={h} className="text-left px-5 py-3 text-[10px] font-bold uppercase tracking-widest" style={{ color: '#9ca3af' }}>{h}</th>
                 ))}
               </tr>
             </thead>
             <tbody>
-              {estimates.map(est => (
-                <tr key={est.id} className="hover:bg-gray-50 transition-colors" style={{ borderBottom: '1px solid #f3f4f6' }}>
-                  <td className="px-4 py-3.5">
-                    <Link href={`/estimates/${est.id}`} className="text-gray-900">{est.estimateNo}</Link>
+              {estimates.map((est, i) => (
+                <tr key={est.id} className="hover:bg-gray-50 transition-colors"
+                  style={{ borderBottom: i < estimates.length - 1 ? '1px solid #f9fafb' : 'none' }}>
+                  <td className="px-5 py-3.5">
+                    <Link href={`/estimates/${est.id}`} className="text-xs font-bold font-mono hover:opacity-75" style={{ color: '#a28ef9' }}>{est.estimateNo}</Link>
                   </td>
-                  <td className="px-4 py-3.5">
-                    <p className="text-sm font-semibold" style={{ color: '#111827' }}>{est.client.name}</p>
-                    {est.client.company && <p className="text-xs" style={{ color: '#9ca3af' }}>{est.client.company}</p>}
+                  <td className="px-5 py-3.5">
+                    <p className="text-xs font-semibold" style={{ color: '#111827' }}>{est.client.name}</p>
+                    {est.client.company && <p className="text-[10px] mt-0.5" style={{ color: '#9ca3af' }}>{est.client.company}</p>}
                   </td>
-                  <td className="px-4 py-3.5">
-                    <span className="text-gray-900">
-                      {est.currency?.symbol ?? 'Rs'}{est.total.toLocaleString('en-LK', { maximumFractionDigits: 0 })}
+                  <td className="px-5 py-3.5 text-xs font-bold" style={{ color: '#111827' }}>
+                    {est.currency?.symbol ?? 'Rs'}{est.total.toLocaleString('en-LK', { maximumFractionDigits: 0 })}
+                  </td>
+                  <td className="px-5 py-3.5">
+                    <span className="text-xs" style={{ color: new Date(est.expiryDate) < new Date() ? '#ef4444' : '#6b7280' }}>
+                      {new Date(est.expiryDate).toLocaleDateString('en-LK', { day: 'numeric', month: 'short', year: 'numeric' })}
                     </span>
                   </td>
-                  <td className="px-4 py-3.5">
-                    <span className="text-sm" style={{ color: new Date(est.expiryDate) < new Date() ? 'hsl(0 84% 60%)' : '#6b7280' }}>
-                      {new Date(est.expiryDate).toLocaleDateString('en-IN', { day: 'numeric', month: 'short', year: 'numeric' })}
-                    </span>
-                  </td>
-                  <td className="px-4 py-3.5"><EstimateBadge status={est.status} /></td>
-                  <td className="px-4 py-3.5">
+                  <td className="px-5 py-3.5"><EstimateBadge status={est.status} /></td>
+                  <td className="px-5 py-3.5">
                     <div className="flex items-center gap-1">
                       {est.status === 'DRAFT' && (
-                        <button onClick={() => updateStatus(est.id, 'SENT')} title="Mark as Sent" className="p-1.5 rounded-lg hover:bg-blue-500/20 transition-colors">
-                          <Send className="w-3.5 h-3.5" style={{ color: 'hsl(199 89% 48%)' }} />
+                        <button onClick={() => updateStatus(est.id, 'SENT')} title="Mark as Sent" className="p-1.5 rounded-lg hover:bg-blue-50 transition-colors">
+                          <Send className="w-3.5 h-3.5" style={{ color: '#3b82f6' }} />
                         </button>
                       )}
                       {est.status === 'SENT' && (
                         <>
-                          <button onClick={() => updateStatus(est.id, 'ACCEPTED')} title="Accept" className="p-1.5 rounded-lg hover:bg-green-500/20 transition-colors">
+                          <button onClick={() => updateStatus(est.id, 'ACCEPTED')} title="Accept" className="p-1.5 rounded-lg hover:bg-green-50 transition-colors">
                             <CheckCircle className="w-3.5 h-3.5" style={{ color: '#16a34a' }} />
                           </button>
-                          <button onClick={() => updateStatus(est.id, 'REJECTED')} title="Reject" className="p-1.5 rounded-lg hover:bg-red-500/20 transition-colors">
-                            <XCircle className="w-3.5 h-3.5" style={{ color: 'hsl(0 84% 60%)' }} />
+                          <button onClick={() => updateStatus(est.id, 'REJECTED')} title="Reject" className="p-1.5 rounded-lg hover:bg-red-50 transition-colors">
+                            <XCircle className="w-3.5 h-3.5" style={{ color: '#ef4444' }} />
                           </button>
                         </>
                       )}
-                      <Link href={`/estimates/${est.id}`} className="p-1.5 rounded-lg hover:bg-purple-500/20 transition-colors">
+                      <Link href={`/estimates/${est.id}`} className="p-1.5 rounded-lg hover:bg-purple-50 transition-colors">
                         <ArrowRight className="w-3.5 h-3.5" style={{ color: '#a28ef9' }} />
                       </Link>
                     </div>
