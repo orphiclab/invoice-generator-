@@ -4,11 +4,16 @@ import { useEffect, useState, useCallback } from 'react'
 import { useParams, useRouter } from 'next/navigation'
 import Link from 'next/link'
 import { toast } from 'sonner'
-import { ArrowLeft, Download, MessageCircle, Share2, Edit2, Check, Clock, Building2, Mail, Phone, MapPin, Copy, Send, X, DollarSign, AlertTriangle, Bell, Plus, CreditCard, ChevronDown } from 'lucide-react'
+import { ArrowLeft, Download, MessageCircle, Share2, Edit2, Check, Clock, Building2, Mail, Phone, MapPin, Copy, Send, X, DollarSign, AlertTriangle, Bell, Plus, CreditCard, ChevronDown, Eye } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import { StatusBadge } from '@/components/StatusBadge'
 import { Input } from '@/components/ui/input'
+import dynamic from 'next/dynamic'
+const InvoicePreviewModal = dynamic(
+  () => import('@/components/InvoicePreviewModal').then(m => m.InvoicePreviewModal),
+  { ssr: false }
+)
 
 interface InvoiceItem { description: string; quantity: number; unitPrice: number; total: number }
 interface PaymentRecord { id: string; amount: number; method: string; note?: string; paymentType: string; paidAt?: string; createdAt: string }
@@ -45,6 +50,7 @@ export default function InvoiceDetailPage() {
   const [lateFeeRate, setLateFeeRate] = useState('2')
   const [pdfTemplate, setPdfTemplate] = useState<'green' | 'classic'>('green')
   const [showTemplateMenu, setShowTemplateMenu] = useState(false)
+  const [showPreview, setShowPreview] = useState(false)
 
   const loadPayments = useCallback(async () => {
     const res = await fetch(`/api/invoices/${id}/record-payment`)
@@ -235,6 +241,12 @@ export default function InvoiceDetailPage() {
           </button>
           <button onClick={copyShareLink} title="Copy share link" className="p-2 rounded-xl hover:bg-white/5 transition-colors" style={{ color: 'rgba(255,255,255,0.4)' }}>
             <Share2 className="w-4 h-4" />
+          </button>
+          {/* Preview button */}
+          <button onClick={() => setShowPreview(true)} title="Preview invoice PDF"
+            className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-semibold transition-all hover:bg-emerald-500/10"
+            style={{ color: '#10B981', border: '1px solid rgba(16,185,129,0.3)' }}>
+            <Eye className="w-3.5 h-3.5" /> Preview
           </button>
           {/* Download with template picker */}
           <div className="relative">
@@ -637,6 +649,17 @@ export default function InvoiceDetailPage() {
           </div>
         </div>
       </div>
+    )}
+
+    {/* PDF Preview Modal */}
+    {showPreview && (
+      <InvoicePreviewModal
+        invoice={invoice}
+        template={pdfTemplate}
+        onClose={() => setShowPreview(false)}
+        onTemplateChange={(t) => setPdfTemplate(t)}
+        onDownload={() => { setShowPreview(false); downloadPDF() }}
+      />
     )}
     </>
   )
