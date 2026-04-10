@@ -88,14 +88,6 @@ export default function SettingsPage() {
     setLoading(false)
   }
 
-  const tabStyle = (active: boolean) => ({
-    display: 'flex', alignItems: 'center', gap: '6px', padding: '8px 16px',
-    borderRadius: '10px', fontSize: '13px', fontWeight: 600, border: 'none', cursor: 'pointer',
-    transition: 'all 0.15s',
-    background: active ? '#a28ef9' : 'transparent',
-    color: active ? 'white' : '#6b7280',
-    boxShadow: active ? '0 2px 8px rgba(124,58,237,0.4)' : 'none',
-  })
 
   return (
     <div className="p-6 lg:p-8 max-w-3xl mx-auto">
@@ -105,10 +97,11 @@ export default function SettingsPage() {
       </div>
 
       {/* Tab Bar */}
-      <div className="flex gap-1 p-1 rounded-xl mb-6 w-fit" style={{ background: '#f9fafb' }}>
+      <div className="pill-tab-bar mb-6">
         {TABS.map(({ id, label, icon: Icon }) => (
-          <button key={id} onClick={() => setTab(id)} style={tabStyle(tab === id)}>
-            <Icon style={{ width: 14, height: 14 }} />
+          <button key={id} onClick={() => setTab(id)}
+            className={`pill-tab flex items-center gap-1.5${tab === id ? ' active' : ''}`}>
+            <Icon style={{ width: 13, height: 13 }} />
             {label}
           </button>
         ))}
@@ -117,7 +110,7 @@ export default function SettingsPage() {
       {/* Invoicing Defaults Tab */}
       {tab === 'invoicing' && (
         <form onSubmit={saveInvSettings} className="space-y-6">
-          <div className="rounded-2xl p-6" style={{ background: '#ffffff', border: '1px solid rgba(0,0,0,0.06)' }}>
+          <div className="bg-white rounded-2xl p-6" style={{ border: '1px solid #f0f2f0', boxShadow: '0 2px 8px rgba(0,0,0,0.05)' }}>
             <h2 className="text-base font-bold" style={{ color: '#111827' }}>
               <FileText className="w-4 h-4" style={{ color: '#a28ef9' }} />
               Invoice Defaults
@@ -169,7 +162,7 @@ export default function SettingsPage() {
       {/* Profile Tab */}
       {tab === 'profile' && (
         <form onSubmit={handleSave} className="space-y-6">
-          <div className="rounded-2xl p-6" style={{ background: '#ffffff', border: '1px solid rgba(0,0,0,0.06)' }}>
+          <div className="bg-white rounded-2xl p-6" style={{ border: '1px solid #f0f2f0', boxShadow: '0 2px 8px rgba(0,0,0,0.05)' }}>
             <h2 className="text-base font-bold" style={{ color: '#111827' }}>
               <User className="w-4 h-4" style={{ color: '#a28ef9' }} />
               Personal Information
@@ -186,7 +179,7 @@ export default function SettingsPage() {
             </div>
           </div>
 
-          <div className="rounded-2xl p-6" style={{ background: '#ffffff', border: '1px solid rgba(0,0,0,0.06)' }}>
+          <div className="bg-white rounded-2xl p-6" style={{ border: '1px solid #f0f2f0', boxShadow: '0 2px 8px rgba(0,0,0,0.05)' }}>
             <h2 className="text-base font-bold" style={{ color: '#111827' }}>
               <Building2 className="w-4 h-4" style={{ color: '#a28ef9' }} />
               Business Information
@@ -217,7 +210,7 @@ export default function SettingsPage() {
 
       {/* Team Tab */}
       {tab === 'team' && (
-        <div className="rounded-2xl p-6" style={{ background: '#ffffff', border: '1px solid rgba(0,0,0,0.06)' }}>
+        <div className="bg-white rounded-2xl p-6" style={{ border: '1px solid #f0f2f0', boxShadow: '0 2px 8px rgba(0,0,0,0.05)' }}>
           <TeamSettingsPage />
         </div>
       )}
@@ -272,7 +265,7 @@ function PortalSettings() {
   const selectStyle = { background: '#ffffff', border: '1px solid #e5e7eb', color: '#111827', padding: '10px 12px', borderRadius: '12px', fontSize: '14px', outline: 'none', width: '100%' }
 
   return (
-    <div className="glass rounded-2xl p-6 space-y-5">
+    <div className="bg-white rounded-2xl p-6 space-y-5" style={{ border: '1px solid #f0f2f0', boxShadow: '0 2px 8px rgba(0,0,0,0.05)' }}>
       <div>
         <h2 className="text-base font-bold" style={{ color: '#111827' }}>
           <Link2 className="w-4 h-4" style={{ color: '#a28ef9' }} /> Client Portal
@@ -292,9 +285,9 @@ function PortalSettings() {
           <input type="number" min="1" max="365" value={expiryDays} onChange={e => setExpiryDays(e.target.value)} style={selectStyle} />
         </div>
       </div>
-      <Button onClick={generate} disabled={generating} className="text-gray-900" style={{ background: 'linear-gradient(135deg, #6B50EE, #3B82F6)' }}>
+      <button onClick={generate} disabled={generating} className="btn-brand h-9 px-5 text-sm">
         {generating ? 'Generating...' : 'Generate Portal Link'}
-      </Button>
+      </button>
 
       {generatedUrl && (
         <div className="rounded-xl p-4 space-y-2" style={{ background: 'rgba(139,92,246,0.1)', border: '1px solid rgba(139,92,246,0.25)' }}>
