@@ -1,0 +1,336 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+// ─── User & Team ──────────────────────────────────────────────────────────────
+
+model User {
+  id        String   @id @default(cuid())
+  name      String
+  email     String   @unique
+  password  String
+  company   String?
+  phone     String?
+  address   String?
+  logo      String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  clients           Client[]
+  invoices          Invoice[]
+  expenses          Expense[]
+  estimates         Estimate[]
+  recurringInvoices RecurringInvoice[]
+  teamMemberships   TeamMember[]
+  ownedTeams        Team[]             @relation("TeamOwner")
+  settings          UserSettings?
+}
+
+model Team {
+  id        String   @id @default(cuid())
+  name      String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  ownerId String
+  owner   User   @relation("TeamOwner", fields: [ownerId], references: [id], onDelete: Cascade)
+
+  members TeamMember[]
+}
+
+model TeamMember {
+  id        String     @id @default(cuid())
+  role      TeamRole   @default(MEMBER)
+  createdAt DateTime   @default(now())
+
+  userId String
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+  teamId String
+  team   Team   @relation(fields: [teamId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, teamId])
+}
+
+// ─── Client ───────────────────────────────────────────────────────────────────
+
+model Client {
+  id        String   @id @default(cuid())
+  name      String
+  email     String
+  phone     String?
+  company   String?
+  address   String?
+  notes     String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  userId   String
+  user     User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  invoices  Invoice[]
+  estimates Estimate[]
+
+  portalTokens ClientPortalToken[]
+}
+
+model ClientPortalToken {
+  id        String   @id @default(cuid())
+  token     String   @unique @default(cuid())
+  expiresAt DateTime
+  createdAt DateTime @default(now())
+
+  clientId String
+  client   Client @relation(fields: [clientId], references: [id], onDelete: Cascade)
+}
+
+// ─── Currency ─────────────────────────────────────────────────────────────────
+
+model Currency {
+  id           String  @id @default(cuid())
+  code         String  @unique  // USD, EUR, LKR
+  symbol       String           // $, €, Rs
+  name         String           // US Dollar
+  exchangeRate Float   @default(1) // relative to LKR
+
+  invoices     Invoice[]
+  estimates    Estimate[]
+  userSettings UserSettings[]
+}
+
+// ─── Invoice Template ─────────────────────────────────────────────────────────
+
+model InvoiceTemplate {
+  id          String  @id @default(cuid())
+  name        String  @unique // classic, modern, minimal, bold
+  displayName String
+  description String?
+  preview     String? // preview image path
+
+  invoices Invoice[]
+}
+
+// ─── Invoice ─────────────────────────────────────────────────────────────────
+
+model Invoice {
+  id          String        @id @default(cuid())
+  invoiceNo   String
+  status      InvoiceStatus @default(DRAFT)
+  issueDate   DateTime      @default(now())
+  dueDate     DateTime
+  notes       String?
+  subtotal    Float         @default(0)
+  taxRate     Float         @default(0)
+  tax         Float         @default(0)
+  discount    Float         @default(0)
+  total       Float         @default(0)
+  shareToken  String?       @unique
+  createdAt   DateTime      @default(now())
+  updatedAt   DateTime      @updatedAt
+
+  userId     String
+  user       User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+  clientId   String
+  client     Client  @relation(fields: [clientId], references: [id])
+  currencyId String?
+  currency   Currency?        @relation(fields: [currencyId], references: [id])
+  templateId String?
+  template   InvoiceTemplate? @relation(fields: [templateId], references: [id])
+
+  // If generated from recurring
+  recurringInvoiceId String?
+  recurringInvoice   RecurringInvoice? @relation(fields: [recurringInvoiceId], references: [id])
+
+  // If converted from estimate
+  estimateId String?   @unique
+  estimate   Estimate? @relation(fields: [estimateId], references: [id])
+
+  // Stripe
+  stripeSessionId String? @unique
+
+  items    InvoiceItem[]
+  payments Payment[]
+}
+
+model InvoiceItem {
+  id          String  @id @default(cuid())
+  description String
+  quantity    Float
+  unitPrice   Float
+  total       Float
+
+  invoiceId String
+  invoice   Invoice @relation(fields: [invoiceId], references: [id], onDelete: Cascade)
+}
+
+// ─── Recurring Invoice ────────────────────────────────────────────────────────
+
+model RecurringInvoice {
+  id          String            @id @default(cuid())
+  title       String
+  frequency   RecurringFrequency
+  nextRunDate DateTime
+  isActive    Boolean           @default(true)
+  notes       String?
+  subtotal    Float             @default(0)
+  taxRate     Float             @default(0)
+  discount    Float             @default(0)
+  total       Float             @default(0)
+  createdAt   DateTime          @default(now())
+  updatedAt   DateTime          @updatedAt
+
+  userId   String
+  user     User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+  clientId String
+
+  items    RecurringInvoiceItem[]
+  invoices Invoice[]
+}
+
+model RecurringInvoiceItem {
+  id          String  @id @default(cuid())
+  description String
+  quantity    Float
+  unitPrice   Float
+  total       Float
+
+  recurringInvoiceId String
+  recurringInvoice   RecurringInvoice @relation(fields: [recurringInvoiceId], references: [id], onDelete: Cascade)
+}
+
+// ─── Estimate ─────────────────────────────────────────────────────────────────
+
+model Estimate {
+  id          String         @id @default(cuid())
+  estimateNo  String
+  status      EstimateStatus @default(DRAFT)
+  issueDate   DateTime       @default(now())
+  expiryDate  DateTime
+  notes       String?
+  subtotal    Float          @default(0)
+  taxRate     Float          @default(0)
+  tax         Float          @default(0)
+  discount    Float          @default(0)
+  total       Float          @default(0)
+  shareToken  String?        @unique
+  createdAt   DateTime       @default(now())
+  updatedAt   DateTime       @updatedAt
+
+  userId     String
+  user       User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  clientId   String
+  client     Client    @relation(fields: [clientId], references: [id])
+  currencyId String?
+  currency   Currency? @relation(fields: [currencyId], references: [id])
+
+  items   EstimateItem[]
+  invoice Invoice?
+}
+
+model EstimateItem {
+  id          String  @id @default(cuid())
+  description String
+  quantity    Float
+  unitPrice   Float
+  total       Float
+
+  estimateId String
+  estimate   Estimate @relation(fields: [estimateId], references: [id], onDelete: Cascade)
+}
+
+// ─── Expense ─────────────────────────────────────────────────────────────────
+
+model Expense {
+  id          String   @id @default(cuid())
+  title       String
+  amount      Float
+  date        DateTime
+  category    String
+  description String?
+  receipt     String?  // file path/url
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  userId String
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+// ─── Enums ────────────────────────────────────────────────────────────────────
+
+enum InvoiceStatus {
+  DRAFT
+  SENT
+  PAID
+  OVERDUE
+}
+
+enum EstimateStatus {
+  DRAFT
+  SENT
+  ACCEPTED
+  REJECTED
+  CONVERTED
+}
+
+enum RecurringFrequency {
+  WEEKLY
+  BIWEEKLY
+  MONTHLY
+  QUARTERLY
+  YEARLY
+}
+
+enum TeamRole {
+  OWNER
+  ADMIN
+  MEMBER
+  VIEWER
+}
+
+// ─── Payment ─────────────────────────────────────────────────────────────────
+
+model Payment {
+  id                String        @id @default(cuid())
+  amount            Float
+  currency          String        @default("inr")
+  status            PaymentStatus @default(PENDING)
+  provider          String        @default("stripe")
+  providerPaymentId String?       @unique // Stripe payment_intent id
+  providerSessionId String?       @unique // Stripe session id
+  metadata          Json?         // extra data
+  createdAt         DateTime      @default(now())
+  updatedAt         DateTime      @updatedAt
+
+  invoiceId String
+  invoice   Invoice @relation(fields: [invoiceId], references: [id], onDelete: Cascade)
+}
+
+enum PaymentStatus {
+  PENDING
+  COMPLETED
+  FAILED
+  REFUNDED
+}
+
+// ─── UserSettings ─────────────────────────────────────────────────────────────
+
+model UserSettings {
+  id                String    @id @default(cuid())
+  invoicePrefix     String    @default("INV")
+  defaultTaxRate    Float     @default(0)
+  defaultDueDays    Int       @default(30)
+  defaultNotes      String?
+  invoiceTemplate   String    @default("modern")
+  defaultCurrencyId String?
+  defaultCurrency   Currency? @relation(fields: [defaultCurrencyId], references: [id])
+  createdAt         DateTime  @default(now())
+  updatedAt         DateTime  @updatedAt
+
+  userId String @unique
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
