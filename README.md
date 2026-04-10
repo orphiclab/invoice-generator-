@@ -1,36 +1,36 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# InvoiceFlow ⚡️
 
-## Getting Started
+InvoiceFlow is a modern, high-contrast invoicing SaaS built to allow freelancers and businesses to send beautiful invoices in under 60 seconds.
 
-First, run the development server:
+## Features
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+- **Geometric Aesthetic**: Minimalist, premium login and register workflows with smooth responsive constraints.
+- **Instant Invoicing**: Full invoice builder with line-items, currency selection, and automatic subtotal generation.
+- **Smart Email Notifications**: Full integration with Resend to automatically email stylized, Apple-receipt-like HTML notifications directly to clients.
+- **Secure Share Links**: Clients get unique tokens to view and pay their invoices online without needing to log in.
+- **Responsive Dashboard**: Track total revenue, outstanding payments, and clients all from a mobile-friendly native dashboard.
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## Tech Stack
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+- **Framework:** Next.js (App Router)
+- **Database:** Prisma with PostgreSQL
+- **Authentication:** Custom JWT sessions
+- **Emails:** Resend
+- **Styling:** Custom CSS with modern UX focus
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+## Setup
 
-## Learn More
+1. Copy `.env.example` to `.env` and fill out your PostgreSQL database URL and JWT secret.
+2. Add your **Resend** API key to your `.env` to enable email notifications:
+   `RESEND_API_KEY=re_your_api_key_here`
+3. Run `npm install`
+4. Run `npx prisma db push`
+5. Run `npm run dev`
 
-To learn more about Next.js, take a look at the following resources:
+## Recent Updates
+* Redesigned authentication workflow to a split-screen geometric mosaic grid (8x6 4:5 aspect ratio tiles).
+* Enabled full native HTML5 constraints on all user entry points.
+* Refactored responsive engine to completely hide the mosaic grid and stretch the form space on screens < 800px.
+* Upgraded Resend HTML receipts to a high-fidelity light theme featuring a premium white receipt design with clear subtotal highlights.
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+Built securely by InvoiceFlow.
