@@ -59,13 +59,117 @@ body {
 ::-webkit-scrollbar-thumb { background: hsl(var(--border)); border-radius: 3px; }
 ::-webkit-scrollbar-thumb:hover { background: #c0c4cc; }
 
-/* ── Card ────────────────────────────────────────────────────── */
+/* ── Card — exact match to design ───────────────────────────── */
 .card {
   background: #ffffff;
-  border: 1px solid hsl(var(--border));
-  border-radius: 16px;
-  box-shadow: 0 1px 4px rgba(0,0,0,0.06), 0 4px 16px rgba(0,0,0,0.04);
+  border: 1px solid #f0f2f0;
+  border-radius: 20px;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.04), 0 4px 12px rgba(0,0,0,0.04);
 }
+
+/* ── Page card (white content area) ─────────────────────────── */
+.page-card {
+  background: #ffffff;
+  border: 1px solid #f0f2f0;
+  border-radius: 20px;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.04), 0 4px 12px rgba(0,0,0,0.04);
+  padding: 20px 24px;
+}
+
+/* ── Filter pill tabs (like "All task | To do | In progress") ── */
+.pill-tab-bar {
+  display: inline-flex;
+  gap: 4px;
+  padding: 4px;
+  background: #f3f4f6;
+  border-radius: 999px;
+}
+.pill-tab {
+  padding: 5px 14px;
+  border-radius: 999px;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.15s;
+  border: none;
+  background: transparent;
+  color: #6b7280;
+}
+.pill-tab:hover { background: rgba(0,0,0,0.05); color: #374151; }
+.pill-tab.active {
+  background: #222222;
+  color: #ffffff;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+}
+
+/* ── Icon button (white square with border) ──────────────────── */
+.btn-icon-clean {
+  width: 34px; height: 34px;
+  display: flex; align-items: center; justify-content: center;
+  background: #ffffff;
+  border: 1px solid #e5e7eb;
+  border-radius: 10px;
+  color: #6b7280;
+  cursor: pointer;
+  transition: all 0.15s;
+}
+.btn-icon-clean:hover { background: #f9fafb; border-color: #d1d5db; }
+
+/* ── "View all" full-width outline button ────────────────────── */
+.btn-view-all {
+  width: 100%;
+  padding: 10px;
+  text-align: center;
+  font-size: 13px;
+  font-weight: 600;
+  color: #374151;
+  background: #ffffff;
+  border: 1px solid #e5e7eb;
+  border-radius: 12px;
+  cursor: pointer;
+  transition: all 0.15s;
+}
+.btn-view-all:hover { background: #f9fafb; border-color: #d1d5db; }
+
+/* ── Status badge pills ──────────────────────────────────────── */
+.badge-in-progress { background: #FFF3E0; color: #E65100; border-radius: 999px; padding: 2px 10px; font-size: 11px; font-weight: 700; }
+.badge-to-do       { background: #EDE7F6; color: #6329C0; border-radius: 999px; padding: 2px 10px; font-size: 11px; font-weight: 700; }
+.badge-done        { background: #E8F5E9; color: #2E7D32; border-radius: 999px; padding: 2px 10px; font-size: 11px; font-weight: 700; }
+
+/* ── Table clean rows ─────────────────────────────────────────── */
+.table-clean thead th {
+  padding: 10px 16px;
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: #9ca3af;
+  text-align: left;
+}
+.table-clean tbody tr {
+  border-bottom: 1px solid #f9fafb;
+  transition: background 0.1s;
+}
+.table-clean tbody tr:hover { background: #f9fafb; }
+.table-clean tbody td { padding: 12px 16px; font-size: 13px; color: #374151; }
+
+/* ── Notification badge ───────────────────────────────────────── */
+.nav-badge {
+  min-width: 18px; height: 18px;
+  background: #a28ef9;
+  color: white;
+  font-size: 10px; font-weight: 700;
+  border-radius: 999px;
+  display: flex; align-items: center; justify-content: center;
+  padding: 0 5px;
+}
+
+/* ── Mint green card (like "Math conspect") ───────────────────── */
+.card-mint   { background: #a4f5a6; border-radius: 20px; padding: 20px; }
+
+/* ── Lavender card (like "Biology conspect") ─────────────────── */
+.card-lavender { background: #a28ef9; border-radius: 20px; padding: 20px; color: white; }
+
 
 /* ── Glass (light mode) ──────────────────────────────────────── */
 .glass {
