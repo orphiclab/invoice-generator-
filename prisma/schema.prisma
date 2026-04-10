@@ -133,6 +133,18 @@ model Invoice {
   createdAt   DateTime      @default(now())
   updatedAt   DateTime      @updatedAt
 
+  // Late fee
+  lateFeeRate    Float   @default(0)   // % per month
+  lateFeeAmount  Float   @default(0)   // calculated amount
+  lateFeeApplied Boolean @default(false)
+
+  // Reminders
+  remindersSent  Int       @default(0)
+  lastReminderAt DateTime?
+
+  // Exchange rate at time of creation
+  exchangeRateSnapshot Float @default(1)
+
   userId     String
   user       User    @relation(fields: [userId], references: [id], onDelete: Cascade)
   clientId   String
@@ -297,12 +309,16 @@ enum TeamRole {
 model Payment {
   id                String        @id @default(cuid())
   amount            Float
-  currency          String        @default("inr")
+  currency          String        @default("lkr")
   status            PaymentStatus @default(PENDING)
-  provider          String        @default("stripe")
+  provider          String        @default("manual")  // stripe, bank_transfer, cash, cheque
+  method            String        @default("manual")  // alias for provider
+  note              String?                           // e.g. "First deposit", "Final payment"
+  paymentType       String        @default("full")    // full | partial
   providerPaymentId String?       @unique // Stripe payment_intent id
   providerSessionId String?       @unique // Stripe session id
   metadata          Json?         // extra data
+  paidAt            DateTime?     // when actually paid
   createdAt         DateTime      @default(now())
   updatedAt         DateTime      @updatedAt
 

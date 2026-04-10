@@ -1,23 +1,27 @@
 'use client'
 
-import { useEffect, useState } from 'react'
+import { useEffect, useState, useCallback } from 'react'
 import { useParams, useRouter } from 'next/navigation'
 import Link from 'next/link'
 import { toast } from 'sonner'
-import { ArrowLeft, Download, MessageCircle, Share2, Edit2, Check, Clock, Building2, Mail, Phone, MapPin, Copy, Send, X } from 'lucide-react'
+import { ArrowLeft, Download, MessageCircle, Share2, Edit2, Check, Clock, Building2, Mail, Phone, MapPin, Copy, Send, X, DollarSign, AlertTriangle, Bell, Plus, CreditCard } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import { StatusBadge } from '@/components/StatusBadge'
 import { Input } from '@/components/ui/input'
 
 interface InvoiceItem { description: string; quantity: number; unitPrice: number; total: number }
+interface PaymentRecord { id: string; amount: number; method: string; note?: string; paymentType: string; paidAt?: string; createdAt: string }
 interface Invoice {
   id: string; invoiceNo: string; status: 'DRAFT' | 'SENT' | 'PAID' | 'OVERDUE'
   total: number; subtotal: number; tax: number; discount: number
   dueDate: string; issueDate: string; notes?: string; shareToken?: string
+  lateFeeApplied: boolean; lateFeeAmount: number; lateFeeRate: number
+  remindersSent: number; lastReminderAt?: string
   client: { name: string; email: string; phone?: string; company?: string; address?: string }
   user: { name: string; email: string; company?: string; phone?: string; address?: string }
   items: InvoiceItem[]
+  currency?: { symbol: string; code: string }
 }
 
 export default function InvoiceDetailPage() {
@@ -30,13 +34,32 @@ export default function InvoiceDetailPage() {
   const [emailModal, setEmailModal] = useState(false)
   const [emailForm, setEmailForm] = useState({ to: '', subject: '', message: '' })
   const [sendingEmail, setSendingEmail] = useState(false)
+  // Finance features
+  const [payments, setPayments] = useState<PaymentRecord[]>([])
+  const [amountPaid, setAmountPaid] = useState(0)
+  const [paymentModal, setPaymentModal] = useState(false)
+  const [paymentForm, setPaymentForm] = useState({ amount: '', method: 'bank_transfer', note: '' })
+  const [recordingPayment, setRecordingPayment] = useState(false)
+  const [sendingReminder, setSendingReminder] = useState(false)
+  const [applyingLateFee, setApplyingLateFee] = useState(false)
+  const [lateFeeRate, setLateFeeRate] = useState('2')
+
+  const loadPayments = useCallback(async () => {
+    const res = await fetch(`/api/invoices/${id}/record-payment`)
+    if (res.ok) {
+      const data = await res.json()
+      setPayments(data.payments ?? [])
+      setAmountPaid(data.amountPaid ?? 0)
+    }
+  }, [id])
 
   useEffect(() => {
     fetch(`/api/invoices/${id}`).then((r) => r.json()).then((d) => {
       setInvoice(d)
       setLoading(false)
     })
-  }, [id])
+    loadPayments()
+  }, [id, loadPayments])
 
   async function updateStatus(status: string) {
     setUpdatingStatus(true)
@@ -105,6 +128,55 @@ export default function InvoiceDetailPage() {
         setInvoice(prev => prev ? { ...prev, status: prev.status === 'DRAFT' ? 'SENT' : prev.status } : prev)
       } else toast.error(data.error || 'Failed to send email')
     } finally { setSendingEmail(false) }
+  }
+
+  async function sendReminder() {
+    setSendingReminder(true)
+    try {
+      const res = await fetch(`/api/invoices/${id}/send-reminder`, { method: 'POST' })
+      const data = await res.json()
+      if (res.ok) {
+        toast.success(data.message ?? 'Reminder sent!')
+        setInvoice(prev => prev ? { ...prev, remindersSent: (prev.remindersSent ?? 0) + 1, lastReminderAt: new Date().toISOString() } : prev)
+      } else toast.error(data.error || 'Failed to send reminder')
+    } finally { setSendingReminder(false) }
+  }
+
+  async function applyLateFee() {
+    setApplyingLateFee(true)
+    try {
+      const res = await fetch(`/api/invoices/${id}/apply-late-fee`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ lateFeeRate: parseFloat(lateFeeRate) || 2 }),
+      })
+      const data = await res.json()
+      if (res.ok) {
+        toast.success(`Late fee of Rs ${data.lateFeeAmount?.toFixed(2)} applied (${data.daysOverdue} days overdue)`)
+        setInvoice(prev => prev ? { ...prev, ...data.invoice } : prev)
+      } else toast.error(data.error || 'Failed to apply late fee')
+    } finally { setApplyingLateFee(false) }
+  }
+
+  async function recordPayment() {
+    const amount = parseFloat(paymentForm.amount)
+    if (!amount || amount <= 0) { toast.error('Enter a valid amount'); return }
+    setRecordingPayment(true)
+    try {
+      const res = await fetch(`/api/invoices/${id}/record-payment`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ amount, method: paymentForm.method, note: paymentForm.note }),
+      })
+      const data = await res.json()
+      if (res.ok) {
+        toast.success(data.isFullPayment ? '🎉 Invoice fully paid!' : `Payment of Rs ${amount.toFixed(2)} recorded`)
+        setPaymentModal(false)
+        setPaymentForm({ amount: '', method: 'bank_transfer', note: '' })
+        await loadPayments()
+        if (data.invoiceStatus) setInvoice(prev => prev ? { ...prev, status: data.invoiceStatus } : prev)
+      } else toast.error(data.error || 'Failed to record payment')
+    } finally { setRecordingPayment(false) }
   }
 
   if (loading) return (
@@ -317,7 +389,189 @@ export default function InvoiceDetailPage() {
           </div>
         )}
       </div>
+
+      {/* ── Finance Panel ── */}
+      <div className="mt-6 grid grid-cols-1 lg:grid-cols-3 gap-4">
+
+        {/* Payment History */}
+        <div className="lg:col-span-2 rounded-2xl p-5" style={{ background: '#16191F', border: '1px solid rgba(255,255,255,0.07)' }}>
+          <div className="flex items-center justify-between mb-4">
+            <h3 className="text-sm font-bold text-white flex items-center gap-2">
+              <CreditCard className="w-4 h-4" style={{ color: '#7B61FF' }} /> Payment History
+            </h3>
+            {invoice.status !== 'PAID' && (
+              <button onClick={() => setPaymentModal(true)}
+                className="flex items-center gap-1.5 text-xs font-semibold px-3 py-1.5 rounded-lg btn-brand">
+                <Plus className="w-3 h-3" /> Record Payment
+              </button>
+            )}
+          </div>
+
+          {/* Balance bar */}
+          {invoice.total > 0 && (
+            <div className="mb-4">
+              <div className="flex justify-between text-xs mb-1.5" style={{ color: 'rgba(255,255,255,0.4)' }}>
+                <span>Rs {amountPaid.toLocaleString('en-LK', { maximumFractionDigits: 0 })} paid</span>
+                <span>Rs {(invoice.total - amountPaid).toLocaleString('en-LK', { maximumFractionDigits: 0 })} remaining</span>
+              </div>
+              <div className="h-2 rounded-full overflow-hidden" style={{ background: 'rgba(255,255,255,0.08)' }}>
+                <div className="h-full rounded-full transition-all duration-500"
+                  style={{ width: `${Math.min(100, (amountPaid / invoice.total) * 100)}%`, background: 'linear-gradient(90deg, #10B981, #059669)' }} />
+              </div>
+            </div>
+          )}
+
+          {payments.length === 0 ? (
+            <p className="text-xs text-center py-6" style={{ color: 'rgba(255,255,255,0.25)' }}>No payments recorded yet</p>
+          ) : (
+            <div className="space-y-2">
+              {payments.map(p => (
+                <div key={p.id} className="flex items-center justify-between px-3 py-2.5 rounded-xl" style={{ background: 'rgba(255,255,255,0.04)' }}>
+                  <div className="flex items-center gap-3">
+                    <div className="w-7 h-7 rounded-lg flex items-center justify-center" style={{ background: 'rgba(16,185,129,0.15)' }}>
+                      <Check className="w-3.5 h-3.5" style={{ color: '#10B981' }} />
+                    </div>
+                    <div>
+                      <p className="text-xs font-semibold text-white capitalize">{p.method.replace('_', ' ')} {p.paymentType === 'partial' ? '(Partial)' : ''}</p>
+                      {p.note && <p className="text-[10px]" style={{ color: 'rgba(255,255,255,0.35)' }}>{p.note}</p>}
+                    </div>
+                  </div>
+                  <div className="text-right">
+                    <p className="text-sm font-bold" style={{ color: '#10B981' }}>Rs {p.amount.toLocaleString('en-LK', { maximumFractionDigits: 2 })}</p>
+                    <p className="text-[10px]" style={{ color: 'rgba(255,255,255,0.3)' }}>{new Date(p.paidAt ?? p.createdAt).toLocaleDateString('en-LK')}</p>
+                  </div>
+                </div>
+              ))}
+            </div>
+          )}
+        </div>
+
+        {/* Actions Panel */}
+        <div className="space-y-4">
+
+          {/* Payment Reminder */}
+          <div className="rounded-2xl p-4" style={{ background: '#16191F', border: '1px solid rgba(255,255,255,0.07)' }}>
+            <h3 className="text-xs font-bold text-white flex items-center gap-2 mb-3">
+              <Bell className="w-3.5 h-3.5" style={{ color: '#F59E0B' }} /> Payment Reminder
+            </h3>
+            {invoice.remindersSent > 0 && (
+              <p className="text-[10px] mb-2" style={{ color: 'rgba(255,255,255,0.35)' }}>
+                {invoice.remindersSent} reminder{invoice.remindersSent > 1 ? 's' : ''} sent
+                {invoice.lastReminderAt ? ` · Last: ${new Date(invoice.lastReminderAt).toLocaleDateString('en-LK')}` : ''}
+              </p>
+            )}
+            <button onClick={sendReminder} disabled={sendingReminder || invoice.status === 'PAID'}
+              className="w-full flex items-center justify-center gap-2 py-2 rounded-xl text-xs font-semibold transition-all disabled:opacity-40"
+              style={{ background: 'rgba(245,158,11,0.15)', border: '1px solid rgba(245,158,11,0.3)', color: '#F59E0B' }}>
+              <Send className="w-3 h-3" />
+              {sendingReminder ? 'Sending...' : 'Send Reminder'}
+            </button>
+          </div>
+
+          {/* Late Fee */}
+          <div className="rounded-2xl p-4" style={{ background: '#16191F', border: '1px solid rgba(255,255,255,0.07)' }}>
+            <h3 className="text-xs font-bold text-white flex items-center gap-2 mb-3">
+              <AlertTriangle className="w-3.5 h-3.5" style={{ color: '#EF4444' }} /> Late Fee
+            </h3>
+            {invoice.lateFeeApplied ? (
+              <div className="text-xs" style={{ color: '#EF4444' }}>
+                ✓ Applied: Rs {invoice.lateFeeAmount?.toFixed(2)} ({invoice.lateFeeRate}%/mo)
+              </div>
+            ) : (
+              <>
+                <div className="flex items-center gap-2 mb-2">
+                  <Input
+                    type="number" min="0" max="100" step="0.5"
+                    value={lateFeeRate}
+                    onChange={e => setLateFeeRate(e.target.value)}
+                    className="h-7 text-xs text-white w-20"
+                    style={{ background: 'rgba(255,255,255,0.05)', borderColor: 'rgba(255,255,255,0.1)' }}
+                  />
+                  <span className="text-xs" style={{ color: 'rgba(255,255,255,0.4)' }}>% / month</span>
+                </div>
+                <button onClick={applyLateFee} disabled={applyingLateFee || invoice.status === 'PAID' || invoice.lateFeeApplied}
+                  className="w-full flex items-center justify-center gap-2 py-2 rounded-xl text-xs font-semibold transition-all disabled:opacity-40"
+                  style={{ background: 'rgba(239,68,68,0.12)', border: '1px solid rgba(239,68,68,0.3)', color: '#EF4444' }}>
+                  <AlertTriangle className="w-3 h-3" />
+                  {applyingLateFee ? 'Applying...' : 'Apply Late Fee'}
+                </button>
+              </>
+            )}
+          </div>
+
+          {/* Quick Stats */}
+          <div className="rounded-2xl p-4" style={{ background: '#16191F', border: '1px solid rgba(255,255,255,0.07)' }}>
+            <h3 className="text-xs font-bold text-white flex items-center gap-2 mb-3">
+              <DollarSign className="w-3.5 h-3.5" style={{ color: '#7B61FF' }} /> Summary
+            </h3>
+            <div className="space-y-2 text-xs">
+              <div className="flex justify-between">
+                <span style={{ color: 'rgba(255,255,255,0.4)' }}>Invoice Total</span>
+                <span className="font-semibold text-white">Rs {invoice.total.toLocaleString('en-LK', { maximumFractionDigits: 0 })}</span>
+              </div>
+              <div className="flex justify-between">
+                <span style={{ color: 'rgba(255,255,255,0.4)' }}>Paid</span>
+                <span className="font-semibold" style={{ color: '#10B981' }}>Rs {amountPaid.toLocaleString('en-LK', { maximumFractionDigits: 0 })}</span>
+              </div>
+              <div className="flex justify-between pt-2 border-t" style={{ borderColor: 'rgba(255,255,255,0.08)' }}>
+                <span style={{ color: 'rgba(255,255,255,0.4)' }}>Balance</span>
+                <span className="font-bold" style={{ color: invoice.total - amountPaid > 0 ? '#F59E0B' : '#10B981' }}>
+                  Rs {Math.max(0, invoice.total - amountPaid).toLocaleString('en-LK', { maximumFractionDigits: 0 })}
+                </span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
+
+    {/* Record Payment Modal */}
+    {paymentModal && (
+      <div className="fixed inset-0 z-50 flex items-center justify-center p-4" style={{ background: 'rgba(0,0,0,0.7)', backdropFilter: 'blur(4px)' }}>
+        <div className="w-full max-w-sm rounded-2xl p-6 space-y-4" style={{ background: '#16191F', border: '1px solid rgba(255,255,255,0.12)' }}>
+          <div className="flex items-center justify-between">
+            <h2 className="text-base font-semibold text-white flex items-center gap-2"><CreditCard className="w-4 h-4" style={{ color: '#10B981' }} /> Record Payment</h2>
+            <button onClick={() => setPaymentModal(false)} className="p-1 rounded hover:bg-white/10"><X className="w-4 h-4" style={{ color: 'rgba(255,255,255,0.35)' }} /></button>
+          </div>
+          <div className="space-y-3">
+            <div>
+              <label className="text-xs font-medium block mb-1" style={{ color: 'rgba(255,255,255,0.4)' }}>Amount (Rs) *</label>
+              <Input type="number" min="0" step="0.01"
+                placeholder={`Max: ${(invoice.total - amountPaid).toFixed(2)}`}
+                value={paymentForm.amount}
+                onChange={e => setPaymentForm(f => ({ ...f, amount: e.target.value }))}
+                className="h-9 text-sm text-white" style={{ background: 'rgba(255,255,255,0.05)', borderColor: 'rgba(255,255,255,0.1)' }} />
+            </div>
+            <div>
+              <label className="text-xs font-medium block mb-1" style={{ color: 'rgba(255,255,255,0.4)' }}>Payment Method</label>
+              <select value={paymentForm.method} onChange={e => setPaymentForm(f => ({ ...f, method: e.target.value }))}
+                className="w-full h-9 px-3 rounded-md text-sm text-white outline-none"
+                style={{ background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.1)', color: 'white' }}>
+                <option value="bank_transfer">Bank Transfer</option>
+                <option value="cash">Cash</option>
+                <option value="cheque">Cheque</option>
+                <option value="card">Card</option>
+                <option value="online">Online</option>
+                <option value="other">Other</option>
+              </select>
+            </div>
+            <div>
+              <label className="text-xs font-medium block mb-1" style={{ color: 'rgba(255,255,255,0.4)' }}>Note (optional)</label>
+              <Input placeholder="e.g. First deposit, Receipt #123"
+                value={paymentForm.note}
+                onChange={e => setPaymentForm(f => ({ ...f, note: e.target.value }))}
+                className="h-9 text-sm text-white" style={{ background: 'rgba(255,255,255,0.05)', borderColor: 'rgba(255,255,255,0.1)' }} />
+            </div>
+          </div>
+          <div className="flex gap-3 justify-end pt-1">
+            <Button variant="outline" onClick={() => setPaymentModal(false)} className="text-sm" style={{ color: 'rgba(255,255,255,0.4)' }}>Cancel</Button>
+            <Button onClick={recordPayment} disabled={recordingPayment} className="gap-2 text-sm font-semibold text-white" style={{ background: 'linear-gradient(135deg, #10B981, #059669)' }}>
+              <Check className="w-3.5 h-3.5" />{recordingPayment ? 'Saving...' : 'Record Payment'}
+            </Button>
+          </div>
+        </div>
+      </div>
+    )}
 
     {/* Email Modal */}
     {emailModal && (
