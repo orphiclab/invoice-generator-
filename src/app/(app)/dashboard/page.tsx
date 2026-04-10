@@ -3,16 +3,15 @@
 import { useEffect, useState } from 'react'
 import Link from 'next/link'
 import {
-  FileText, Users, DollarSign, AlertCircle, Plus, ArrowRight,
-  TrendingUp, TrendingDown, ArrowUpRight,
+  FileText, Users, DollarSign, AlertCircle, Plus, ArrowRight, ArrowUpRight, TrendingUp,
 } from 'lucide-react'
 import { StatusBadge } from '@/components/StatusBadge'
 import {
   AreaChart, Area, BarChart, Bar, PieChart, Pie, Cell,
-  XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Legend,
+  XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer,
 } from 'recharts'
 
-// ── Types ────────────────────────────────────────────────────────
+// ── Types ─────────────────────────────────────────────────────────
 interface Stats {
   totalInvoices: number; totalClients: number
   totalRevenue: number; outstanding: number
@@ -24,41 +23,39 @@ interface Invoice {
 }
 interface ChartData {
   monthlyRevenue: { month: string; revenue: number }[]
-  revenueByClient: { name: string; revenue: number }[]
   statusData: { name: string; value: number }[]
   profitLoss: { month: string; revenue: number; expenses: number; profit: number }[]
 }
 
 const STATUS_COLORS: Record<string, string> = {
-  DRAFT: '#9ca3af', SENT: '#60a5fa', PAID: '#4ade80', OVERDUE: '#f87171',
+  DRAFT: '#e5e7eb', SENT: '#a28ef9', PAID: '#222222', OVERDUE: '#fda4af',
 }
 
-// Light mode tooltip
+// Minimal light tooltip
 const tt = {
   contentStyle: {
-    background: '#fff',
-    border: '1px solid #e5e7eb',
-    borderRadius: '12px',
-    color: '#111827',
-    boxShadow: '0 8px 24px rgba(0,0,0,0.1)',
+    background: '#fff', border: '1px solid #f0f2f0',
+    borderRadius: '12px', color: '#111827',
+    boxShadow: '0 4px 20px rgba(0,0,0,0.08)', fontSize: 12,
   },
   itemStyle: { color: '#6b7280' },
   labelStyle: { color: '#111827', fontWeight: 700 },
+  cursor: { fill: 'rgba(162,142,249,0.06)' },
 }
 
-const statCards = [
-  { key: 'revenue',     label: 'Total Revenue',  icon: DollarSign,  cls: 'stat-purple', trend: +12, sub: 'From paid invoices',  textColor: 'text-gray-900' },
-  { key: 'outstanding', label: 'Outstanding',    icon: AlertCircle, cls: 'stat-amber',  sub: 'Sent & overdue',                   textColor: 'text-gray-900' },
-  { key: 'invoices',    label: 'Invoices',       icon: FileText,    cls: 'stat-blue',   trend: +4,  sub: 'All time',             textColor: 'text-gray-900' },
-  { key: 'clients',     label: 'Clients',        icon: Users,       cls: 'stat-emerald', sub: 'Active clients',                  textColor: 'text-gray-900' },
-]
+// ── Clean number formatter ─────────────────────────────────────────
+function fmt(n: number) {
+  if (n >= 1000000) return `Rs ${(n/1000000).toFixed(1)}M`
+  if (n >= 1000) return `Rs ${(n/1000).toFixed(0)}k`
+  return `Rs ${n.toFixed(0)}`
+}
 
 export default function DashboardPage() {
   const [stats, setStats] = useState<Stats | null>(null)
   const [recentInvoices, setRecentInvoices] = useState<Invoice[]>([])
   const [charts, setCharts] = useState<ChartData | null>(null)
   const [loading, setLoading] = useState(true)
-  const [activeTab, setActiveTab] = useState<'revenue' | 'profit'>('revenue')
+  const [activeChart, setActiveChart] = useState<'revenue' | 'profit'>('revenue')
 
   useEffect(() => {
     Promise.all([
@@ -75,16 +72,9 @@ export default function DashboardPage() {
 
   if (loading) return (
     <div className="flex items-center justify-center min-h-[60vh]">
-      <div className="w-8 h-8 rounded-full border-2 animate-spin" style={{ borderColor: '#a28ef9', borderTopColor: 'transparent' }} />
+      <div className="w-7 h-7 rounded-full border-2 animate-spin" style={{ borderColor: '#a28ef9', borderTopColor: 'transparent' }} />
     </div>
   )
-
-  const statValues: Record<string, string> = {
-    revenue:     `Rs ${(stats?.totalRevenue  ?? 0).toLocaleString('en-LK', { maximumFractionDigits: 0 })}`,
-    outstanding: `Rs ${(stats?.outstanding   ?? 0).toLocaleString('en-LK', { maximumFractionDigits: 0 })}`,
-    invoices:    String(stats?.totalInvoices ?? 0),
-    clients:     String(stats?.totalClients  ?? 0),
-  }
 
   const today = new Date().toLocaleDateString('en-LK', { weekday: 'long', day: 'numeric', month: 'long' })
 
@@ -94,118 +84,164 @@ export default function DashboardPage() {
       {/* ── Header ── */}
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-2xl font-bold tracking-tight" style={{ color: '#111827' }}>Dashboard</h1>
-          <p className="text-xs mt-1" style={{ color: '#9ca3af' }}>{today}</p>
+          <h1 className="text-2xl font-bold" style={{ color: '#111827' }}>Dashboard</h1>
+          <p className="text-xs mt-0.5" style={{ color: '#9ca3af' }}>{today}</p>
         </div>
         <Link href="/invoices/new">
-          <button className="btn-brand h-9 px-5 text-sm flex items-center gap-2">
+          <button className="btn-brand h-9 px-4 text-sm flex items-center gap-2">
             <Plus className="w-4 h-4" /> New Invoice
           </button>
         </Link>
       </div>
 
-      {/* ── Stat Cards ── */}
+      {/* ── Stat Cards — clean white, big number ── */}
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
-        {statCards.map(card => (
-          <div key={card.key} className={`${card.cls} rounded-2xl p-5 relative overflow-hidden`}>
-            <div className="absolute -top-8 -right-8 w-32 h-32 rounded-full" style={{ background: '#e5e7eb', filter: 'blur(2px)' }} />
-            <div className="absolute top-2 right-2 w-16 h-16 rounded-full" style={{ background: '#e5e7eb', filter: 'blur(4px)' }} />
-            <div className="relative">
-              <div className="flex items-start justify-between mb-4">
-                <div className="w-10 h-10 rounded-xl flex items-center justify-center" style={{ background: '#9ca3af' }}>
-                  <card.icon className="text-gray-900" />
-                </div>
-                {card.trend !== undefined && (
-                  <span className="flex items-center gap-0.5 text-[10px] font-bold px-2 py-1 rounded-full"
-                    style={{ background: '#9ca3af', color: '#111827' }}>
-                    {card.trend > 0 ? <TrendingUp className="w-2.5 h-2.5" /> : <TrendingDown className="w-2.5 h-2.5" />}
-                    {Math.abs(card.trend)}%
-                  </span>
-                )}
+        {[
+          {
+            label: 'Total Revenue',
+            value: fmt(stats?.totalRevenue ?? 0),
+            sub: 'From paid invoices',
+            icon: DollarSign,
+            iconBg: '#f5f3ff',
+            iconColor: '#a28ef9',
+            trend: '+12%',
+            trendUp: true,
+          },
+          {
+            label: 'Outstanding',
+            value: fmt(stats?.outstanding ?? 0),
+            sub: 'Sent & overdue',
+            icon: AlertCircle,
+            iconBg: '#fff7ed',
+            iconColor: '#f97316',
+            trend: null,
+            trendUp: false,
+          },
+          {
+            label: 'Invoices',
+            value: String(stats?.totalInvoices ?? 0),
+            sub: 'All time',
+            icon: FileText,
+            iconBg: '#eff6ff',
+            iconColor: '#3b82f6',
+            trend: '+4',
+            trendUp: true,
+          },
+          {
+            label: 'Clients',
+            value: String(stats?.totalClients ?? 0),
+            sub: 'Active',
+            icon: Users,
+            iconBg: '#f0fdf4',
+            iconColor: '#22c55e',
+            trend: null,
+            trendUp: false,
+          },
+        ].map(card => (
+          <div key={card.label} className="bg-white rounded-2xl p-5"
+            style={{ border: '1px solid #f0f2f0', boxShadow: '0 1px 3px rgba(0,0,0,0.04), 0 4px 12px rgba(0,0,0,0.04)' }}>
+            <div className="flex items-start justify-between mb-4">
+              <div className="w-10 h-10 rounded-xl flex items-center justify-center flex-shrink-0"
+                style={{ background: card.iconBg }}>
+                <card.icon className="w-5 h-5" style={{ color: card.iconColor }} />
               </div>
-              <p className="text-gray-900">{statValues[card.key]}</p>
-              <p className="text-xs mt-2 font-semibold" style={{ color: '#374151' }}>{card.label}</p>
-              <p className="text-[11px] mt-0.5" style={{ color: '#6b7280' }}>{card.sub}</p>
+              {card.trend && (
+                <span className="flex items-center gap-0.5 text-[11px] font-bold px-2 py-0.5 rounded-full"
+                  style={{ background: '#f0fdf4', color: '#16a34a' }}>
+                  <TrendingUp className="w-2.5 h-2.5" /> {card.trend}
+                </span>
+              )}
             </div>
+            <p className="text-[28px] font-extrabold tracking-tight leading-none" style={{ color: '#111827' }}>
+              {card.value}
+            </p>
+            <p className="text-xs font-semibold mt-2" style={{ color: '#374151' }}>{card.label}</p>
+            <p className="text-[11px] mt-0.5" style={{ color: '#9ca3af' }}>{card.sub}</p>
           </div>
         ))}
       </div>
 
-      {/* ── Chart + Sidebar ── */}
+      {/* ── Charts + Side ── */}
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-5">
 
-        {/* Revenue Chart */}
-        <div className="lg:col-span-2 rounded-2xl p-6 bg-white" style={{ border: '1px solid #e5e7eb', boxShadow: '0 1px 4px rgba(0,0,0,0.05)' }}>
-          <div className="flex items-center justify-between mb-5">
+        {/* Main Chart */}
+        <div className="lg:col-span-2 bg-white rounded-2xl p-6"
+          style={{ border: '1px solid #f0f2f0', boxShadow: '0 1px 3px rgba(0,0,0,0.04)' }}>
+          <div className="flex items-center justify-between mb-6">
             <div>
-              <h2 className="text-sm font-bold" style={{ color: '#111827' }}>Financial Overview</h2>
-              <p className="text-xs mt-0.5" style={{ color: '#9ca3af' }}>Revenue & expenses over time</p>
+              <h2 className="text-base font-bold" style={{ color: '#111827' }}>
+                {activeChart === 'revenue' ? 'Revenue Overview' : 'Profit & Loss'}
+              </h2>
+              <p className="text-xs mt-0.5" style={{ color: '#9ca3af' }}>Last 6 months</p>
             </div>
-            <div className="flex gap-1 p-1 rounded-xl" style={{ background: '#f3f4f6' }}>
-              {(['revenue', 'profit'] as const).map(tab => (
-                <button key={tab} onClick={() => setActiveTab(tab)}
-                  className="px-3 py-1 rounded-lg text-xs font-semibold transition-all"
-                  style={activeTab === tab
-                    ? { background: '#a28ef9', color: '#111827', boxShadow: '0 2px 8px rgba(162,142,249,0.35)' }
-                    : { color: '#6b7280' }}>
-                  {tab === 'revenue' ? 'Revenue' : 'P&L'}
+            {/* Tab switcher */}
+            <div className="pill-tab-bar">
+              {(['revenue', 'profit'] as const).map(t => (
+                <button key={t} onClick={() => setActiveChart(t)}
+                  className={`pill-tab${activeChart === t ? ' active' : ''}`}>
+                  {t === 'revenue' ? 'Revenue' : 'P&L'}
                 </button>
               ))}
             </div>
           </div>
-          <ResponsiveContainer width="100%" height={240}>
-            {activeTab === 'revenue' ? (
-              <AreaChart data={charts?.monthlyRevenue ?? []}>
+
+          {activeChart === 'revenue' ? (
+            <ResponsiveContainer width="100%" height={220}>
+              <AreaChart data={charts?.monthlyRevenue ?? []} margin={{ top: 4, right: 4, left: -20, bottom: 0 }}>
                 <defs>
                   <linearGradient id="revGrad" x1="0" y1="0" x2="0" y2="1">
-                    <stop offset="5%"  stopColor="#a28ef9" stopOpacity={0.25} />
-                    <stop offset="95%" stopColor="#a28ef9" stopOpacity={0}    />
+                    <stop offset="0%"   stopColor="#a28ef9" stopOpacity={0.15} />
+                    <stop offset="100%" stopColor="#a28ef9" stopOpacity={0}    />
                   </linearGradient>
                 </defs>
-                <CartesianGrid strokeDasharray="3 3" stroke="#f0f0f0" />
+                <CartesianGrid strokeDasharray="4 4" stroke="#f3f4f6" vertical={false} />
                 <XAxis dataKey="month" tick={{ fill: '#9ca3af', fontSize: 11 }} axisLine={false} tickLine={false} />
-                <YAxis tick={{ fill: '#9ca3af', fontSize: 11 }} axisLine={false} tickLine={false} tickFormatter={v => `Rs ${(v/1000).toFixed(0)}k`} />
+                <YAxis tick={{ fill: '#9ca3af', fontSize: 11 }} axisLine={false} tickLine={false} tickFormatter={v => `${(v/1000).toFixed(0)}k`} />
                 <Tooltip {...tt} formatter={(v: number) => [`Rs ${v.toLocaleString('en-LK')}`, 'Revenue']} />
-                <Area type="monotone" dataKey="revenue" stroke="#a28ef9" strokeWidth={2.5} fill="url(#revGrad)" dot={{ fill: '#a28ef9', r: 3, strokeWidth: 0 }} />
+                <Area type="monotone" dataKey="revenue" stroke="#a28ef9" strokeWidth={2.5}
+                  fill="url(#revGrad)" dot={false}
+                  activeDot={{ r: 5, fill: '#a28ef9', strokeWidth: 2, stroke: '#fff' }} />
               </AreaChart>
-            ) : (
-              <BarChart data={charts?.profitLoss ?? []}>
-                <CartesianGrid strokeDasharray="3 3" stroke="#f0f0f0" />
+            </ResponsiveContainer>
+          ) : (
+            <ResponsiveContainer width="100%" height={220}>
+              <BarChart data={charts?.profitLoss ?? []} margin={{ top: 4, right: 4, left: -20, bottom: 0 }} barGap={3}>
+                <CartesianGrid strokeDasharray="4 4" stroke="#f3f4f6" vertical={false} />
                 <XAxis dataKey="month" tick={{ fill: '#9ca3af', fontSize: 11 }} axisLine={false} tickLine={false} />
-                <YAxis tick={{ fill: '#9ca3af', fontSize: 11 }} axisLine={false} tickLine={false} tickFormatter={v => `Rs ${(v/1000).toFixed(0)}k`} />
+                <YAxis tick={{ fill: '#9ca3af', fontSize: 11 }} axisLine={false} tickLine={false} tickFormatter={v => `${(v/1000).toFixed(0)}k`} />
                 <Tooltip {...tt} formatter={(v: number) => `Rs ${v.toLocaleString('en-LK')}`} />
-                <Legend wrapperStyle={{ color: '#6b7280', fontSize: 12 }} />
-                <Bar dataKey="revenue"  name="Revenue"  fill="#a28ef9" radius={[4,4,0,0]} />
-                <Bar dataKey="expenses" name="Expenses" fill="#fda4af" radius={[4,4,0,0]} />
-                <Bar dataKey="profit"   name="Profit"   fill="#a4f5a6" radius={[4,4,0,0]} />
+                <Bar dataKey="revenue"  name="Revenue"  fill="#a28ef9" radius={[6,6,0,0]} maxBarSize={28} />
+                <Bar dataKey="expenses" name="Expenses" fill="#222222" radius={[6,6,0,0]} maxBarSize={28} />
+                <Bar dataKey="profit"   name="Profit"   fill="#a4f5a6" radius={[6,6,0,0]} maxBarSize={28} />
               </BarChart>
-            )}
-          </ResponsiveContainer>
+            </ResponsiveContainer>
+          )}
         </div>
 
         {/* Right column */}
         <div className="space-y-4">
-
-          {/* Status Donut */}
-          <div className="rounded-2xl p-5 bg-white" style={{ border: '1px solid #e5e7eb', boxShadow: '0 1px 4px rgba(0,0,0,0.05)' }}>
+          {/* Status donut */}
+          <div className="bg-white rounded-2xl p-5"
+            style={{ border: '1px solid #f0f2f0', boxShadow: '0 1px 3px rgba(0,0,0,0.04)' }}>
             <h2 className="text-sm font-bold mb-4" style={{ color: '#111827' }}>Invoice Status</h2>
             {(charts?.statusData ?? []).some(s => s.value > 0) ? (
               <>
-                <ResponsiveContainer width="100%" height={130}>
+                <ResponsiveContainer width="100%" height={120}>
                   <PieChart>
-                    <Pie data={charts?.statusData ?? []} cx="50%" cy="50%" innerRadius={38} outerRadius={58} paddingAngle={3} dataKey="value">
+                    <Pie data={charts?.statusData ?? []} cx="50%" cy="50%"
+                      innerRadius={36} outerRadius={52} paddingAngle={3} dataKey="value" strokeWidth={0}>
                       {(charts?.statusData ?? []).map(entry => (
-                        <Cell key={entry.name} fill={STATUS_COLORS[entry.name] ?? '#9ca3af'} />
+                        <Cell key={entry.name} fill={STATUS_COLORS[entry.name] ?? '#e5e7eb'} />
                       ))}
                     </Pie>
                     <Tooltip {...tt} />
                   </PieChart>
                 </ResponsiveContainer>
-                <div className="space-y-2 mt-2">
+                <div className="space-y-2 mt-3">
                   {(charts?.statusData ?? []).filter(s => s.value > 0).map(s => (
                     <div key={s.name} className="flex items-center justify-between">
                       <div className="flex items-center gap-2">
-                        <div className="w-2 h-2 rounded-full" style={{ background: STATUS_COLORS[s.name] }} />
+                        <div className="w-2.5 h-2.5 rounded-full" style={{ background: STATUS_COLORS[s.name] }} />
                         <span className="text-xs capitalize" style={{ color: '#6b7280' }}>{s.name.toLowerCase()}</span>
                       </div>
                       <span className="text-xs font-bold" style={{ color: '#111827' }}>{s.value}</span>
@@ -219,23 +255,24 @@ export default function DashboardPage() {
           </div>
 
           {/* Quick Actions */}
-          <div className="rounded-2xl p-5 bg-white" style={{ border: '1px solid #e5e7eb', boxShadow: '0 1px 4px rgba(0,0,0,0.05)' }}>
+          <div className="bg-white rounded-2xl p-5"
+            style={{ border: '1px solid #f0f2f0', boxShadow: '0 1px 3px rgba(0,0,0,0.04)' }}>
             <h2 className="text-sm font-bold mb-3" style={{ color: '#111827' }}>Quick Actions</h2>
             <div className="space-y-1.5">
               {[
-                { label: 'New Invoice',  href: '/invoices/new', color: '#a28ef9' },
-                { label: 'Add Client',   href: '/clients',      color: '#60a5fa' },
-                { label: 'Log Expense',  href: '/expenses',     color: '#4ade80' },
-                { label: 'View Reports', href: '/reports',      color: '#fcd34d' },
+                { label: 'New Invoice',  href: '/invoices/new', badge: '#a28ef9', badgeBg: '#f5f3ff' },
+                { label: 'Add Client',   href: '/clients',      badge: '#3b82f6', badgeBg: '#eff6ff' },
+                { label: 'Log Expense',  href: '/expenses',     badge: '#22c55e', badgeBg: '#f0fdf4' },
+                { label: 'View Reports', href: '/reports',      badge: '#f59e0b', badgeBg: '#fffbeb' },
               ].map(item => (
                 <Link key={item.href} href={item.href}
                   className="flex items-center justify-between px-3 py-2.5 rounded-xl transition-all group hover:bg-gray-50"
                   style={{ border: '1px solid #f3f4f6' }}>
                   <div className="flex items-center gap-2.5">
-                    <div className="w-2 h-2 rounded-full" style={{ background: item.color }} />
+                    <div className="w-2 h-2 rounded-full" style={{ background: item.badge }} />
                     <span className="text-xs font-semibold" style={{ color: '#374151' }}>{item.label}</span>
                   </div>
-                  <ArrowUpRight className="w-3 h-3 opacity-0 group-hover:opacity-60 transition-opacity" style={{ color: item.color }} />
+                  <ArrowUpRight className="w-3 h-3 opacity-0 group-hover:opacity-50 transition-opacity" style={{ color: item.badge }} />
                 </Link>
               ))}
             </div>
@@ -244,17 +281,25 @@ export default function DashboardPage() {
       </div>
 
       {/* ── Recent Invoices ── */}
-      <div className="rounded-2xl overflow-hidden bg-white" style={{ border: '1px solid #e5e7eb', boxShadow: '0 1px 4px rgba(0,0,0,0.05)' }}>
-        <div className="flex items-center justify-between px-6 py-4" style={{ borderBottom: '1px solid #f3f4f6' }}>
+      <div className="bg-white rounded-2xl overflow-hidden"
+        style={{ border: '1px solid #f0f2f0', boxShadow: '0 1px 3px rgba(0,0,0,0.04)' }}>
+        <div className="flex items-center justify-between px-6 py-4" style={{ borderBottom: '1px solid #f9fafb' }}>
           <h2 className="text-sm font-bold" style={{ color: '#111827' }}>Recent Invoices</h2>
-          <Link href="/invoices" className="flex items-center gap-1 text-xs font-semibold hover:opacity-80 transition-opacity" style={{ color: '#a28ef9' }}>
+          <Link href="/invoices"
+            className="flex items-center gap-1 text-xs font-semibold hover:opacity-80 transition-opacity"
+            style={{ color: '#a28ef9' }}>
             View all <ArrowRight className="w-3 h-3" />
           </Link>
         </div>
         {recentInvoices.length === 0 ? (
-          <div className="flex flex-col items-center justify-center py-12">
-            <FileText className="w-8 h-8 mb-2" style={{ color: '#e5e7eb' }} />
-            <p className="text-xs" style={{ color: '#9ca3af' }}>No invoices yet</p>
+          <div className="flex flex-col items-center justify-center py-14">
+            <FileText className="w-10 h-10 mb-3" style={{ color: '#e5e7eb' }} />
+            <p className="text-sm font-medium" style={{ color: '#9ca3af' }}>No invoices yet</p>
+            <Link href="/invoices/new">
+              <button className="mt-3 btn-brand h-8 px-4 text-xs flex items-center gap-1.5">
+                <Plus className="w-3.5 h-3.5" /> Create one
+              </button>
+            </Link>
           </div>
         ) : (
           <div className="overflow-x-auto">
@@ -273,7 +318,7 @@ export default function DashboardPage() {
                     style={{ borderBottom: i < recentInvoices.length - 1 ? '1px solid #f9fafb' : 'none' }}>
                     <td className="px-6 py-3.5">
                       <Link href={`/invoices/${inv.id}`}
-                        className="text-xs font-bold font-mono hover:opacity-80 transition-opacity"
+                        className="text-xs font-bold font-mono hover:opacity-75 transition-opacity"
                         style={{ color: '#a28ef9' }}>
                         {inv.invoiceNo}
                       </Link>
