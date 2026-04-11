@@ -84,6 +84,106 @@
   border-color: hsl(220 20% 18%) !important;
 }
 
+/* ── Dark mode: override hardcoded text & card colors ─────────── */
+[data-theme="dark"] {
+  color-scheme: dark;
+}
+
+/* Force foreground color on elements using inline dark text colors */
+[data-theme="dark"] h1,
+[data-theme="dark"] h2,
+[data-theme="dark"] h3,
+[data-theme="dark"] h4,
+[data-theme="dark"] h5,
+[data-theme="dark"] h6 {
+  color: hsl(var(--foreground));
+}
+
+/* Card and panel backgrounds */
+[data-theme="dark"] .card,
+[data-theme="dark"] .page-card {
+  background: hsl(var(--card)) !important;
+  border-color: hsl(var(--border)) !important;
+}
+
+/* Inputs in dark mode */
+[data-theme="dark"] input,
+[data-theme="dark"] textarea,
+[data-theme="dark"] select {
+  background: hsl(220 25% 14%) !important;
+  border-color: hsl(var(--border)) !important;
+  color: hsl(var(--foreground)) !important;
+}
+
+[data-theme="dark"] input::placeholder,
+[data-theme="dark"] textarea::placeholder {
+  color: hsl(215 20% 45%) !important;
+}
+
+/* White panels used throughout — flip to dark card bg */
+[data-theme="dark"] [style*="background: #ffffff"],
+[data-theme="dark"] [style*="background: '#ffffff'"],
+[data-theme="dark"] [style*="background:#ffffff"] {
+  background: hsl(222 42% 11%) !important;
+}
+
+[data-theme="dark"] [style*="background: #f9fafb"],
+[data-theme="dark"] [style*="background: #f3f4f6"],
+[data-theme="dark"] [style*="background: #f8fafc"] {
+  background: hsl(220 30% 13%) !important;
+}
+
+/* Dark hardcoded text → light in dark mode */
+[data-theme="dark"] [style*="color: #111827"],
+[data-theme="dark"] [style*="color: rgb(17, 24, 39)"],
+[data-theme="dark"] [style*="color: '#111827'"] {
+  color: hsl(var(--foreground)) !important;
+}
+
+[data-theme="dark"] [style*="color: #374151"],
+[data-theme="dark"] [style*="color: '#374151'"] {
+  color: hsl(210 30% 80%) !important;
+}
+
+[data-theme="dark"] [style*="color: #1E293B"],
+[data-theme="dark"] [style*="color: '#1E293B'"] {
+  color: hsl(var(--foreground)) !important;
+}
+
+[data-theme="dark"] [style*="color: #0f172a"],
+[data-theme="dark"] [style*="color: '#0f172a'"] {
+  color: hsl(var(--foreground)) !important;
+}
+
+/* Tables in dark mode */
+[data-theme="dark"] table {
+  color: hsl(var(--foreground));
+}
+
+[data-theme="dark"] tr[style*="background: #f3f4f6"],
+[data-theme="dark"] tr[style*="background:#f3f4f6"] {
+  background: hsl(220 30% 16%) !important;
+}
+
+/* Muted subtext — keep readable */
+[data-theme="dark"] [style*="color: #6b7280"],
+[data-theme="dark"] [style*="color: '#6b7280'"] {
+  color: hsl(215 20% 58%) !important;
+}
+
+[data-theme="dark"] [style*="color: #9ca3af"],
+[data-theme="dark"] [style*="color: '#9ca3af'"] {
+  color: hsl(215 15% 52%) !important;
+}
+
+/* Border colors */
+[data-theme="dark"] [style*="borderColor: '#e5e7eb'"],
+[data-theme="dark"] [style*="borderColor: #e5e7eb"],
+[data-theme="dark"] [style*="border: '1px solid #e5e7eb'"],
+[data-theme="dark"] [style*="border-color: #e5e7eb"] {
+  border-color: hsl(var(--border)) !important;
+}
+
 * { border-color: hsl(var(--border)); box-sizing: border-box; }
 html { scroll-behavior: smooth; }
 
@@ -103,16 +203,16 @@ body {
 
 /* ── Card — exact match to design ───────────────────────────── */
 .card {
-  background: #ffffff;
-  border: 1px solid #f0f2f0;
+  background: hsl(var(--card));
+  border: 1px solid hsl(var(--border));
   border-radius: 20px;
   box-shadow: 0 1px 3px rgba(0,0,0,0.04), 0 4px 12px rgba(0,0,0,0.04);
 }
 
 /* ── Page card (white content area) ─────────────────────────── */
 .page-card {
-  background: #ffffff;
-  border: 1px solid #f0f2f0;
+  background: hsl(var(--card));
+  border: 1px solid hsl(var(--border));
   border-radius: 20px;
   box-shadow: 0 1px 3px rgba(0,0,0,0.04), 0 4px 12px rgba(0,0,0,0.04);
   padding: 20px 24px;
