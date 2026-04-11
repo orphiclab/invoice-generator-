@@ -166,44 +166,52 @@ export default function EditInvoicePage() {
           <h2 className="text-base font-bold" style={{ color: '#111827' }}>Line Items</h2>
           <div className="space-y-3">
             {/* Header */}
-            <div className="grid grid-cols-12 gap-2 px-1">
-              {['Description', 'Qty', 'Unit Price', 'Total', ''].map((h, i) => (
-                <div key={i} className={`text-xs font-semibold uppercase tracking-wider ${i === 0 ? 'col-span-5' : i === 1 ? 'col-span-2' : i === 2 ? 'col-span-2' : i === 3 ? 'col-span-2' : 'col-span-1'}`} style={{ color: '#9ca3af' }}>{h}</div>
-              ))}
+            <div className="grid grid-cols-12 gap-3 px-1">
+              <div className="col-span-5 text-xs font-semibold uppercase tracking-wider" style={{ color: '#9ca3af' }}>Description</div>
+              <div className="col-span-2 text-xs font-semibold uppercase tracking-wider" style={{ color: '#9ca3af' }}>Qty</div>
+              <div className="col-span-2 text-xs font-semibold uppercase tracking-wider" style={{ color: '#9ca3af' }}>Unit Price</div>
+              <div className="col-span-2 text-xs font-semibold uppercase tracking-wider" style={{ color: '#9ca3af' }}>Total</div>
+              <div className="col-span-1"></div>
             </div>
             {items.map((item, idx) => (
-              <div key={idx} className="grid grid-cols-12 gap-2 items-center">
-                <Input
-                  className="text-gray-900"
-                  style={inputStyle}
-                  placeholder="Service or product description"
-                  value={item.description}
-                  onChange={(e) => updateItem(idx, 'description', e.target.value)}
-                  required
-                />
-                <Input
-                  className="text-gray-900"
-                  style={inputStyle}
-                  type="number"
-                  min={0.01}
-                  step={0.01}
-                  value={item.quantity}
-                  onChange={(e) => updateItem(idx, 'quantity', parseFloat(e.target.value) || 0)}
-                />
-                <Input
-                  className="text-gray-900"
-                  style={inputStyle}
-                  type="number"
-                  min={0}
-                  step={0.01}
-                  placeholder="0.00"
-                  value={item.unitPrice}
-                  onChange={(e) => updateItem(idx, 'unitPrice', parseFloat(e.target.value) || 0)}
-                />
-                <div className="text-gray-900">
+              <div key={idx} className="grid grid-cols-12 gap-3 items-center">
+                <div className="col-span-5">
+                  <Input
+                    className="text-gray-900 w-full"
+                    style={inputStyle}
+                    placeholder="Service or product description"
+                    value={item.description}
+                    onChange={(e) => updateItem(idx, 'description', e.target.value)}
+                    required
+                  />
+                </div>
+                <div className="col-span-2">
+                  <Input
+                    className="text-gray-900 w-full"
+                    style={inputStyle}
+                    type="number"
+                    min={0.01}
+                    step={0.01}
+                    value={item.quantity}
+                    onChange={(e) => updateItem(idx, 'quantity', parseFloat(e.target.value) || 0)}
+                  />
+                </div>
+                <div className="col-span-2">
+                  <Input
+                    className="text-gray-900 w-full"
+                    style={inputStyle}
+                    type="number"
+                    min={0}
+                    step={0.01}
+                    placeholder="0.00"
+                    value={item.unitPrice}
+                    onChange={(e) => updateItem(idx, 'unitPrice', parseFloat(e.target.value) || 0)}
+                  />
+                </div>
+                <div className="col-span-2 text-sm font-semibold px-1" style={{ color: '#111827' }}>
                   Rs {(item.quantity * item.unitPrice).toLocaleString('en-IN', { maximumFractionDigits: 0 })}
                 </div>
-                <div className="col-span-1">
+                <div className="col-span-1 flex justify-center">
                   <button type="button" onClick={() => removeItem(idx)} className="p-1.5 rounded-lg hover:bg-red-500/10 transition-colors" style={{ color: 'hsl(0 72% 65%)' }}>
                     <Trash2 className="w-3.5 h-3.5" />
                   </button>

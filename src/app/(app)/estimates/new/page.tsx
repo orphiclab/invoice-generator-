@@ -113,27 +113,39 @@ export default function NewEstimatePage() {
               <Plus className="w-3 h-3" /> Add Item
             </Button>
           </div>
-          <div className="grid grid-cols-12 gap-2 px-1">
-            {['Description', 'Qty', 'Unit Price', 'Total', ''].map(h => (
-              <div key={h} className="text-xs font-medium" style={{ color: '#9ca3af', gridColumn: h === 'Description' ? 'span 6' : h === '' ? 'span 1' : 'span 2' }}>{h}</div>
-            ))}
+          <div className="grid grid-cols-12 gap-3 px-1">
+            <div className="col-span-5 text-xs font-medium" style={{ color: '#9ca3af' }}>Description</div>
+            <div className="col-span-2 text-xs font-medium" style={{ color: '#9ca3af' }}>Qty</div>
+            <div className="col-span-2 text-xs font-medium" style={{ color: '#9ca3af' }}>Unit Price</div>
+            <div className="col-span-2 text-xs font-medium" style={{ color: '#9ca3af' }}>Total</div>
+            <div className="col-span-1"></div>
           </div>
           {items.map((item, i) => {
             const lineTotal = (parseFloat(item.quantity) || 0) * (parseFloat(item.unitPrice) || 0)
             return (
-              <div key={i} className="grid grid-cols-12 gap-2 items-center">
-                <input placeholder="Description" value={item.description} onChange={e => updateItem(i, 'description', e.target.value)}
-                  className="col-span-6 px-3 py-2 rounded-xl text-sm outline-none" style={inputStyle} />
-                <input type="number" min="0" step="0.01" placeholder="1" value={item.quantity} onChange={e => updateItem(i, 'quantity', e.target.value)}
-                  className="col-span-2 px-3 py-2 rounded-xl text-sm outline-none text-center" style={inputStyle} />
-                <input type="number" min="0" step="0.01" placeholder="0.00" value={item.unitPrice} onChange={e => updateItem(i, 'unitPrice', e.target.value)}
-                  className="col-span-2 px-3 py-2 rounded-xl text-sm outline-none" style={inputStyle} />
-                <div className="text-gray-900">{currSymbol}{lineTotal.toFixed(0)}</div>
-                {items.length > 1 && (
-                  <button type="button" onClick={() => removeItem(i)} className="col-span-1 p-1.5 rounded-lg hover:bg-red-500/20 w-fit">
-                    <Trash2 className="w-3.5 h-3.5" style={{ color: 'hsl(0 84% 60%)' }} />
-                  </button>
-                )}
+              <div key={i} className="grid grid-cols-12 gap-3 items-center">
+                <div className="col-span-5">
+                  <input placeholder="Description" value={item.description} onChange={e => updateItem(i, 'description', e.target.value)}
+                    className="w-full px-3 py-2 rounded-xl text-sm outline-none" style={inputStyle} />
+                </div>
+                <div className="col-span-2">
+                  <input type="number" min="0" step="0.01" placeholder="1" value={item.quantity} onChange={e => updateItem(i, 'quantity', e.target.value)}
+                    className="w-full px-3 py-2 rounded-xl text-sm outline-none text-center" style={inputStyle} />
+                </div>
+                <div className="col-span-2">
+                  <input type="number" min="0" step="0.01" placeholder="0.00" value={item.unitPrice} onChange={e => updateItem(i, 'unitPrice', e.target.value)}
+                    className="w-full px-3 py-2 rounded-xl text-sm outline-none" style={inputStyle} />
+                </div>
+                <div className="col-span-2 text-sm font-semibold px-1" style={{ color: '#111827' }}>
+                  {currSymbol}{lineTotal.toFixed(0)}
+                </div>
+                <div className="col-span-1 flex justify-center">
+                  {items.length > 1 && (
+                    <button type="button" onClick={() => removeItem(i)} className="p-1.5 rounded-lg hover:bg-red-500/20">
+                      <Trash2 className="w-3.5 h-3.5" style={{ color: 'hsl(0 84% 60%)' }} />
+                    </button>
+                  )}
+                </div>
               </div>
             )
           })}

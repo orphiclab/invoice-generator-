@@ -18,10 +18,11 @@ export async function POST(request: Request) {
 
     const hashedPassword = await bcrypt.hash(password, 12)
     const user = await prisma.user.create({
-      data: { name, email, password: hashedPassword },
+      data: { name, email, password: hashedPassword, role: 'ADMIN' },
     })
 
-    await createSession(user.id, user.email, user.name)
+    // ADMIN user: companyId = their own userId
+    await createSession(user.id, user.email, user.name, 'ADMIN', user.id)
     return NextResponse.json({ success: true, user: { id: user.id, email: user.email, name: user.name } }, { status: 201 })
   } catch (error) {
     console.error('Register error:', error)

@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server'
 import { prisma } from '@/lib/prisma'
 import { requireAuth } from '@/lib/auth'
+import { logActivity, createNotification } from '@/lib/activity'
 
 export async function GET(_: Request, { params }: { params: Promise<{ id: string }> }) {
   const { error, session } = await requireAuth()
@@ -64,6 +65,30 @@ export async function PUT(request: Request, { params }: { params: Promise<{ id: 
     },
     include: { client: true, items: true },
   })
+
+  // Log activity — detect status change
+  const action = status && status !== invoice.status
+    ? (status === 'PAID' ? 'paid' : status === 'SENT' ? 'sent' : 'updated')
+    : 'updated'
+  await logActivity({
+    userId: session!.userId,
+    action,
+    entityType: 'invoice',
+    entityId: updated.id,
+    entityName: updated.invoiceNo,
+    metadata: { total: updated.total, status: updated.status },
+  })
+
+  if (status === 'PAID' && status !== invoice.status) {
+    await createNotification({
+      userId: session!.userId,
+      type: 'payment_received',
+      title: 'Invoice Paid!',
+      message: `${updated.invoiceNo} — Rs ${updated.total.toLocaleString()} has been marked as paid`,
+      linkTo: `/invoices/${updated.id}`,
+    })
+  }
+
   return NextResponse.json(updated)
 }
 
@@ -76,5 +101,14 @@ export async function DELETE(_: Request, { params }: { params: Promise<{ id: str
   if (!invoice) return NextResponse.json({ error: 'Not found' }, { status: 404 })
 
   await prisma.invoice.delete({ where: { id } })
+
+  await logActivity({
+    userId: session!.userId,
+    action: 'deleted',
+    entityType: 'invoice',
+    entityId: id,
+    entityName: invoice.invoiceNo,
+  })
+
   return NextResponse.json({ success: true })
 }

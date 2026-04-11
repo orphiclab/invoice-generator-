@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server'
 import { prisma } from '@/lib/prisma'
 import { requireAuth } from '@/lib/auth'
+import { logActivity } from '@/lib/activity'
 
 export async function GET() {
   const { error, session } = await requireAuth()
@@ -28,6 +29,14 @@ export async function POST(request: Request) {
 
   const client = await prisma.client.create({
     data: { name, email, phone, company, address, userId: session!.userId },
+  })
+
+  await logActivity({
+    userId: session!.userId,
+    action: 'created',
+    entityType: 'client',
+    entityId: client.id,
+    entityName: client.name,
   })
 
   return NextResponse.json(client, { status: 201 })

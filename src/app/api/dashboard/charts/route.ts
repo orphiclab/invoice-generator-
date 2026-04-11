@@ -91,7 +91,36 @@ export async function GET() {
       profit: Math.round(revenue - (expMonthlyMap[month] || 0)),
     }))
 
-    return NextResponse.json({ monthlyRevenue, revenueByClient, statusData, profitLoss })
+    // Expense categories breakdown
+    const categoryMap: Record<string, number> = {}
+    for (const exp of expenses) {
+      categoryMap[exp.category] = (categoryMap[exp.category] || 0) + exp.amount
+    }
+    const expensesByCategory = Object.entries(categoryMap)
+      .sort((a, b) => b[1] - a[1])
+      .map(([name, amount]) => ({ name, amount: Math.round(amount) }))
+
+    // Cash flow (cumulative net)
+    let cumulative = 0
+    const cashFlow = monthlyRevenue.map(({ month, revenue }) => {
+      const exp = expMonthlyMap[month] || 0
+      cumulative += revenue - exp
+      return { month, net: Math.round(revenue - exp), cumulative: Math.round(cumulative) }
+    })
+
+    // Collection rate (paid vs total invoiced)
+    const totalInvoiced = invoices.reduce((s, inv) => s + inv.total, 0)
+    const totalPaid = invoices.filter(inv => inv.status === 'PAID').reduce((s, inv) => s + inv.total, 0)
+    const collectionRate = totalInvoiced > 0 ? Math.round((totalPaid / totalInvoiced) * 100) : 0
+
+    // Average invoice value
+    const avgInvoice = invoices.length > 0 ? Math.round(totalInvoiced / invoices.length) : 0
+
+    return NextResponse.json({
+      monthlyRevenue, revenueByClient, statusData, profitLoss,
+      expensesByCategory, cashFlow, collectionRate, avgInvoice,
+      totalExpenses: Math.round(expenses.reduce((s, e) => s + e.amount, 0)),
+    })
   } catch (error) {
     console.error(error)
     return NextResponse.json({ error: 'Failed to load chart data' }, { status: 500 })

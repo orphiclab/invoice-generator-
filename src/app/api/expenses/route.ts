@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { requireAuth } from '@/lib/auth'
 import { prisma } from '@/lib/prisma'
+import { logActivity } from '@/lib/activity'
 
 export async function GET(req: NextRequest) {
   const { error, session } = await requireAuth()
@@ -53,6 +54,16 @@ export async function POST(req: NextRequest) {
         userId: session!.userId,
       },
     })
+
+    await logActivity({
+      userId: session!.userId,
+      action: 'created',
+      entityType: 'expense',
+      entityId: expense.id,
+      entityName: expense.title,
+      metadata: { amount: expense.amount, category },
+    })
+
     return NextResponse.json(expense, { status: 201 })
   } catch {
     return NextResponse.json({ error: 'Failed to create expense' }, { status: 500 })

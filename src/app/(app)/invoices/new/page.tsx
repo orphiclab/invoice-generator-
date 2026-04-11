@@ -3,7 +3,7 @@
 import { useEffect, useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { toast } from 'sonner'
-import { Plus, Trash2, ArrowLeft, Calculator } from 'lucide-react'
+import { Plus, Trash2, ArrowLeft, Calculator, X, UserPlus } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
@@ -22,6 +22,9 @@ export default function NewInvoicePage() {
   const [loading, setLoading] = useState(false)
   const [clients, setClients] = useState<Client[]>([])
   const [currencies, setCurrencies] = useState<Currency[]>([])
+  const [showNewClient, setShowNewClient] = useState(false)
+  const [savingClient, setSavingClient] = useState(false)
+  const [newClient, setNewClient] = useState({ name: '', email: '', phone: '', company: '' })
   const [form, setForm] = useState({
     clientId: '',
     invoiceNo: `INV-${Date.now().toString().slice(-6)}`,
@@ -57,6 +60,30 @@ export default function NewInvoicePage() {
   function removeItem(idx: number) { if (items.length > 1) setItems(items.filter((_, i) => i !== idx)) }
   function updateItem(idx: number, field: keyof Item, value: string | number) {
     setItems(items.map((item, i) => i === idx ? { ...item, [field]: value } : item))
+  }
+
+  async function handleCreateClient(e: React.FormEvent) {
+    e.preventDefault()
+    if (!newClient.name.trim()) { toast.error('Client name is required'); return }
+    setSavingClient(true)
+    try {
+      const res = await fetch('/api/clients', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(newClient),
+      })
+      const data = await res.json()
+      if (!res.ok) { toast.error(data.error || 'Failed to create client'); return }
+      setClients(prev => [...prev, data])
+      setForm(prev => ({ ...prev, clientId: data.id }))
+      setShowNewClient(false)
+      setNewClient({ name: '', email: '', phone: '', company: '' })
+      toast.success(`${data.name} added & selected!`)
+    } catch {
+      toast.error('Failed to create client')
+    } finally {
+      setSavingClient(false)
+    }
   }
 
   async function handleSubmit(e: React.FormEvent) {
@@ -95,21 +122,33 @@ export default function NewInvoicePage() {
         <div className="glass rounded-2xl p-6">
           <h2 className="text-base font-bold" style={{ color: '#111827' }}>Invoice Details</h2>
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            {/* Client selector with Add New button */}
             <div className="space-y-2">
               <Label className="text-sm" style={labelStyle}>Client *</Label>
-              <Select value={form.clientId} onValueChange={(v) => setForm({ ...form, clientId: v })}>
-                <SelectTrigger className="text-gray-900" style={inputStyle}>
-                  <SelectValue placeholder="Select client" />
-                </SelectTrigger>
-                <SelectContent style={{ background: '#ffffff', borderColor: '#e5e7eb' }}>
-                  {clients.length === 0 ? (
-                    <SelectItem value="_none" disabled>No clients yet — <Link href="/clients" className="underline">add one</Link></SelectItem>
-                  ) : clients.map((c) => (
-                    <SelectItem key={c.id} value={c.id}>{c.name}{c.company ? ` · ${c.company}` : ''}</SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
+              <div className="flex items-center gap-2">
+                <div className="flex-1">
+                  <Select value={form.clientId} onValueChange={(v) => setForm({ ...form, clientId: v })}>
+                    <SelectTrigger className="text-gray-900" style={inputStyle}>
+                      <SelectValue placeholder="Select client" />
+                    </SelectTrigger>
+                    <SelectContent style={{ background: '#ffffff', borderColor: '#e5e7eb' }}>
+                      {clients.length === 0 ? (
+                        <SelectItem value="_none" disabled>No clients yet</SelectItem>
+                      ) : clients.map((c) => (
+                        <SelectItem key={c.id} value={c.id}>{c.name}{c.company ? ` · ${c.company}` : ''}</SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                </div>
+                <button type="button" onClick={() => setShowNewClient(true)}
+                  className="h-9 w-9 flex-shrink-0 rounded-xl flex items-center justify-center transition-all hover:opacity-90 active:scale-95"
+                  style={{ background: '#a28ef9', color: '#fff' }}
+                  title="Add new client">
+                  <UserPlus className="w-4 h-4" />
+                </button>
+              </div>
             </div>
+
             <div className="space-y-2">
               <Label className="text-sm" style={labelStyle}>Invoice Number *</Label>
               <Input value={form.invoiceNo} onChange={(e) => setForm({ ...form, invoiceNo: e.target.value })} className="text-gray-900" style={inputStyle} required />
@@ -152,45 +191,31 @@ export default function NewInvoicePage() {
         <div className="glass rounded-2xl p-6">
           <h2 className="text-base font-bold" style={{ color: '#111827' }}>Line Items</h2>
           <div className="space-y-3">
-            {/* Header */}
-            <div className="grid grid-cols-12 gap-2 px-1">
-              {['Description', 'Qty', 'Unit Price', 'Total', ''].map((h, i) => (
-                <div key={i} className={`text-xs font-semibold uppercase tracking-wider ${i === 0 ? 'col-span-5' : i === 1 ? 'col-span-2' : i === 2 ? 'col-span-2' : i === 3 ? 'col-span-2' : 'col-span-1'}`} style={{ color: '#9ca3af' }}>{h}</div>
-              ))}
+            <div className="grid grid-cols-12 gap-3 px-1">
+              <div className="col-span-5 text-xs font-semibold uppercase tracking-wider" style={{ color: '#9ca3af' }}>Description</div>
+              <div className="col-span-2 text-xs font-semibold uppercase tracking-wider" style={{ color: '#9ca3af' }}>Qty</div>
+              <div className="col-span-2 text-xs font-semibold uppercase tracking-wider" style={{ color: '#9ca3af' }}>Unit Price</div>
+              <div className="col-span-2 text-xs font-semibold uppercase tracking-wider" style={{ color: '#9ca3af' }}>Total</div>
+              <div className="col-span-1"></div>
             </div>
             {items.map((item, idx) => (
-              <div key={idx} className="grid grid-cols-12 gap-2 items-center">
-                <Input
-                  className="text-gray-900"
-                  style={inputStyle}
-                  placeholder="Service or product description"
-                  value={item.description}
-                  onChange={(e) => updateItem(idx, 'description', e.target.value)}
-                  required
-                />
-                <Input
-                  className="text-gray-900"
-                  style={inputStyle}
-                  type="number"
-                  min={0.01}
-                  step={0.01}
-                  value={item.quantity}
-                  onChange={(e) => updateItem(idx, 'quantity', parseFloat(e.target.value) || 0)}
-                />
-                <Input
-                  className="text-gray-900"
-                  style={inputStyle}
-                  type="number"
-                  min={0}
-                  step={0.01}
-                  placeholder="0.00"
-                  value={item.unitPrice}
-                  onChange={(e) => updateItem(idx, 'unitPrice', parseFloat(e.target.value) || 0)}
-                />
-                <div className="text-gray-900">
+              <div key={idx} className="grid grid-cols-12 gap-3 items-center">
+                <div className="col-span-5">
+                  <Input className="text-gray-900 w-full" style={inputStyle} placeholder="Service or product description"
+                    value={item.description} onChange={(e) => updateItem(idx, 'description', e.target.value)} required />
+                </div>
+                <div className="col-span-2">
+                  <Input className="text-gray-900 w-full" style={inputStyle} type="number" min={0.01} step={0.01}
+                    value={item.quantity} onChange={(e) => updateItem(idx, 'quantity', parseFloat(e.target.value) || 0)} />
+                </div>
+                <div className="col-span-2">
+                  <Input className="text-gray-900 w-full" style={inputStyle} type="number" min={0} step={0.01} placeholder="0.00"
+                    value={item.unitPrice} onChange={(e) => updateItem(idx, 'unitPrice', parseFloat(e.target.value) || 0)} />
+                </div>
+                <div className="col-span-2 text-sm font-semibold px-1" style={{ color: '#111827' }}>
                   {currSymbol}{(item.quantity * item.unitPrice).toLocaleString('en-IN', { maximumFractionDigits: 0 })}
                 </div>
-                <div className="col-span-1">
+                <div className="col-span-1 flex justify-center">
                   <button type="button" onClick={() => removeItem(idx)} className="p-1.5 rounded-lg hover:bg-red-500/10 transition-colors" style={{ color: 'hsl(0 72% 65%)' }}>
                     <Trash2 className="w-3.5 h-3.5" />
                   </button>
@@ -207,16 +232,10 @@ export default function NewInvoicePage() {
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
           <div className="glass rounded-2xl p-6">
             <h2 className="text-base font-bold" style={{ color: '#111827' }}>Notes</h2>
-            <textarea
-              value={form.notes}
-              onChange={(e) => setForm({ ...form, notes: e.target.value })}
-              rows={4}
-              placeholder="Payment terms, thank you notes, bank details…"
-              className="text-gray-900"
-              style={{ ...inputStyle, '--tw-ring-color': '#a28ef9' } as React.CSSProperties}
-            />
+            <textarea value={form.notes} onChange={(e) => setForm({ ...form, notes: e.target.value })} rows={4}
+              placeholder="Payment terms, thank you notes, bank details…" className="text-gray-900"
+              style={{ ...inputStyle, '--tw-ring-color': '#a28ef9' } as React.CSSProperties} />
           </div>
-
           <div className="glass rounded-2xl p-6">
             <h2 className="text-base font-bold" style={{ color: '#111827' }}>
               <Calculator className="w-4 h-4" style={{ color: '#a28ef9' }} /> Summary
@@ -258,6 +277,66 @@ export default function NewInvoicePage() {
           </Button>
         </div>
       </form>
+
+      {/* Add New Client Modal */}
+      {showNewClient && (
+        <div className="fixed inset-0 bg-black/40 backdrop-blur-sm flex items-center justify-center z-50" onClick={() => setShowNewClient(false)}>
+          <div className="bg-white rounded-2xl p-6 w-full max-w-md shadow-2xl" onClick={e => e.stopPropagation()}
+            style={{ animation: 'fadeIn 200ms ease-out' }}>
+            <div className="flex items-center justify-between mb-5">
+              <div>
+                <h2 className="text-base font-bold flex items-center gap-2" style={{ color: '#111827' }}>
+                  <UserPlus className="w-4 h-4" style={{ color: '#a28ef9' }} /> Add New Client
+                </h2>
+                <p className="text-xs mt-0.5" style={{ color: '#9ca3af' }}>Quick add — you can edit details later</p>
+              </div>
+              <button onClick={() => setShowNewClient(false)} className="p-1 rounded-lg hover:bg-gray-100">
+                <X className="w-4 h-4" style={{ color: '#6b7280' }} />
+              </button>
+            </div>
+            <form onSubmit={handleCreateClient} className="space-y-3">
+              <div>
+                <label className="text-xs font-medium block mb-1" style={{ color: '#6b7280' }}>Full Name *</label>
+                <input required value={newClient.name} onChange={e => setNewClient({ ...newClient, name: e.target.value })}
+                  className="w-full px-3 py-2.5 rounded-xl text-sm outline-none" placeholder="John Doe"
+                  style={{ background: '#f9fafb', border: '1px solid #e5e7eb', color: '#111827' }} autoFocus />
+              </div>
+              <div className="grid grid-cols-2 gap-3">
+                <div>
+                  <label className="text-xs font-medium block mb-1" style={{ color: '#6b7280' }}>Email</label>
+                  <input type="email" value={newClient.email} onChange={e => setNewClient({ ...newClient, email: e.target.value })}
+                    className="w-full px-3 py-2.5 rounded-xl text-sm outline-none" placeholder="john@email.com"
+                    style={{ background: '#f9fafb', border: '1px solid #e5e7eb', color: '#111827' }} />
+                </div>
+                <div>
+                  <label className="text-xs font-medium block mb-1" style={{ color: '#6b7280' }}>Phone</label>
+                  <input value={newClient.phone} onChange={e => setNewClient({ ...newClient, phone: e.target.value })}
+                    className="w-full px-3 py-2.5 rounded-xl text-sm outline-none" placeholder="+94 77 123 4567"
+                    style={{ background: '#f9fafb', border: '1px solid #e5e7eb', color: '#111827' }} />
+                </div>
+              </div>
+              <div>
+                <label className="text-xs font-medium block mb-1" style={{ color: '#6b7280' }}>Company</label>
+                <input value={newClient.company} onChange={e => setNewClient({ ...newClient, company: e.target.value })}
+                  className="w-full px-3 py-2.5 rounded-xl text-sm outline-none" placeholder="Acme Inc. (optional)"
+                  style={{ background: '#f9fafb', border: '1px solid #e5e7eb', color: '#111827' }} />
+              </div>
+              <div className="flex gap-2 pt-2">
+                <button type="button" onClick={() => setShowNewClient(false)}
+                  className="flex-1 h-10 rounded-xl text-sm font-semibold transition-colors hover:bg-gray-50"
+                  style={{ border: '1px solid #e5e7eb', color: '#6b7280' }}>
+                  Cancel
+                </button>
+                <button type="submit" disabled={savingClient}
+                  className="flex-1 h-10 rounded-xl text-sm font-semibold text-white transition-all hover:opacity-90"
+                  style={{ background: '#a28ef9' }}>
+                  {savingClient ? 'Adding...' : 'Add & Select'}
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
     </div>
   )
 }

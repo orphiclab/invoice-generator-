@@ -2,6 +2,7 @@ import { NextResponse } from 'next/server'
 import { prisma } from '@/lib/prisma'
 import { requireAuth } from '@/lib/auth'
 import { randomBytes } from 'crypto'
+import { logActivity, createNotification } from '@/lib/activity'
 
 export async function GET(request: Request) {
   const { error, session } = await requireAuth()
@@ -72,6 +73,23 @@ export async function POST(request: Request) {
       },
     },
     include: { client: true, items: true },
+  })
+
+  await logActivity({
+    userId: session!.userId,
+    action: 'created',
+    entityType: 'invoice',
+    entityId: invoice.id,
+    entityName: invoice.invoiceNo,
+    metadata: { total, clientName: client.name },
+  })
+
+  await createNotification({
+    userId: session!.userId,
+    type: 'invoice_created',
+    title: 'Invoice Created',
+    message: `Invoice ${invoice.invoiceNo} for Rs ${total.toLocaleString()} created for ${client.name}`,
+    linkTo: `/invoices/${invoice.id}`,
   })
 
   return NextResponse.json(invoice, { status: 201 })

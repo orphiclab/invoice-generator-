@@ -25,6 +25,12 @@ interface ChartData {
   monthlyRevenue: { month: string; revenue: number }[]
   statusData: { name: string; value: number }[]
   profitLoss: { month: string; revenue: number; expenses: number; profit: number }[]
+  revenueByClient: { name: string; revenue: number }[]
+  expensesByCategory: { name: string; amount: number }[]
+  cashFlow: { month: string; net: number; cumulative: number }[]
+  collectionRate: number
+  avgInvoice: number
+  totalExpenses: number
 }
 
 // Tooltip — clean white
@@ -300,6 +306,120 @@ export default function DashboardPage() {
                 </Link>
               ))}
             </div>
+          </div>
+        </div>
+      </div>
+
+      {/* ── Row 3: Revenue by Client + Expense Categories + KPIs ── */}
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
+
+        {/* Revenue by Client — horizontal bars */}
+        <div className="bg-white rounded-2xl p-6" style={{ border: '1px solid #f0f2f0', boxShadow: '0 2px 8px rgba(0,0,0,0.05)' }}>
+          <h2 className="text-sm font-bold mb-1" style={{ color: '#111827' }}>Top Clients</h2>
+          <p className="text-[11px] mb-4" style={{ color: '#9ca3af' }}>Revenue by client</p>
+          {(charts?.revenueByClient ?? []).length === 0 ? (
+            <p className="text-xs text-center py-8" style={{ color: '#d1d5db' }}>No data yet</p>
+          ) : (
+            <div className="space-y-3">
+              {(charts?.revenueByClient ?? []).map((client, i) => {
+                const maxRev = Math.max(...(charts?.revenueByClient ?? []).map(c => c.revenue), 1)
+                const pct = (client.revenue / maxRev) * 100
+                const colors = ['#a28ef9', '#7c5cfc', '#3b82f6', '#6366f1', '#8b5cf6', '#a855f7']
+                return (
+                  <div key={client.name}>
+                    <div className="flex items-center justify-between mb-1">
+                      <span className="text-[11px] font-semibold truncate" style={{ color: '#111827', maxWidth: '60%' }}>{client.name}</span>
+                      <span className="text-[10px] font-bold" style={{ color: '#6b7280' }}>Rs {(client.revenue / 1000).toFixed(0)}k</span>
+                    </div>
+                    <div className="h-2 rounded-full overflow-hidden" style={{ background: '#f3f4f6' }}>
+                      <div className="h-full rounded-full transition-all duration-700" style={{ width: `${pct}%`, background: colors[i % colors.length] }} />
+                    </div>
+                  </div>
+                )
+              })}
+            </div>
+          )}
+        </div>
+
+        {/* Expense Categories */}
+        <div className="bg-white rounded-2xl p-6" style={{ border: '1px solid #f0f2f0', boxShadow: '0 2px 8px rgba(0,0,0,0.05)' }}>
+          <div className="flex items-center justify-between mb-1">
+            <div>
+              <h2 className="text-sm font-bold" style={{ color: '#111827' }}>Expense Breakdown</h2>
+              <p className="text-[11px]" style={{ color: '#9ca3af' }}>By category</p>
+            </div>
+            <span className="text-xs font-bold px-2 py-1 rounded-lg" style={{ background: '#fef2f2', color: '#ef4444' }}>
+              Rs {((charts?.totalExpenses ?? 0) / 1000).toFixed(0)}k
+            </span>
+          </div>
+          {(charts?.expensesByCategory ?? []).length === 0 ? (
+            <p className="text-xs text-center py-8" style={{ color: '#d1d5db' }}>No expenses yet</p>
+          ) : (
+            <>
+              <ResponsiveContainer width="100%" height={130}>
+                <PieChart>
+                  <Pie data={charts?.expensesByCategory ?? []}
+                    cx="50%" cy="50%" innerRadius={36} outerRadius={54}
+                    paddingAngle={2} dataKey="amount" strokeWidth={0}
+                    startAngle={90} endAngle={-270}>
+                    {(charts?.expensesByCategory ?? []).map((_, i) => (
+                      <Cell key={i} fill={['#222222', '#6b7280', '#9ca3af', '#d1d5db', '#e5e7eb', '#f3f4f6'][i % 6]} />
+                    ))}
+                  </Pie>
+                  <Tooltip {...tt} formatter={(v: number) => fmtRs(v)} />
+                </PieChart>
+              </ResponsiveContainer>
+              <div className="space-y-2 mt-1">
+                {(charts?.expensesByCategory ?? []).slice(0, 5).map((cat, i) => (
+                  <div key={cat.name} className="flex items-center justify-between">
+                    <div className="flex items-center gap-2">
+                      <div className="w-2 h-2 rounded-full" style={{ background: ['#222222', '#6b7280', '#9ca3af', '#d1d5db', '#e5e7eb'][i % 5] }} />
+                      <span className="text-[11px] capitalize" style={{ color: '#6b7280' }}>{cat.name.toLowerCase()}</span>
+                    </div>
+                    <span className="text-[11px] font-bold" style={{ color: '#111827' }}>Rs {cat.amount.toLocaleString('en-LK')}</span>
+                  </div>
+                ))}
+              </div>
+            </>
+          )}
+        </div>
+
+        {/* KPI Cards Stack */}
+        <div className="space-y-4">
+          {/* Collection Rate */}
+          <div className="bg-white rounded-2xl p-5" style={{ border: '1px solid #f0f2f0', boxShadow: '0 2px 8px rgba(0,0,0,0.05)' }}>
+            <p className="text-xs font-semibold mb-2" style={{ color: '#6b7280' }}>Collection Rate</p>
+            <div className="flex items-end gap-3">
+              <p className="text-3xl font-extrabold" style={{ color: '#111827' }}>{charts?.collectionRate ?? 0}%</p>
+              <p className="text-[11px] mb-1" style={{ color: '#9ca3af' }}>paid vs invoiced</p>
+            </div>
+            <div className="h-2 rounded-full mt-3 overflow-hidden" style={{ background: '#f3f4f6' }}>
+              <div className="h-full rounded-full transition-all duration-700" style={{ width: `${charts?.collectionRate ?? 0}%`, background: 'linear-gradient(90deg, #a28ef9, #22c55e)' }} />
+            </div>
+          </div>
+
+          {/* Avg Invoice */}
+          <div className="bg-white rounded-2xl p-5" style={{ border: '1px solid #f0f2f0', boxShadow: '0 2px 8px rgba(0,0,0,0.05)' }}>
+            <p className="text-xs font-semibold mb-2" style={{ color: '#6b7280' }}>Avg. Invoice Value</p>
+            <p className="text-3xl font-extrabold" style={{ color: '#111827' }}>Rs {((charts?.avgInvoice ?? 0) / 1000).toFixed(1)}k</p>
+            <p className="text-[11px] mt-1" style={{ color: '#9ca3af' }}>Across all invoices</p>
+          </div>
+
+          {/* Cash Flow mini */}
+          <div className="bg-white rounded-2xl p-5" style={{ border: '1px solid #f0f2f0', boxShadow: '0 2px 8px rgba(0,0,0,0.05)' }}>
+            <p className="text-xs font-semibold mb-2" style={{ color: '#6b7280' }}>Cash Flow</p>
+            <ResponsiveContainer width="100%" height={60}>
+              <AreaChart data={charts?.cashFlow ?? []} margin={{ top: 0, right: 0, left: 0, bottom: 0 }}>
+                <defs>
+                  <linearGradient id="cfGrad" x1="0" y1="0" x2="0" y2="1">
+                    <stop offset="0%" stopColor="#a28ef9" stopOpacity={0.3} />
+                    <stop offset="100%" stopColor="#a28ef9" stopOpacity={0} />
+                  </linearGradient>
+                </defs>
+                <Area type="monotone" dataKey="cumulative" stroke="#a28ef9" strokeWidth={2} fill="url(#cfGrad)" dot={false} />
+                <Tooltip {...tt} formatter={(v: number) => fmtRs(v)} />
+              </AreaChart>
+            </ResponsiveContainer>
           </div>
         </div>
       </div>

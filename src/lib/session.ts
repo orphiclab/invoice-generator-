@@ -9,6 +9,8 @@ export interface SessionPayload {
   userId: string
   email: string
   name: string
+  role: 'ADMIN' | 'MANAGER' | 'SALES' | 'VIEWER'
+  companyId: string // the admin's userId (= userId for admins, = companyId for sub-users)
   expiresAt: Date
 }
 
@@ -31,9 +33,9 @@ export async function decrypt(session: string | undefined = ''): Promise<Session
   }
 }
 
-export async function createSession(userId: string, email: string, name: string) {
+export async function createSession(userId: string, email: string, name: string, role: SessionPayload['role'] = 'ADMIN', companyId?: string) {
   const expiresAt = new Date(Date.now() + 7 * 24 * 60 * 60 * 1000)
-  const session = await encrypt({ userId, email, name, expiresAt })
+  const session = await encrypt({ userId, email, name, role, companyId: companyId || userId, expiresAt })
   const cookieStore = await cookies()
   cookieStore.set('session', session, {
     httpOnly: true,

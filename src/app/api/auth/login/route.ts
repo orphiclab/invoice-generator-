@@ -16,13 +16,19 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: 'Invalid credentials' }, { status: 401 })
     }
 
+    if (!user.isActive) {
+      return NextResponse.json({ error: 'Account is deactivated. Contact your admin.' }, { status: 403 })
+    }
+
     const valid = await bcrypt.compare(password, user.password)
     if (!valid) {
       return NextResponse.json({ error: 'Invalid credentials' }, { status: 401 })
     }
 
-    await createSession(user.id, user.email, user.name)
-    return NextResponse.json({ success: true, user: { id: user.id, email: user.email, name: user.name } })
+    // companyId: admin's own id, sub-user's companyId field
+    const companyId = user.companyId || user.id
+    await createSession(user.id, user.email, user.name, user.role as 'ADMIN' | 'MANAGER' | 'SALES' | 'VIEWER', companyId)
+    return NextResponse.json({ success: true, user: { id: user.id, email: user.email, name: user.name, role: user.role } })
   } catch (error) {
     console.error('Login error:', error)
     return NextResponse.json({ error: 'Internal server error' }, { status: 500 })

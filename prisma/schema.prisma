@@ -20,6 +20,11 @@ model User {
   phone     String?
   address   String?
   logo      String?
+  role      UserRole @default(ADMIN)
+  companyId String?  // null for ADMIN (they own the company), set for sub-users
+  companyOwner User?  @relation("CompanyMembers", fields: [companyId], references: [id])
+  companyMembers User[] @relation("CompanyMembers")
+  isActive  Boolean  @default(true)
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
@@ -31,6 +36,72 @@ model User {
   teamMemberships   TeamMember[]
   ownedTeams        Team[]             @relation("TeamOwner")
   settings          UserSettings?
+  notifications     Notification[]
+  products          Product[]
+  activityLogs      ActivityLog[]
+}
+
+enum UserRole {
+  ADMIN     // Full access — company owner
+  MANAGER   // Can manage invoices, clients, expenses, reports — cannot manage users
+  SALES     // Can create/edit invoices and clients — no expenses or settings
+  VIEWER    // Read-only access to everything
+}
+
+// ─── Notification ─────────────────────────────────────────────────────────────
+
+model Notification {
+  id        String   @id @default(cuid())
+  type      String   // payment_received, invoice_overdue, estimate_accepted, recurring_generated, etc.
+  title     String
+  message   String
+  isRead    Boolean  @default(false)
+  linkTo    String?  // optional URL to navigate to
+  metadata  Json?    // extra data (invoiceNo, amount, etc.)
+  createdAt DateTime @default(now())
+
+  userId String
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId, isRead])
+  @@index([userId, createdAt])
+}
+
+// ─── Product / Service Catalog ────────────────────────────────────────────────
+
+model Product {
+  id          String   @id @default(cuid())
+  name        String
+  description String?
+  unitPrice   Float
+  unit        String   @default("unit") // unit, hour, day, project, etc.
+  category    String?
+  taxable     Boolean  @default(true)
+  isActive    Boolean  @default(true)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  userId String
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId, isActive])
+}
+
+// ─── Activity Log / Audit Trail ───────────────────────────────────────────────
+
+model ActivityLog {
+  id         String   @id @default(cuid())
+  action     String   // created, updated, deleted, sent, paid, converted, etc.
+  entityType String   // invoice, estimate, client, expense, payment, etc.
+  entityId   String?
+  entityName String?  // human-readable: "INV-0012", "John Doe", etc.
+  metadata   Json?    // extra context
+  createdAt  DateTime @default(now())
+
+  userId String
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId, createdAt])
 }
 
 model Team {
