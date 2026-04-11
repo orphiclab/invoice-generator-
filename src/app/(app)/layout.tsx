@@ -6,21 +6,31 @@ import { useState, useEffect, useRef } from 'react'
 import { toast } from 'sonner'
 import { GlobalSearch } from '@/components/GlobalSearch'
 import { NotificationDropdown } from '@/components/NotificationDropdown'
+import { useTheme } from '@/components/ThemeProvider'
 import {
   LayoutDashboard, FileText, Users, Settings, Zap, LogOut,
   Menu, X, Plus, Receipt, ClipboardList, RefreshCw, BarChart3,
-  CreditCard, Package, Activity, Shield, ChevronLeft,
+  CreditCard, Package, Activity, Shield, ChevronLeft, Sun, Moon, TrendingUp,
 } from 'lucide-react'
 
-// ── Design tokens — Fustat light theme ─────────────────────────
-const SIDEBAR_BG    = '#ffffff'
-const MAIN_BG       = '#edf0ed'
-const TOPBAR_BG     = '#ffffff'
-const BORDER_COLOR  = '#e5e7eb'
-const ACTIVE_BG     = '#222222'
-const ACTIVE_COLOR  = '#ffffff'
-const INACTIVE_COLOR = '#6b7280'
-const LABEL_COLOR   = '#9ca3af'
+// ── Design tokens — theme aware ────────────────────────────────
+function useTokens() {
+  const { theme } = useTheme()
+  const dark = theme === 'dark'
+  return {
+    SIDEBAR_BG:    dark ? '#0f1729' : '#ffffff',
+    MAIN_BG:       dark ? '#0b1120' : '#edf0ed',
+    TOPBAR_BG:     dark ? '#111827' : '#ffffff',
+    BORDER_COLOR:  dark ? '#1e293b' : '#e5e7eb',
+    ACTIVE_BG:     dark ? '#a28ef9' : '#222222',
+    ACTIVE_COLOR:  '#ffffff',
+    INACTIVE_COLOR: dark ? '#64748b' : '#6b7280',
+    LABEL_COLOR:   dark ? '#475569' : '#9ca3af',
+    TEXT_PRIMARY:  dark ? '#e2e8f0' : '#111827',
+    TEXT_SECONDARY: dark ? '#94a3b8' : '#6b7280',
+    CARD_BG:       dark ? '#111827' : '#ffffff',
+  }
+}
 
 const navGroups = [
   {
@@ -28,6 +38,7 @@ const navGroups = [
     items: [
       { href: '/dashboard', label: 'Dashboard', icon: LayoutDashboard },
       { href: '/reports',   label: 'Reports',   icon: BarChart3 },
+      { href: '/forecast',  label: 'Forecast',  icon: TrendingUp },
     ],
   },
   {
@@ -60,6 +71,9 @@ const navGroups = [
 export default function AppLayout({ children }: { children: React.ReactNode }) {
   const pathname = usePathname()
   const router = useRouter()
+  const { theme, toggleTheme } = useTheme()
+  const tokens = useTokens()
+  const { SIDEBAR_BG, MAIN_BG, TOPBAR_BG, BORDER_COLOR, ACTIVE_BG, ACTIVE_COLOR, INACTIVE_COLOR, LABEL_COLOR, TEXT_PRIMARY, TEXT_SECONDARY, CARD_BG } = tokens
   const [sidebarOpen, setSidebarOpen] = useState(false)
   const sidebarRef = useRef<HTMLDivElement>(null)
   const touchStartX = useRef(0)
@@ -224,13 +238,70 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
           </div>
           <div className="flex-1" />
           <GlobalSearch />
+          <button onClick={toggleTheme} className="p-2 rounded-xl hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors" title={theme === 'dark' ? 'Switch to light' : 'Switch to dark'}>
+            {theme === 'dark' ? <Sun className="w-4 h-4" style={{ color: '#f59e0b' }} /> : <Moon className="w-4 h-4" style={{ color: INACTIVE_COLOR }} />}
+          </button>
           <NotificationDropdown />
         </header>
 
-        <main className="flex-1 overflow-y-auto">
+        <main className="flex-1 overflow-y-auto pb-[72px] lg:pb-0">
           {children}
         </main>
       </div>
+
+      {/* Mobile Bottom Nav */}
+      <nav className="lg:hidden fixed bottom-0 left-0 right-0 z-40 flex items-end justify-around"
+        style={{
+          background: SIDEBAR_BG,
+          borderTop: `1px solid ${BORDER_COLOR}`,
+          paddingBottom: 'env(safe-area-inset-bottom, 0px)',
+          boxShadow: '0 -2px 12px rgba(0,0,0,0.06)',
+        }}>
+        {[
+          { href: '/dashboard', label: 'Home', icon: LayoutDashboard },
+          { href: '/invoices', label: 'Invoices', icon: FileText },
+          { href: '/invoices/new', label: 'New', icon: Plus, isFab: true },
+          { href: '/clients', label: 'Clients', icon: Users },
+          { href: '', label: 'More', icon: Menu, isMore: true },
+        ].map((item) => {
+          const active = item.href && (pathname === item.href || (item.href !== '/dashboard' && item.href !== '/invoices/new' && pathname.startsWith(item.href)))
+
+          // Center FAB button
+          if (item.isFab) {
+            return (
+              <Link key="fab" href={item.href} className="flex flex-col items-center -mt-5">
+                <div className="w-12 h-12 rounded-2xl flex items-center justify-center shadow-lg active:scale-90 transition-transform"
+                  style={{ background: '#a28ef9', boxShadow: '0 4px 16px rgba(162,142,249,0.4)' }}>
+                  <Plus className="w-5 h-5 text-white" />
+                </div>
+                <span className="text-[9px] font-semibold mt-0.5" style={{ color: '#a28ef9' }}>New</span>
+              </Link>
+            )
+          }
+
+          // More button opens sidebar
+          if (item.isMore) {
+            return (
+              <button key="more" onClick={() => setSidebarOpen(true)}
+                className="flex flex-col items-center py-2 px-3 active:scale-90 transition-transform">
+                <Menu className="w-5 h-5" style={{ color: sidebarOpen ? '#a28ef9' : INACTIVE_COLOR }} />
+                <span className="text-[9px] font-semibold mt-0.5" style={{ color: sidebarOpen ? '#a28ef9' : INACTIVE_COLOR }}>More</span>
+              </button>
+            )
+          }
+
+          // Regular nav items
+          const Icon = item.icon
+          return (
+            <Link key={item.href} href={item.href}
+              className="flex flex-col items-center py-2 px-3 active:scale-90 transition-transform">
+              <Icon className="w-5 h-5" style={{ color: active ? '#a28ef9' : INACTIVE_COLOR }} />
+              <span className="text-[9px] font-semibold mt-0.5" style={{ color: active ? '#a28ef9' : INACTIVE_COLOR }}>{item.label}</span>
+              {active && <span className="w-1 h-1 rounded-full mt-0.5" style={{ background: '#a28ef9' }} />}
+            </Link>
+          )
+        })}
+      </nav>
 
       {/* Animations */}
       <style jsx global>{`

@@ -238,6 +238,7 @@ model Invoice {
 
   items    InvoiceItem[]
   payments Payment[]
+  comments InvoiceComment[]
 }
 
 model InvoiceItem {
@@ -249,6 +250,20 @@ model InvoiceItem {
 
   invoiceId String
   invoice   Invoice @relation(fields: [invoiceId], references: [id], onDelete: Cascade)
+}
+
+model InvoiceComment {
+  id        String   @id @default(cuid())
+  text      String
+  createdAt DateTime @default(now())
+
+  invoiceId String
+  invoice   Invoice @relation(fields: [invoiceId], references: [id], onDelete: Cascade)
+
+  userId String
+  userName String  // denormalized for display
+
+  @@index([invoiceId, createdAt])
 }
 
 // ─── Recurring Invoice ────────────────────────────────────────────────────────

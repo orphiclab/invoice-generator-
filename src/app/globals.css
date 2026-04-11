@@ -42,6 +42,48 @@
   --topbar-bg:      0 0% 100%;
 }
 
+/* ── Dark theme ────────────────────────────────────────────── */
+[data-theme="dark"] {
+  --background:     222 47% 8%;      /* #0b1120 */
+  --foreground:     210 40% 92%;     /* #e2e8f0 */
+  --card:           222 42% 11%;     /* #111827 */
+  --card-foreground: 210 40% 92%;
+  --popover:        222 42% 11%;
+  --popover-foreground: 210 40% 92%;
+  --primary:        258 84% 72%;     /* #9B8AFF */
+  --primary-foreground: 0 0% 100%;
+  --secondary:      122 70% 65%;
+  --secondary-foreground: 0 0% 100%;
+  --muted:          223 35% 15%;
+  --muted-foreground: 215 20% 55%;
+  --accent:         258 84% 72%;
+  --accent-foreground: 0 0% 100%;
+  --destructive:    0 72% 55%;
+  --destructive-foreground: 0 0% 100%;
+  --border:         220 20% 18%;
+  --input:          220 20% 18%;
+  --ring:           258 84% 72%;
+
+  --brand: 258 84% 72%;
+  --brand-dark: 258 84% 72%;
+  --success: 160 80% 55%;
+  --warning: 38 92% 55%;
+  --info: 199 89% 55%;
+
+  --sidebar-bg:     222 42% 9%;
+  --sidebar-border: 220 20% 16%;
+  --sidebar-active-bg: 258 84% 72%;
+  --sidebar-active-text: 0 0% 100%;
+  --sidebar-inactive-text: 215 20% 55%;
+  --sidebar-label: 215 20% 45%;
+  --topbar-bg:      222 42% 11%;
+}
+
+[data-theme="dark"] .glass {
+  background: hsl(222 42% 11% / 0.8) !important;
+  border-color: hsl(220 20% 18%) !important;
+}
+
 * { border-color: hsl(var(--border)); box-sizing: border-box; }
 html { scroll-behavior: smooth; }
 

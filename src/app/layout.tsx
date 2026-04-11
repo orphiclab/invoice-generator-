@@ -2,6 +2,7 @@ import type { Metadata } from 'next'
 import { Fustat } from 'next/font/google'
 import './globals.css'
 import { Toaster } from '@/components/ui/sonner'
+import { ThemeProvider } from '@/components/ThemeProvider'
 
 const fustat = Fustat({
   subsets: ['latin'],
@@ -18,9 +19,11 @@ export const metadata: Metadata = {
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="en" className={fustat.variable}>
+    <html lang="en" className={fustat.variable} suppressHydrationWarning>
       <body className="antialiased">
-        {children}
+        <ThemeProvider>
+          {children}
+        </ThemeProvider>
         <Toaster richColors position="top-right" />
       </body>
     </html>

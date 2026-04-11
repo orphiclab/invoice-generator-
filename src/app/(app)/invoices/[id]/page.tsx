@@ -4,7 +4,7 @@ import { useEffect, useState, useCallback } from 'react'
 import { useParams, useRouter } from 'next/navigation'
 import Link from 'next/link'
 import { toast } from 'sonner'
-import { ArrowLeft, Download, MessageCircle, Share2, Edit2, Check, Clock, Building2, Mail, Phone, MapPin, Copy, Send, X, DollarSign, AlertTriangle, Bell, Plus, CreditCard, ChevronDown, Eye } from 'lucide-react'
+import { ArrowLeft, Download, MessageCircle, Share2, Edit2, Check, Clock, Building2, Mail, Phone, MapPin, Copy, Send, X, DollarSign, AlertTriangle, Bell, Plus, CreditCard, ChevronDown, Eye, MessageSquare } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import { StatusBadge } from '@/components/StatusBadge'
@@ -51,6 +51,10 @@ export default function InvoiceDetailPage() {
   const [pdfTemplate, setPdfTemplate] = useState<'green' | 'classic'>('green')
   const [showTemplateMenu, setShowTemplateMenu] = useState(false)
   const [showPreview, setShowPreview] = useState(false)
+  // Comments
+  const [comments, setComments] = useState<{id:string;text:string;userName:string;createdAt:string}[]>([])
+  const [commentText, setCommentText] = useState('')
+  const [postingComment, setPostingComment] = useState(false)
 
   const loadPayments = useCallback(async () => {
     const res = await fetch(`/api/invoices/${id}/record-payment`)
@@ -67,6 +71,8 @@ export default function InvoiceDetailPage() {
       setLoading(false)
     })
     loadPayments()
+    // Load comments
+    fetch(`/api/invoices/${id}/comments`).then(r => r.json()).then(d => { if (Array.isArray(d)) setComments(d) })
   }, [id, loadPayments])
 
   async function updateStatus(status: string) {
@@ -568,6 +574,63 @@ export default function InvoiceDetailPage() {
             </div>
           </div>
         </div>
+      </div>
+
+      {/* ── Comments ── */}
+      <div className="mt-6 rounded-2xl p-5" style={{ background: '#ffffff', border: '1px solid rgba(0,0,0,0.06)' }}>
+        <h3 className="text-sm font-bold flex items-center gap-2 mb-4" style={{ color: '#111827' }}>
+          <MessageSquare className="w-4 h-4" style={{ color: '#a28ef9' }} /> Internal Notes
+          {comments.length > 0 && <span className="text-[10px] px-1.5 py-0.5 rounded-full" style={{ background: 'rgba(162,142,249,0.15)', color: '#a28ef9' }}>{comments.length}</span>}
+        </h3>
+        {/* Comment input */}
+        <form onSubmit={async (e) => {
+          e.preventDefault()
+          if (!commentText.trim()) return
+          setPostingComment(true)
+          try {
+            const res = await fetch(`/api/invoices/${id}/comments`, {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({ text: commentText }),
+            })
+            if (res.ok) {
+              const c = await res.json()
+              setComments(prev => [...prev, c])
+              setCommentText('')
+            }
+          } finally { setPostingComment(false) }
+        }} className="flex gap-2 mb-4">
+          <input value={commentText} onChange={e => setCommentText(e.target.value)}
+            placeholder="Add a note... (visible only to your team)"
+            className="flex-1 px-3 py-2 rounded-xl text-sm outline-none"
+            style={{ background: '#f9fafb', border: '1px solid #e5e7eb', color: '#111827' }} />
+          <button type="submit" disabled={postingComment || !commentText.trim()}
+            className="px-4 py-2 rounded-xl text-xs font-semibold text-white transition-all hover:opacity-90 disabled:opacity-40"
+            style={{ background: '#a28ef9' }}>
+            {postingComment ? '...' : 'Post'}
+          </button>
+        </form>
+        {/* Comment list */}
+        {comments.length === 0 ? (
+          <p className="text-xs text-center py-4" style={{ color: '#9ca3af' }}>No notes yet</p>
+        ) : (
+          <div className="space-y-3 max-h-64 overflow-y-auto">
+            {comments.map(c => (
+              <div key={c.id} className="flex gap-3">
+                <div className="w-7 h-7 rounded-full flex items-center justify-center flex-shrink-0 text-[10px] font-bold text-white" style={{ background: '#a28ef9' }}>
+                  {c.userName?.split(' ').map(w => w[0]).join('').slice(0,2).toUpperCase()}
+                </div>
+                <div className="flex-1">
+                  <div className="flex items-center gap-2">
+                    <span className="text-xs font-semibold" style={{ color: '#111827' }}>{c.userName}</span>
+                    <span className="text-[10px]" style={{ color: '#9ca3af' }}>{new Date(c.createdAt).toLocaleDateString('en-IN', { day: 'numeric', month: 'short', hour: '2-digit', minute: '2-digit' })}</span>
+                  </div>
+                  <p className="text-sm mt-0.5" style={{ color: '#374151' }}>{c.text}</p>
+                </div>
+              </div>
+            ))}
+          </div>
+        )}
       </div>
     </div>
 
