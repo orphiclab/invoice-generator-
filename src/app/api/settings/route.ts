@@ -27,11 +27,11 @@ export async function PUT(req: NextRequest) {
   if (error) return error
   try {
     const body = await req.json()
-    const { invoicePrefix, defaultTaxRate, defaultDueDays, defaultNotes, defaultCurrencyId } = body
+    const { invoicePrefix, defaultTaxRate, defaultDueDays, defaultNotes, defaultCurrencyId, bankDetails } = body
     const settings = await prisma.userSettings.upsert({
       where: { userId: session!.userId },
-      update: { invoicePrefix, defaultTaxRate, defaultDueDays, defaultNotes, defaultCurrencyId: defaultCurrencyId || null },
-      create: { userId: session!.userId, invoicePrefix, defaultTaxRate, defaultDueDays, defaultNotes, defaultCurrencyId: defaultCurrencyId || null },
+      update: { invoicePrefix, defaultTaxRate, defaultDueDays, defaultNotes, defaultCurrencyId: defaultCurrencyId || null, bankDetails },
+      create: { userId: session!.userId, invoicePrefix, defaultTaxRate, defaultDueDays, defaultNotes, defaultCurrencyId: defaultCurrencyId || null, bankDetails },
       include: { defaultCurrency: true },
     })
     return NextResponse.json(settings)

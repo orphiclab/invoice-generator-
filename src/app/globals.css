@@ -193,7 +193,9 @@ body {
   font-family: var(--font-fustat), 'Fustat', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  min-height: 100vh;
+  min-height: 100dvh;
+  /* Prevent any accidental horizontal overflow on mobile */
+  overflow-x: hidden;
 }
 
 ::-webkit-scrollbar { width: 5px; height: 5px; }
@@ -209,13 +211,16 @@ body {
   box-shadow: 0 1px 3px rgba(0,0,0,0.04), 0 4px 12px rgba(0,0,0,0.04);
 }
 
-/* ── Page card (white content area) ─────────────────────────── */
+/* ── Page card (white content area) ───────────────── */
 .page-card {
   background: hsl(var(--card));
   border: 1px solid hsl(var(--border));
   border-radius: 20px;
   box-shadow: 0 1px 3px rgba(0,0,0,0.04), 0 4px 12px rgba(0,0,0,0.04);
-  padding: 20px 24px;
+  padding: 16px;
+}
+@media (min-width: 640px) {
+  .page-card { padding: 20px 24px; }
 }
 
 /* ── Filter pill tabs (like "All task | To do | In progress") ── */

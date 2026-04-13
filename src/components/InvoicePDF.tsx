@@ -346,6 +346,7 @@ interface Invoice {
   user: { name: string; email: string; company?: string; phone?: string; address?: string }
   items: InvoiceItem[]
   currency?: { symbol: string; code: string }
+  bankDetails?: string | null
 }
 
 export function InvoicePDF({ invoice }: { invoice: Invoice | null }) {
@@ -486,11 +487,21 @@ export function InvoicePDF({ invoice }: { invoice: Invoice | null }) {
           </View>
         )}
 
-        {/* ── NOTES ── */}
-        {invoice.notes && (
+        {/* ── NOTES & BANK DETAILS ── */}
+        {(invoice.notes || invoice.bankDetails) && (
           <View style={styles.notesSection}>
-            <Text style={styles.notesLabel}>Notes & Payment Terms</Text>
-            <Text style={styles.notesText}>{invoice.notes}</Text>
+            {invoice.notes && (
+              <>
+                <Text style={styles.notesLabel}>Notes & Payment Terms</Text>
+                <Text style={styles.notesText}>{invoice.notes}</Text>
+              </>
+            )}
+            {invoice.bankDetails && (
+              <View style={{ marginTop: invoice.notes ? 10 : 0 }}>
+                <Text style={styles.notesLabel}>Bank Details</Text>
+                <Text style={styles.notesText}>{invoice.bankDetails}</Text>
+              </View>
+            )}
           </View>
         )}
 

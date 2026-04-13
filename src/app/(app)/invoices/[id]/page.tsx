@@ -14,6 +14,7 @@ const InvoicePreviewModal = dynamic(
   () => import('@/components/InvoicePreviewModal').then(m => m.InvoicePreviewModal),
   { ssr: false }
 )
+import type { TemplateId } from '@/components/InvoicePreviewModal'
 
 interface InvoiceItem { description: string; quantity: number; unitPrice: number; total: number }
 interface PaymentRecord { id: string; amount: number; method: string; note?: string; paymentType: string; paidAt?: string; createdAt: string }
@@ -48,7 +49,7 @@ export default function InvoiceDetailPage() {
   const [sendingReminder, setSendingReminder] = useState(false)
   const [applyingLateFee, setApplyingLateFee] = useState(false)
   const [lateFeeRate, setLateFeeRate] = useState('2')
-  const [pdfTemplate, setPdfTemplate] = useState<'green' | 'classic'>('green')
+  const [pdfTemplate, setPdfTemplate] = useState<TemplateId>('green')
   const [showTemplateMenu, setShowTemplateMenu] = useState(false)
   const [showPreview, setShowPreview] = useState(false)
   // Comments
@@ -108,12 +109,21 @@ export default function InvoiceDetailPage() {
     const { pdf } = await import('@react-pdf/renderer')
     const { createElement } = await import('react')
     let blob: Blob
-    if (pdfTemplate === 'green') {
-      const { InvoicePDF } = await import('@/components/InvoicePDF')
-      blob = await pdf(createElement(InvoicePDF, { invoice })).toBlob()
-    } else {
+    if (pdfTemplate === 'midnight') {
+      const { InvoicePDFMidnight } = await import('@/components/InvoicePDFMidnight')
+      blob = await pdf(createElement(InvoicePDFMidnight, { invoice })).toBlob()
+    } else if (pdfTemplate === 'ocean') {
+      const { InvoicePDFOcean } = await import('@/components/InvoicePDFOcean')
+      blob = await pdf(createElement(InvoicePDFOcean, { invoice })).toBlob()
+    } else if (pdfTemplate === 'rose') {
+      const { InvoicePDFRose } = await import('@/components/InvoicePDFRose')
+      blob = await pdf(createElement(InvoicePDFRose, { invoice })).toBlob()
+    } else if (pdfTemplate === 'classic') {
       const { InvoicePDFClassic } = await import('@/components/InvoicePDFClassic')
       blob = await pdf(createElement(InvoicePDFClassic, { invoice })).toBlob()
+    } else {
+      const { InvoicePDF } = await import('@/components/InvoicePDF')
+      blob = await pdf(createElement(InvoicePDF, { invoice })).toBlob()
     }
     const url = URL.createObjectURL(blob)
     const a = document.createElement('a')
@@ -211,7 +221,7 @@ export default function InvoiceDetailPage() {
 
   return (
     <>
-    <div className="p-6 lg:p-8 max-w-5xl mx-auto">
+    <div className="p-4 sm:p-6 lg:p-8 max-w-5xl mx-auto">
       {/* Header */}
       <div className="flex items-center gap-3 mb-6">
         <Link href="/invoices">
@@ -231,16 +241,31 @@ export default function InvoiceDetailPage() {
         {/* Actions */}
         <div className="flex items-center gap-2">
           <div className="w-36">
-            <Select value={invoice.status} onValueChange={updateStatus} disabled={updatingStatus}>
-              <SelectTrigger className="text-gray-900" style={{ background: '#ffffff', borderColor: '#e5e7eb' }}>
-                <SelectValue />
-              </SelectTrigger>
-              <SelectContent style={{ background: '#ffffff', borderColor: '#e5e7eb' }}>
-                {['DRAFT', 'SENT', 'PAID', 'OVERDUE'].map((s) => (
-                  <SelectItem key={s} value={s} className="text-xs">{s.charAt(0) + s.slice(1).toLowerCase()}</SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
+            <select
+              value={invoice.status}
+              onChange={(e) => updateStatus(e.target.value)}
+              disabled={updatingStatus}
+              className="w-full h-9 px-3 rounded-xl text-xs font-semibold border outline-none transition-all cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
+              style={{
+                background: '#ffffff',
+                borderColor: '#e5e7eb',
+                color: {
+                  DRAFT:   '#374151',
+                  SENT:    '#1d4ed8',
+                  PAID:    '#166534',
+                  OVERDUE: '#991b1b',
+                }[invoice.status] ?? '#374151',
+              }}
+            >
+              {[
+                { value: 'DRAFT',   label: 'Draft' },
+                { value: 'SENT',    label: 'Sent' },
+                { value: 'PAID',    label: 'Paid' },
+                { value: 'OVERDUE', label: 'Overdue' },
+              ].map(s => (
+                <option key={s.value} value={s.value}>{s.label}</option>
+              ))}
+            </select>
           </div>
           <button onClick={shareWhatsApp} title="Send via WhatsApp" className="p-2 rounded-xl hover:bg-green-500/10 transition-colors" style={{ color: '#16a34a' }}>
             <MessageCircle className="w-4 h-4" />
@@ -261,7 +286,13 @@ export default function InvoiceDetailPage() {
                 className="flex items-center gap-1.5 px-3 py-1.5 text-xs font-semibold transition-all hover:bg-gray-50"
                 style={{ color: '#a28ef9' }}>
                 <Download className="w-3.5 h-3.5" />
-                {pdfTemplate === 'green' ? 'Green' : 'Classic'}
+                {{
+                  green: '🌿 Green',
+                  classic: '🌌 Classic',
+                  midnight: '🌙 Midnight',
+                  ocean: '🌊 Ocean',
+                  rose: '🌸 Rose',
+                }[pdfTemplate]}
               </button>
               <button onClick={() => setShowTemplateMenu(p => !p)}
                 className="px-1.5 py-1.5 border-l hover:bg-gray-50 transition-all"
@@ -270,10 +301,16 @@ export default function InvoiceDetailPage() {
               </button>
             </div>
             {showTemplateMenu && (
-              <div className="absolute right-0 top-9 z-50 rounded-xl overflow-hidden shadow-2xl" style={{ background: '#ffffff', border: '1px solid #e5e7eb', minWidth: 160 }}>
+              <div className="absolute right-0 top-9 z-50 rounded-xl overflow-hidden shadow-2xl" style={{ background: '#ffffff', border: '1px solid #e5e7eb', minWidth: 180 }}>
                 <p className="text-[10px] font-bold px-3 pt-2.5 pb-1" style={{ color: '#9ca3af' }}>Choose Template</p>
-                {[{ id: 'green', label: '🌿 Green Modern' }, { id: 'classic', label: '🌌 Classic Dark' }].map(t => (
-                  <button key={t.id} onClick={() => { setPdfTemplate(t.id as 'green' | 'classic'); setShowTemplateMenu(false); downloadPDF() }}
+                {([
+                  { id: 'green',    label: '🌿 Green Modern'  },
+                  { id: 'classic',  label: '🌌 Classic Dark'  },
+                  { id: 'midnight', label: '🌙 Midnight Gold' },
+                  { id: 'ocean',    label: '🌊 Ocean Blue'    },
+                  { id: 'rose',     label: '🌸 Rose Studio'   },
+                ] as const).map(t => (
+                  <button key={t.id} onClick={() => { setPdfTemplate(t.id); setShowTemplateMenu(false); }}
                     className="w-full text-left px-3 py-2.5 text-xs hover:bg-gray-50 transition-all flex items-center justify-between"
                     style={{ color: pdfTemplate === t.id ? '#a28ef9' : '#374151' }}>
                     {t.label}
@@ -396,12 +433,18 @@ export default function InvoiceDetailPage() {
 
         {/* Totals + Notes */}
         <div className="px-10 pb-10 flex justify-between items-start gap-8">
-          {/* Notes */}
-          <div className="flex-1">
+          {/* Notes & Bank Details */}
+          <div className="flex-1 space-y-4">
             {invoice.notes && (
               <div className="p-4 rounded-xl border-l-4" style={{ background: '#f9fafb', borderLeftColor: '#6366f1' }}>
-                <p className="text-xs font-bold uppercase tracking-wider mb-2" style={{ color: '#9ca3af' }}>Notes</p>
-                <p className="text-sm leading-relaxed" style={{ color: '#6b7280' }}>{invoice.notes}</p>
+                <p className="text-xs font-bold uppercase tracking-wider mb-2" style={{ color: '#9ca3af' }}>Notes & Payment Terms</p>
+                <p className="text-sm leading-relaxed whitespace-pre-line" style={{ color: '#6b7280' }}>{invoice.notes}</p>
+              </div>
+            )}
+            {invoice.bankDetails && (
+              <div className="p-4 rounded-xl border-l-4" style={{ background: '#f9fafb', borderLeftColor: '#10B981' }}>
+                <p className="text-xs font-bold uppercase tracking-wider mb-2" style={{ color: '#9ca3af' }}>Bank Details</p>
+                <p className="text-sm leading-relaxed whitespace-pre-line" style={{ color: '#6b7280' }}>{invoice.bankDetails}</p>
               </div>
             )}
           </div>

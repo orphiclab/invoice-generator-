@@ -52,10 +52,10 @@ export default function ReportsPage() {
   const selectStyle = { background: '#f9fafb', border: '1px solid #e5e7eb', color: '#111827', padding: '6px 12px', borderRadius: '10px', fontSize: '13px', outline: 'none' }
 
   return (
-    <div className="p-6 lg:p-8 max-w-6xl mx-auto space-y-6">
+    <div className="p-4 sm:p-6 lg:p-8 max-w-6xl mx-auto space-y-6">
       <div className="flex items-start justify-between flex-wrap gap-4">
         <div>
-          <h1 className="text-2xl font-extrabold tracking-tight" style={{ color: '#111827' }}>Tax Reports</h1>
+          <h1 className="text-xl sm:text-2xl font-extrabold tracking-tight" style={{ color: '#111827' }}>Tax Reports</h1>
           <p className="text-xs mt-0.5" style={{ color: '#9ca3af' }}>Revenue, expense &amp; tax summary</p>
         </div>
         <div className="flex items-center gap-3 flex-wrap">

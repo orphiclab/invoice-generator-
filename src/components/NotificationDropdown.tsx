@@ -131,8 +131,9 @@ export function NotificationDropdown() {
 
       {/* Dropdown */}
       {open && (
-        <div className="absolute right-0 top-12 w-[380px] max-h-[480px] bg-white rounded-2xl overflow-hidden z-50"
+        <div className="absolute right-0 top-12 max-h-[480px] bg-white rounded-2xl overflow-hidden z-50"
           style={{
+            width: 'min(380px, calc(100vw - 1.5rem))',
             border: '1px solid #f0f2f0',
             boxShadow: '0 12px 40px rgba(0,0,0,0.12), 0 2px 8px rgba(0,0,0,0.06)',
           }}>

@@ -66,9 +66,9 @@ export default function NewEstimatePage() {
   const labelStyle = { color: '#6b7280', fontSize: '12px', fontWeight: 500, marginBottom: '6px', display: 'block' }
 
   return (
-    <div className="p-6 lg:p-8 max-w-4xl mx-auto">
+    <div className="p-4 sm:p-6 lg:p-8 max-w-4xl mx-auto">
       <div className="mb-8">
-        <h1 className="text-2xl font-extrabold tracking-tight" style={{ color: '#111827' }}>New Estimate</h1>
+        <h1 className="text-xl sm:text-2xl font-extrabold tracking-tight" style={{ color: '#111827' }}>New Estimate</h1>
         <p className="text-sm mt-1" style={{ color: '#6b7280' }}>Create a quote for your client</p>
       </div>
 

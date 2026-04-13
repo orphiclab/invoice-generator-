@@ -22,7 +22,7 @@ export async function PUT(request: Request, { params }: { params: Promise<{ id: 
   const { id } = await params
 
   const body = await request.json()
-  const { clientId, invoiceNo, status, issueDate, dueDate, notes, items, tax, discount } = body
+  const { clientId, invoiceNo, status, issueDate, dueDate, notes, items, tax, discount, currencyId, bankDetails } = body
 
   const invoice = await prisma.invoice.findFirst({ where: { id, userId: session!.userId } })
   if (!invoice) return NextResponse.json({ error: 'Not found' }, { status: 404 })
@@ -48,8 +48,10 @@ export async function PUT(request: Request, { params }: { params: Promise<{ id: 
       ...(issueDate && { issueDate: new Date(issueDate) }),
       ...(dueDate && { dueDate: new Date(dueDate) }),
       ...(notes !== undefined && { notes }),
+      ...(bankDetails !== undefined && { bankDetails }),
       ...(tax !== undefined && { tax }),
       ...(discount !== undefined && { discount }),
+      ...(currencyId && { currencyId }),
       subtotal,
       total,
       ...(items && {
@@ -63,7 +65,7 @@ export async function PUT(request: Request, { params }: { params: Promise<{ id: 
         },
       }),
     },
-    include: { client: true, items: true },
+    include: { client: true, items: true, currency: true, user: { select: { name: true, email: true, company: true, phone: true, address: true } } },
   })
 
   // Log activity — detect status change

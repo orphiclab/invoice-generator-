@@ -33,7 +33,7 @@ export async function POST(request: Request) {
   if (error) return error
 
   const body = await request.json()
-  const { clientId, invoiceNo, status, issueDate, dueDate, notes, items, tax, discount } = body
+  const { clientId, invoiceNo, status, issueDate, dueDate, notes, items, tax, discount, currencyId, bankDetails } = body
 
   if (!clientId || !invoiceNo || !dueDate || !items?.length) {
     return NextResponse.json({ error: 'Missing required fields' }, { status: 400 })
@@ -58,11 +58,13 @@ export async function POST(request: Request) {
       issueDate: issueDate ? new Date(issueDate) : new Date(),
       dueDate: new Date(dueDate),
       notes,
+      bankDetails,
       subtotal,
       tax: tax || 0,
       discount: discount || 0,
       total,
       shareToken,
+      ...(currencyId && { currencyId }),
       items: {
         create: items.map((item: { description: string; quantity: number; unitPrice: number }) => ({
           description: item.description,

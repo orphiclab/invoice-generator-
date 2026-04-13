@@ -40,7 +40,7 @@ export default function ForecastPage() {
   const maxPredicted = Math.max(...data.forecast.map(f => f.predicted), 1)
 
   return (
-    <div className="p-6 lg:p-8 max-w-5xl mx-auto">
+    <div className="p-4 sm:p-6 lg:p-8 max-w-5xl mx-auto">
       <div className="flex items-center gap-3 mb-8">
         <Link href="/dashboard">
           <button className="p-2 rounded-xl hover:bg-gray-50 transition-colors" style={{ color: '#6b7280' }}>
@@ -48,7 +48,7 @@ export default function ForecastPage() {
           </button>
         </Link>
         <div>
-          <h1 className="text-2xl font-extrabold tracking-tight" style={{ color: 'var(--text-primary, #111827)' }}>Cash Flow Forecast</h1>
+          <h1 className="text-xl sm:text-2xl font-extrabold tracking-tight" style={{ color: 'var(--text-primary, #111827)' }}>Cash Flow Forecast</h1>
           <p className="text-sm" style={{ color: '#6b7280' }}>6-month income prediction based on outstanding & recurring invoices</p>
         </div>
       </div>

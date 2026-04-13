@@ -120,10 +120,10 @@ export default function UserManagementPage() {
   const members = users.filter(u => u.role !== 'ADMIN')
 
   return (
-    <div className="p-6 lg:p-8 max-w-5xl mx-auto">
+    <div className="p-4 sm:p-6 lg:p-8 max-w-5xl mx-auto">
       <div className="flex items-center justify-between mb-8">
         <div>
-          <h1 className="text-2xl font-extrabold tracking-tight" style={{ color: '#111827' }}>
+          <h1 className="text-xl sm:text-2xl font-extrabold tracking-tight" style={{ color: '#111827' }}>
             <Users className="w-6 h-6 inline-block mr-2" style={{ color: '#a28ef9' }} />
             User Management
           </h1>

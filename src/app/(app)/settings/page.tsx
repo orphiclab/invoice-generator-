@@ -8,8 +8,10 @@ import { Label } from '@/components/ui/label'
 import {
   User, Building2, Phone, MapPin, Users, Link2, FileText,
   Upload, Globe, Mail, Hash, Palette, Image as ImageIcon,
+  Landmark, Trash2, Plus, PenSquare,
 } from 'lucide-react'
 import TeamSettingsPage from './team/page'
+import { BankAccountManager } from '@/components/BankAccountManager'
 
 interface Currency { id: string; code: string; symbol: string; name: string }
 
@@ -28,7 +30,7 @@ export default function SettingsPage() {
   const [loading, setLoading] = useState(false)
   const [tab, setTab] = useState('profile')
   const [form, setForm] = useState({ name: '', email: '', company: '', phone: '', address: '' })
-  const [invSettings, setInvSettings] = useState({ invoicePrefix: 'INV', defaultTaxRate: 0, defaultDueDays: 30, defaultNotes: '', defaultCurrencyId: '' })
+  const [invSettings, setInvSettings] = useState({ invoicePrefix: 'INV', defaultTaxRate: 0, defaultDueDays: 30, defaultNotes: '', defaultCurrencyId: '', bankDetails: '' })
   const [currencies, setCurrencies] = useState<Currency[]>([])
   const [savingInv, setSavingInv] = useState(false)
 
@@ -74,6 +76,7 @@ export default function SettingsPage() {
             defaultDueDays: d.defaultDueDays ?? 30,
             defaultNotes: d.defaultNotes ?? '',
             defaultCurrencyId: d.defaultCurrencyId ?? '',
+            bankDetails: d.bankDetails ?? '',
           })
           // Load company-specific settings if available
           if (d.companyWebsite || d.taxId || d.registrationNo || d.brandColor) {
@@ -184,9 +187,9 @@ export default function SettingsPage() {
   const cardStyle = { border: '1px solid #f0f2f0', boxShadow: '0 2px 8px rgba(0,0,0,0.05)' }
 
   return (
-    <div className="p-6 lg:p-8 max-w-3xl mx-auto">
+    <div className="p-4 sm:p-6 lg:p-8 max-w-3xl mx-auto">
       <div className="mb-6">
-        <h1 className="text-2xl font-extrabold tracking-tight" style={{ color: '#111827' }}>Settings</h1>
+        <h1 className="text-xl sm:text-2xl font-extrabold tracking-tight" style={{ color: '#111827' }}>Settings</h1>
         <p className="text-xs mt-1" style={{ color: '#9ca3af' }}>Manage your account and workspace</p>
       </div>
 
@@ -370,7 +373,7 @@ export default function SettingsPage() {
               </div>
               <div className="sm:col-span-2 space-y-2">
                 <Label className="text-sm" style={labelStyle}>Default Notes / Payment Terms</Label>
-                <textarea value={invSettings.defaultNotes ?? ''} onChange={e => setInvSettings(s => ({ ...s, defaultNotes: e.target.value }))} rows={3} placeholder="Payment due within 30 days. Bank details: ..."
+                <textarea value={invSettings.defaultNotes ?? ''} onChange={e => setInvSettings(s => ({ ...s, defaultNotes: e.target.value }))} rows={3} placeholder="Payment due within 30 days..."
                   className="w-full px-3 py-2 rounded-xl text-sm outline-none resize-none" style={{ ...inputStyle, border: '1px solid #e5e7eb' }} />
               </div>
             </div>
@@ -381,6 +384,11 @@ export default function SettingsPage() {
             </button>
           </div>
         </form>
+      )}
+
+      {/* Bank Accounts Section in Invoicing */}
+      {tab === 'invoicing' && (
+        <BankAccountManager />
       )}
 
       {/* Profile Tab */}
@@ -527,3 +535,4 @@ function PortalSettings() {
     </div>
   )
 }
+

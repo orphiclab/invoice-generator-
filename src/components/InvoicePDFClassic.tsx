@@ -60,6 +60,7 @@ interface Invoice {
   user: { name: string; email: string; company?: string; phone?: string; address?: string }
   items: InvoiceItem[]
   currency?: { symbol: string; code: string }
+  bankDetails?: string | null
 }
 
 export function InvoicePDFClassic({ invoice }: { invoice: Invoice | null }) {
@@ -141,10 +142,20 @@ export function InvoicePDFClassic({ invoice }: { invoice: Invoice | null }) {
             </View>
           </View>
         </View>
-        {invoice.notes && (
+        {(invoice.notes || invoice.bankDetails) && (
           <View style={styles.notesBox}>
-            <Text style={styles.notesTitle}>Notes</Text>
-            <Text style={styles.notesText}>{invoice.notes}</Text>
+            {invoice.notes && (
+              <>
+                <Text style={styles.notesTitle}>Notes</Text>
+                <Text style={styles.notesText}>{invoice.notes}</Text>
+              </>
+            )}
+            {invoice.bankDetails && (
+              <View style={{ marginTop: invoice.notes ? 8 : 0 }}>
+                <Text style={styles.notesTitle}>Bank Details</Text>
+                <Text style={styles.notesText}>{invoice.bankDetails}</Text>
+              </View>
+            )}
           </View>
         )}
       </Page>

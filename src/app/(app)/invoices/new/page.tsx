@@ -9,6 +9,7 @@ import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import Link from 'next/link'
+import { ClientSelect } from '@/components/ClientSelect'
 
 interface Client { id: string; name: string; company?: string }
 interface Currency { id: string; code: string; symbol: string; name: string }
@@ -35,8 +36,10 @@ export default function NewInvoicePage() {
     tax: 0,
     discount: 0,
     currencyId: '',
+    bankDetails: '' as string | null,
   })
   const [items, setItems] = useState<Item[]>([{ description: '', quantity: 1, unitPrice: 0 }])
+  const [bankAccounts, setBankAccounts] = useState<any[]>([])
 
   useEffect(() => {
     fetch('/api/clients').then((r) => r.json()).then((d) => setClients(Array.isArray(d) ? d : []))
@@ -45,6 +48,21 @@ export default function NewInvoicePage() {
         setCurrencies(d)
         const lkr = d.find(c => c.code === 'LKR')
         if (lkr) setForm(prev => ({ ...prev, currencyId: lkr.id }))
+      }
+    })
+    fetch('/api/settings').then(r => r.ok ? r.json() : null).then(d => {
+      if (d && !d.error) {
+        setForm(prev => ({ ...prev, 
+          tax: d.defaultTaxRate ?? prev.tax, 
+          notes: d.defaultNotes ?? prev.notes, 
+        }))
+      }
+    })
+    fetch('/api/bank-accounts').then(r => r.ok ? r.json() : null).then(d => {
+      if (Array.isArray(d) && d.length > 0) {
+        setBankAccounts(d)
+        const def = d.find(a => a.isDefault) || d[0]
+        setForm(prev => ({ ...prev, bankDetails: def.details }))
       }
     })
   }, [])
@@ -104,7 +122,7 @@ export default function NewInvoicePage() {
   }
 
   return (
-    <div className="p-6 lg:p-8 max-w-4xl mx-auto">
+    <div className="p-4 sm:p-6 lg:p-8 max-w-4xl mx-auto">
       <div className="flex items-center gap-3 mb-8">
         <Link href="/invoices">
           <button className="p-2 rounded-xl hover:bg-gray-50 transition-colors" style={{ color: '#6b7280' }}>
@@ -112,7 +130,7 @@ export default function NewInvoicePage() {
           </button>
         </Link>
         <div>
-          <h1 className="text-2xl font-extrabold tracking-tight" style={{ color: '#111827' }}>New Invoice</h1>
+          <h1 className="text-xl sm:text-2xl font-extrabold tracking-tight" style={{ color: '#111827' }}>New Invoice</h1>
           <p className="text-sm" style={{ color: '#6b7280' }}>Create and send in under 60 seconds</p>
         </div>
       </div>
@@ -127,18 +145,12 @@ export default function NewInvoicePage() {
               <Label className="text-sm" style={labelStyle}>Client *</Label>
               <div className="flex items-center gap-2">
                 <div className="flex-1">
-                  <Select value={form.clientId} onValueChange={(v) => setForm({ ...form, clientId: v })}>
-                    <SelectTrigger className="text-gray-900" style={inputStyle}>
-                      <SelectValue placeholder="Select client" />
-                    </SelectTrigger>
-                    <SelectContent style={{ background: '#ffffff', borderColor: '#e5e7eb' }}>
-                      {clients.length === 0 ? (
-                        <SelectItem value="_none" disabled>No clients yet</SelectItem>
-                      ) : clients.map((c) => (
-                        <SelectItem key={c.id} value={c.id}>{c.name}{c.company ? ` · ${c.company}` : ''}</SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
+                  <ClientSelect
+                    clients={clients}
+                    value={form.clientId}
+                    onChange={(id) => setForm({ ...form, clientId: id })}
+                    required
+                  />
                 </div>
                 <button type="button" onClick={() => setShowNewClient(true)}
                   className="h-9 w-9 flex-shrink-0 rounded-xl flex items-center justify-center transition-all hover:opacity-90 active:scale-95"
@@ -235,6 +247,28 @@ export default function NewInvoicePage() {
             <textarea value={form.notes} onChange={(e) => setForm({ ...form, notes: e.target.value })} rows={4}
               placeholder="Payment terms, thank you notes, bank details…" className="text-gray-900"
               style={{ ...inputStyle, '--tw-ring-color': '#a28ef9' } as React.CSSProperties} />
+            
+            {bankAccounts.length > 0 && (
+              <div className="mt-4">
+                <h3 className="text-sm font-bold mb-2" style={{ color: '#111827' }}>Bank Details</h3>
+                <select 
+                  className="w-full px-3 py-2 rounded-xl text-sm outline-none text-gray-900 focus:ring-2 focus:ring-[#a28ef9] focus:border-transparent" 
+                  style={{ border: '1px solid #e5e7eb', background: '#f9fafb' }}
+                  onChange={(e) => setForm({ ...form, bankDetails: e.target.value || null })}
+                  value={form.bankDetails || ""}
+                >
+                  <option value="">None (Do not include bank details)</option>
+                  {bankAccounts.map((a: any) => (
+                    <option key={a.id} value={a.details}>{a.name}</option>
+                  ))}
+                </select>
+                {form.bankDetails && (
+                  <div className="mt-3 p-3 rounded-xl" style={{ background: '#f9fafb', border: '1px solid #e5e7eb' }}>
+                    <p className="whitespace-pre-line text-xs" style={{ color: '#6b7280' }}>{form.bankDetails}</p>
+                  </div>
+                )}
+              </div>
+            )}
           </div>
           <div className="glass rounded-2xl p-6">
             <h2 className="text-base font-bold" style={{ color: '#111827' }}>

@@ -9,8 +9,10 @@ import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import Link from 'next/link'
+import { ClientSelect } from '@/components/ClientSelect'
 
 interface Client { id: string; name: string; company?: string }
+interface Currency { id: string; code: string; symbol: string; name: string }
 interface Item { description: string; quantity: number; unitPrice: number }
 
 const inputStyle = { background: '#ffffff', borderColor: '#e5e7eb' }
@@ -22,6 +24,7 @@ export default function EditInvoicePage() {
   const [loading, setLoading] = useState(false)
   const [fetching, setFetching] = useState(true)
   const [clients, setClients] = useState<Client[]>([])
+  const [currencies, setCurrencies] = useState<Currency[]>([])
   const [form, setForm] = useState({
     clientId: '',
     invoiceNo: '',
@@ -31,15 +34,24 @@ export default function EditInvoicePage() {
     notes: '',
     tax: 0,
     discount: 0,
+    currencyId: '',
+    bankDetails: '' as string | null,
   })
   const [items, setItems] = useState<Item[]>([{ description: '', quantity: 1, unitPrice: 0 }])
+  const [bankAccounts, setBankAccounts] = useState<any[]>([])
 
   useEffect(() => {
     Promise.all([
       fetch('/api/clients').then((r) => r.json()),
+      fetch('/api/currencies').then((r) => r.json()),
+      fetch('/api/bank-accounts').then((r) => r.ok ? r.json() : null),
       fetch(`/api/invoices/${id}`).then((r) => r.json()),
-    ]).then(([clientsData, invoice]) => {
+    ]).then(([clientsData, currenciesData, banksData, invoice]) => {
       setClients(Array.isArray(clientsData) ? clientsData : [])
+      setCurrencies(Array.isArray(currenciesData) ? currenciesData : [])
+      if (Array.isArray(banksData)) {
+        setBankAccounts(banksData)
+      }
       if (invoice && !invoice.error) {
         setForm({
           clientId: invoice.clientId || '',
@@ -50,6 +62,8 @@ export default function EditInvoicePage() {
           notes: invoice.notes || '',
           tax: invoice.tax ?? 0,
           discount: invoice.discount ?? 0,
+          currencyId: invoice.currencyId || '',
+          bankDetails: invoice.bankDetails || null,
         })
         setItems(
           invoice.items?.length
@@ -69,6 +83,7 @@ export default function EditInvoicePage() {
   const taxAmt = (subtotal * form.tax) / 100
   const discountAmt = (subtotal * form.discount) / 100
   const total = subtotal + taxAmt - discountAmt
+  const currSym = currencies.find(c => c.id === form.currencyId)?.symbol ?? 'Rs '
 
   function addItem() { setItems([...items, { description: '', quantity: 1, unitPrice: 0 }]) }
   function removeItem(idx: number) { if (items.length > 1) setItems(items.filter((_, i) => i !== idx)) }
@@ -102,7 +117,7 @@ export default function EditInvoicePage() {
   }
 
   return (
-    <div className="p-6 lg:p-8 max-w-4xl mx-auto">
+    <div className="p-4 sm:p-6 lg:p-8 max-w-4xl mx-auto">
       <div className="flex items-center gap-3 mb-8">
         <Link href={`/invoices/${id}`}>
           <button className="p-2 rounded-xl hover:bg-gray-50 transition-colors" style={{ color: '#6b7280' }}>
@@ -110,7 +125,7 @@ export default function EditInvoicePage() {
           </button>
         </Link>
         <div>
-          <h1 className="text-2xl font-extrabold tracking-tight" style={{ color: '#111827' }}>Edit Invoice</h1>
+          <h1 className="text-xl sm:text-2xl font-extrabold tracking-tight" style={{ color: '#111827' }}>Edit Invoice</h1>
           <p className="text-sm font-mono" style={{ color: '#8B7AFF' }}>{form.invoiceNo}</p>
         </div>
       </div>
@@ -122,16 +137,12 @@ export default function EditInvoicePage() {
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div className="space-y-2">
               <Label className="text-sm" style={labelStyle}>Client *</Label>
-              <Select value={form.clientId} onValueChange={(v) => setForm({ ...form, clientId: v })}>
-                <SelectTrigger className="text-gray-900" style={inputStyle}>
-                  <SelectValue placeholder="Select client" />
-                </SelectTrigger>
-                <SelectContent style={{ background: '#ffffff', borderColor: '#e5e7eb' }}>
-                  {clients.map((c) => (
-                    <SelectItem key={c.id} value={c.id}>{c.name}{c.company ? ` · ${c.company}` : ''}</SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
+              <ClientSelect
+                clients={clients}
+                value={form.clientId}
+                onChange={(id) => setForm({ ...form, clientId: id })}
+                required
+              />
             </div>
             <div className="space-y-2">
               <Label className="text-sm" style={labelStyle}>Invoice Number *</Label>
@@ -157,6 +168,16 @@ export default function EditInvoicePage() {
                   ))}
                 </SelectContent>
               </Select>
+            </div>
+            <div className="space-y-2">
+              <Label className="text-sm" style={labelStyle}>Currency</Label>
+              <select value={form.currencyId} onChange={(e) => setForm({ ...form, currencyId: e.target.value })}
+                className="text-gray-900 w-full h-9 px-3 rounded-md border" style={inputStyle}>
+                <option value="">LKR (Rs) — default</option>
+                {currencies.map((c) => (
+                  <option key={c.id} value={c.id}>{c.code} ({c.symbol}) — {c.name}</option>
+                ))}
+              </select>
             </div>
           </div>
         </div>
@@ -209,7 +230,7 @@ export default function EditInvoicePage() {
                   />
                 </div>
                 <div className="col-span-2 text-sm font-semibold px-1" style={{ color: '#111827' }}>
-                  Rs {(item.quantity * item.unitPrice).toLocaleString('en-IN', { maximumFractionDigits: 0 })}
+                  {currSym}{(item.quantity * item.unitPrice).toLocaleString('en-IN', { maximumFractionDigits: 0 })}
                 </div>
                 <div className="col-span-1 flex justify-center">
                   <button type="button" onClick={() => removeItem(idx)} className="p-1.5 rounded-lg hover:bg-red-500/10 transition-colors" style={{ color: 'hsl(0 72% 65%)' }}>
@@ -236,6 +257,28 @@ export default function EditInvoicePage() {
               className="text-gray-900"
               style={{ ...inputStyle, '--tw-ring-color': '#a28ef9' } as React.CSSProperties}
             />
+
+            {bankAccounts.length > 0 && (
+              <div className="mt-4">
+                <h3 className="text-sm font-bold mb-2" style={{ color: '#111827' }}>Bank Details</h3>
+                <select 
+                  className="w-full px-3 py-2 rounded-xl text-sm outline-none text-gray-900 focus:ring-2 focus:ring-[#a28ef9] focus:border-transparent" 
+                  style={{ border: '1px solid #e5e7eb', background: '#f9fafb' }}
+                  onChange={(e) => setForm({ ...form, bankDetails: e.target.value || null })}
+                  value={form.bankDetails || ""}
+                >
+                  <option value="">None (Do not include bank details)</option>
+                  {bankAccounts.map((a: any) => (
+                    <option key={a.id} value={a.details}>{a.name}</option>
+                  ))}
+                </select>
+                {form.bankDetails && (
+                  <div className="mt-3 p-3 rounded-xl" style={{ background: '#f9fafb', border: '1px solid #e5e7eb' }}>
+                    <p className="whitespace-pre-line text-xs" style={{ color: '#6b7280' }}>{form.bankDetails}</p>
+                  </div>
+                )}
+              </div>
+            )}
           </div>
 
           <div className="glass rounded-2xl p-6">
@@ -245,24 +288,24 @@ export default function EditInvoicePage() {
             <div className="space-y-3">
               <div className="flex justify-between text-sm" style={{ color: '#6b7280' }}>
                 <span>Subtotal</span>
-                <span className="text-gray-900">Rs {subtotal.toLocaleString('en-IN', { maximumFractionDigits: 2 })}</span>
+                <span className="text-gray-900">{currSym}{subtotal.toLocaleString('en-IN', { maximumFractionDigits: 2 })}</span>
               </div>
               <div className="flex items-center gap-2">
                 <span className="text-sm flex-1" style={{ color: '#6b7280' }}>Tax (%)</span>
                 <Input type="number" min={0} max={100} step={0.1} value={form.tax} onChange={(e) => setForm({ ...form, tax: parseFloat(e.target.value) || 0 })}
                   className="text-gray-900" style={inputStyle} />
-                <span className="text-gray-900">Rs {taxAmt.toLocaleString('en-IN', { maximumFractionDigits: 2 })}</span>
+                <span className="text-gray-900">{currSym}{taxAmt.toLocaleString('en-IN', { maximumFractionDigits: 2 })}</span>
               </div>
               <div className="flex items-center gap-2">
                 <span className="text-sm flex-1" style={{ color: '#6b7280' }}>Discount (%)</span>
                 <Input type="number" min={0} max={100} step={0.1} value={form.discount} onChange={(e) => setForm({ ...form, discount: parseFloat(e.target.value) || 0 })}
                   className="text-gray-900" style={inputStyle} />
-                <span className="text-gray-900">-Rs {discountAmt.toLocaleString('en-IN', { maximumFractionDigits: 2 })}</span>
+                <span className="text-gray-900">-{currSym}{discountAmt.toLocaleString('en-IN', { maximumFractionDigits: 2 })}</span>
               </div>
               <div className="pt-3 border-t" style={{ borderColor: '#e5e7eb' }}>
                 <div className="flex justify-between items-center">
                   <span className="text-gray-900">Total</span>
-                  <span className="text-xl font-bold gradient-text">Rs {total.toLocaleString('en-IN', { maximumFractionDigits: 2 })}</span>
+                  <span className="text-xl font-bold gradient-text">{currSym}{total.toLocaleString('en-IN', { maximumFractionDigits: 2 })}</span>
                 </div>
               </div>
             </div>

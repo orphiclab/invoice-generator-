@@ -39,6 +39,7 @@ model User {
   notifications     Notification[]
   products          Product[]
   activityLogs      ActivityLog[]
+  bankAccounts      BankAccount[]
 }
 
 enum UserRole {
@@ -195,6 +196,7 @@ model Invoice {
   issueDate   DateTime      @default(now())
   dueDate     DateTime
   notes       String?
+  bankDetails String?
   subtotal    Float         @default(0)
   taxRate     Float         @default(0)
   tax         Float         @default(0)
@@ -427,6 +429,7 @@ model UserSettings {
   defaultTaxRate    Float     @default(0)
   defaultDueDays    Int       @default(30)
   defaultNotes      String?
+  bankDetails       String?
   invoiceTemplate   String    @default("modern")
   defaultCurrencyId String?
   defaultCurrency   Currency? @relation(fields: [defaultCurrencyId], references: [id])
@@ -436,3 +439,20 @@ model UserSettings {
   userId String @unique
   user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
 }
+
+// ─── Bank Account ─────────────────────────────────────────────────────────────
+
+model BankAccount {
+  id        String   @id @default(cuid())
+  name      String   // e.g. "Commercial Bank (LKR)", "HSBC (USD)"
+  details   String   // text block: AC Name, AC No, Branch
+  isDefault Boolean  @default(false)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+}
+

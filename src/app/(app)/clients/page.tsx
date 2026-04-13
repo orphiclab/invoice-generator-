@@ -60,10 +60,10 @@ export default function ClientsPage() {
   }
 
   return (
-    <div className="p-6 lg:p-8 space-y-6">
+    <div className="p-4 sm:p-6 lg:p-8 space-y-6">
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-2xl font-extrabold tracking-tight" style={{ color: '#111827' }}>Clients</h1>
+          <h1 className="text-xl sm:text-2xl font-extrabold tracking-tight" style={{ color: '#111827' }}>Clients</h1>
           <p className="text-xs mt-0.5" style={{ color: '#9ca3af' }}>{clients.length} clients total</p>
         </div>
         <button onClick={openCreate} className="btn-brand h-9 px-4 text-sm flex items-center gap-2">

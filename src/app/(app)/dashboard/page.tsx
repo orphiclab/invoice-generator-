@@ -87,17 +87,17 @@ export default function DashboardPage() {
   const paidCount = stats?.byStatus?.PAID ?? 0
 
   return (
-    <div className="p-6 lg:p-8 space-y-5">
+    <div className="p-4 sm:p-6 lg:p-8 space-y-4 sm:space-y-5">
 
       {/* ── Page header ── */}
-      <div className="flex items-center justify-between">
-        <div>
-          <h1 className="text-2xl font-extrabold tracking-tight" style={{ color: '#111827' }}>
+      <div className="flex items-start sm:items-center justify-between gap-3">
+        <div className="min-w-0">
+          <h1 className="text-xl sm:text-2xl font-extrabold tracking-tight truncate" style={{ color: '#111827' }}>
             Hello! 👋
           </h1>
-          <p className="text-xs mt-0.5" style={{ color: '#9ca3af' }}>{today}</p>
+          <p className="text-xs mt-0.5 truncate" style={{ color: '#9ca3af' }}>{today}</p>
         </div>
-        <Link href="/invoices/new">
+        <Link href="/invoices/new" className="flex-shrink-0 hidden sm:block">
           <button className="btn-brand h-9 px-4 text-sm flex items-center gap-2">
             <Plus className="w-4 h-4" /> New Invoice
           </button>
@@ -105,78 +105,78 @@ export default function DashboardPage() {
       </div>
 
       {/* ── Row 1: 4 stat cards ── */}
-      <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
+      <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4">
 
         {/* Revenue card — lavender bg */}
-        <div className="rounded-2xl p-5 relative overflow-hidden col-span-1"
+        <div className="rounded-2xl p-4 sm:p-5 relative overflow-hidden col-span-1"
           style={{ background: 'linear-gradient(135deg, #a28ef9 0%, #7c5cfc 100%)', boxShadow: '0 8px 24px rgba(162,142,249,0.35)' }}>
           <div className="absolute -top-6 -right-6 w-24 h-24 rounded-full" style={{ background: 'rgba(255,255,255,0.12)' }} />
           <div className="relative">
-            <p className="text-xs font-semibold mb-3" style={{ color: 'rgba(255,255,255,0.7)' }}>Total Revenue</p>
-            <p className="text-2xl font-extrabold text-white tracking-tight leading-none">
+            <p className="text-[11px] font-semibold mb-2" style={{ color: 'rgba(255,255,255,0.7)' }}>Total Revenue</p>
+            <p className="text-lg sm:text-2xl font-extrabold text-white tracking-tight leading-none">
               Rs {(totalRev/1000).toFixed(0)}k
             </p>
-            <p className="text-[11px] mt-2" style={{ color: 'rgba(255,255,255,0.6)' }}>From paid invoices</p>
-            <div className="flex items-center gap-1 mt-3">
-              <span className="flex items-center gap-0.5 text-[10px] font-bold px-2 py-0.5 rounded-full" style={{ background: 'rgba(255,255,255,0.2)', color: 'white' }}>
+            <p className="text-[10px] mt-1.5" style={{ color: 'rgba(255,255,255,0.6)' }}>From paid invoices</p>
+            <div className="flex items-center gap-1 mt-2">
+              <span className="flex items-center gap-0.5 text-[10px] font-bold px-1.5 py-0.5 rounded-full" style={{ background: 'rgba(255,255,255,0.2)', color: 'white' }}>
                 <ArrowUp className="w-2.5 h-2.5" /> 12%
               </span>
-              <span className="text-[10px]" style={{ color: 'rgba(255,255,255,0.5)' }}>vs last month</span>
+              <span className="text-[10px] hidden sm:inline" style={{ color: 'rgba(255,255,255,0.5)' }}>vs last month</span>
             </div>
           </div>
         </div>
 
         {/* Outstanding */}
-        <div className="bg-white rounded-2xl p-5" style={{ border: '1px solid #f0f2f0', boxShadow: '0 2px 8px rgba(0,0,0,0.05)' }}>
-          <div className="flex items-start justify-between mb-3">
-            <div className="w-9 h-9 rounded-xl flex items-center justify-center" style={{ background: '#fff7ed' }}>
-              <AlertCircle className="w-4.5 h-4.5" style={{ color: '#f97316', width: 18, height: 18 }} />
+        <div className="bg-white rounded-2xl p-4 sm:p-5" style={{ border: '1px solid #f0f2f0', boxShadow: '0 2px 8px rgba(0,0,0,0.05)' }}>
+          <div className="flex items-start justify-between mb-2">
+            <div className="w-8 h-8 sm:w-9 sm:h-9 rounded-xl flex items-center justify-center" style={{ background: '#fff7ed' }}>
+              <AlertCircle style={{ color: '#f97316', width: 16, height: 16 }} />
             </div>
-            <span className="flex items-center gap-0.5 text-[10px] font-bold px-2 py-0.5 rounded-full" style={{ background: '#fef2f2', color: '#dc2626' }}>
+            <span className="flex items-center gap-0.5 text-[10px] font-bold px-1.5 py-0.5 rounded-full" style={{ background: '#fef2f2', color: '#dc2626' }}>
               <ArrowDown className="w-2.5 h-2.5" /> Due
             </span>
           </div>
-          <p className="text-2xl font-extrabold tracking-tight" style={{ color: '#111827' }}>
+          <p className="text-lg sm:text-2xl font-extrabold tracking-tight" style={{ color: '#111827' }}>
             Rs {(outstanding/1000).toFixed(0)}k
           </p>
           <p className="text-xs font-semibold mt-1" style={{ color: '#374151' }}>Outstanding</p>
-          <p className="text-[11px] mt-0.5" style={{ color: '#9ca3af' }}>Sent & overdue</p>
+          <p className="text-[11px] mt-0.5 hidden sm:block" style={{ color: '#9ca3af' }}>Sent & overdue</p>
         </div>
 
         {/* Invoices */}
-        <div className="bg-white rounded-2xl p-5" style={{ border: '1px solid #f0f2f0', boxShadow: '0 2px 8px rgba(0,0,0,0.05)' }}>
-          <div className="flex items-start justify-between mb-3">
-            <div className="w-9 h-9 rounded-xl flex items-center justify-center" style={{ background: '#eff6ff' }}>
-              <FileText className="w-4.5 h-4.5" style={{ color: '#3b82f6', width: 18, height: 18 }} />
+        <div className="bg-white rounded-2xl p-4 sm:p-5" style={{ border: '1px solid #f0f2f0', boxShadow: '0 2px 8px rgba(0,0,0,0.05)' }}>
+          <div className="flex items-start justify-between mb-2">
+            <div className="w-8 h-8 sm:w-9 sm:h-9 rounded-xl flex items-center justify-center" style={{ background: '#eff6ff' }}>
+              <FileText style={{ color: '#3b82f6', width: 16, height: 16 }} />
             </div>
           </div>
-          <p className="text-2xl font-extrabold tracking-tight" style={{ color: '#111827' }}>
+          <p className="text-lg sm:text-2xl font-extrabold tracking-tight" style={{ color: '#111827' }}>
             {totalInvoiceCount}
           </p>
           <p className="text-xs font-semibold mt-1" style={{ color: '#374151' }}>Invoices</p>
-          <p className="text-[11px] mt-0.5" style={{ color: '#9ca3af' }}>{paidCount} paid this month</p>
+          <p className="text-[11px] mt-0.5 hidden sm:block" style={{ color: '#9ca3af' }}>{paidCount} paid this month</p>
         </div>
 
         {/* Clients */}
-        <div className="bg-white rounded-2xl p-5" style={{ border: '1px solid #f0f2f0', boxShadow: '0 2px 8px rgba(0,0,0,0.05)' }}>
-          <div className="flex items-start justify-between mb-3">
-            <div className="w-9 h-9 rounded-xl flex items-center justify-center" style={{ background: '#f0fdf4' }}>
-              <Users className="w-4.5 h-4.5" style={{ color: '#22c55e', width: 18, height: 18 }} />
+        <div className="bg-white rounded-2xl p-4 sm:p-5" style={{ border: '1px solid #f0f2f0', boxShadow: '0 2px 8px rgba(0,0,0,0.05)' }}>
+          <div className="flex items-start justify-between mb-2">
+            <div className="w-8 h-8 sm:w-9 sm:h-9 rounded-xl flex items-center justify-center" style={{ background: '#f0fdf4' }}>
+              <Users style={{ color: '#22c55e', width: 16, height: 16 }} />
             </div>
           </div>
-          <p className="text-2xl font-extrabold tracking-tight" style={{ color: '#111827' }}>
+          <p className="text-lg sm:text-2xl font-extrabold tracking-tight" style={{ color: '#111827' }}>
             {stats?.totalClients ?? 0}
           </p>
           <p className="text-xs font-semibold mt-1" style={{ color: '#374151' }}>Clients</p>
-          <p className="text-[11px] mt-0.5" style={{ color: '#9ca3af' }}>Active</p>
+          <p className="text-[11px] mt-0.5 hidden sm:block" style={{ color: '#9ca3af' }}>Active</p>
         </div>
       </div>
 
       {/* ── Row 2: Main chart + right panel ── */}
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-3 sm:gap-4">
 
         {/* Main chart card */}
-        <div className="lg:col-span-2 bg-white rounded-2xl p-6" style={{ border: '1px solid #f0f2f0', boxShadow: '0 2px 8px rgba(0,0,0,0.05)' }}>
+        <div className="lg:col-span-2 bg-white rounded-2xl p-4 sm:p-6" style={{ border: '1px solid #f0f2f0', boxShadow: '0 2px 8px rgba(0,0,0,0.05)' }}>
           <div className="flex items-center justify-between mb-1">
             <div>
               <h2 className="text-base font-bold" style={{ color: '#111827' }}>
@@ -311,7 +311,7 @@ export default function DashboardPage() {
       </div>
 
       {/* ── Row 3: Revenue by Client + Expense Categories + KPIs ── */}
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-3 sm:gap-4">
 
         {/* Revenue by Client — horizontal bars */}
         <div className="bg-white rounded-2xl p-6" style={{ border: '1px solid #f0f2f0', boxShadow: '0 2px 8px rgba(0,0,0,0.05)' }}>
@@ -424,9 +424,9 @@ export default function DashboardPage() {
         </div>
       </div>
 
-      {/* ── Row 3: Recent invoices table ── */}
+      {/* ── Row 4: Recent invoices table ── */}
       <div className="bg-white rounded-2xl overflow-hidden" style={{ border: '1px solid #f0f2f0', boxShadow: '0 2px 8px rgba(0,0,0,0.05)' }}>
-        <div className="flex items-center justify-between px-6 py-4" style={{ borderBottom: '1px solid #f3f4f6' }}>
+        <div className="flex items-center justify-between px-4 sm:px-6 py-4" style={{ borderBottom: '1px solid #f3f4f6' }}>
           <div>
             <h2 className="text-sm font-bold" style={{ color: '#111827' }}>Recent Invoices</h2>
             <p className="text-[11px]" style={{ color: '#9ca3af' }}>Latest transactions</p>
@@ -451,45 +451,68 @@ export default function DashboardPage() {
             </Link>
           </div>
         ) : (
-          <div className="overflow-x-auto">
-            <table className="w-full">
-              <thead>
-                <tr style={{ borderBottom: '1px solid #f3f4f6' }}>
-                  {['Invoice #', 'Client', 'Amount', 'Due Date', 'Status'].map(h => (
-                    <th key={h} className="text-left px-6 py-3 text-[10px] font-bold uppercase tracking-[0.08em]"
-                      style={{ color: '#9ca3af' }}>{h}</th>
-                  ))}
-                </tr>
-              </thead>
-              <tbody>
-                {recentInvoices.map((inv, i) => (
-                  <tr key={inv.id} className="hover:bg-gray-50 transition-colors"
-                    style={{ borderBottom: i < recentInvoices.length - 1 ? '1px solid #f9fafb' : 'none' }}>
-                    <td className="px-6 py-3.5">
-                      <Link href={`/invoices/${inv.id}`}
-                        className="text-xs font-bold font-mono hover:opacity-75 transition-opacity"
-                        style={{ color: '#a28ef9' }}>
-                        {inv.invoiceNo}
-                      </Link>
-                    </td>
-                    <td className="px-6 py-3.5">
-                      <p className="text-xs font-semibold" style={{ color: '#111827' }}>{inv.client?.name}</p>
-                      {inv.client?.company && <p className="text-[10px] mt-0.5" style={{ color: '#9ca3af' }}>{inv.client.company}</p>}
-                    </td>
-                    <td className="px-6 py-3.5 text-xs font-bold" style={{ color: '#111827' }}>
-                      Rs {inv.total.toLocaleString('en-LK', { maximumFractionDigits: 0 })}
-                    </td>
-                    <td className="px-6 py-3.5 text-xs" style={{ color: '#6b7280' }}>
-                      {new Date(inv.dueDate).toLocaleDateString('en-LK', { day: 'numeric', month: 'short' })}
-                    </td>
-                    <td className="px-6 py-3.5">
+          <>
+            {/* Mobile card list */}
+            <div className="sm:hidden divide-y" style={{ borderColor: '#f3f4f6' }}>
+              {recentInvoices.map(inv => (
+                <Link key={inv.id} href={`/invoices/${inv.id}`} className="flex items-center justify-between p-4 hover:bg-gray-50 transition-colors">
+                  <div className="min-w-0">
+                    <div className="flex items-center gap-2 mb-0.5">
+                      <span className="text-xs font-bold font-mono" style={{ color: '#a28ef9' }}>{inv.invoiceNo}</span>
                       <StatusBadge status={inv.status} />
-                    </td>
+                    </div>
+                    <p className="text-sm font-semibold truncate" style={{ color: '#111827' }}>{inv.client?.name}</p>
+                    <p className="text-[11px] mt-0.5" style={{ color: '#9ca3af' }}>
+                      Due {new Date(inv.dueDate).toLocaleDateString('en-LK', { day: 'numeric', month: 'short' })}
+                    </p>
+                  </div>
+                  <p className="text-sm font-bold flex-shrink-0 ml-3" style={{ color: '#111827' }}>
+                    Rs {inv.total.toLocaleString('en-LK', { maximumFractionDigits: 0 })}
+                  </p>
+                </Link>
+              ))}
+            </div>
+            {/* Desktop table */}
+            <div className="hidden sm:block overflow-x-auto">
+              <table className="w-full">
+                <thead>
+                  <tr style={{ borderBottom: '1px solid #f3f4f6' }}>
+                    {['Invoice #', 'Client', 'Amount', 'Due Date', 'Status'].map(h => (
+                      <th key={h} className="text-left px-6 py-3 text-[10px] font-bold uppercase tracking-[0.08em]"
+                        style={{ color: '#9ca3af' }}>{h}</th>
+                    ))}
                   </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
+                </thead>
+                <tbody>
+                  {recentInvoices.map((inv, i) => (
+                    <tr key={inv.id} className="hover:bg-gray-50 transition-colors"
+                      style={{ borderBottom: i < recentInvoices.length - 1 ? '1px solid #f9fafb' : 'none' }}>
+                      <td className="px-6 py-3.5">
+                        <Link href={`/invoices/${inv.id}`}
+                          className="text-xs font-bold font-mono hover:opacity-75 transition-opacity"
+                          style={{ color: '#a28ef9' }}>
+                          {inv.invoiceNo}
+                        </Link>
+                      </td>
+                      <td className="px-6 py-3.5">
+                        <p className="text-xs font-semibold" style={{ color: '#111827' }}>{inv.client?.name}</p>
+                        {inv.client?.company && <p className="text-[10px] mt-0.5" style={{ color: '#9ca3af' }}>{inv.client.company}</p>}
+                      </td>
+                      <td className="px-6 py-3.5 text-xs font-bold" style={{ color: '#111827' }}>
+                        Rs {inv.total.toLocaleString('en-LK', { maximumFractionDigits: 0 })}
+                      </td>
+                      <td className="px-6 py-3.5 text-xs" style={{ color: '#6b7280' }}>
+                        {new Date(inv.dueDate).toLocaleDateString('en-LK', { day: 'numeric', month: 'short' })}
+                      </td>
+                      <td className="px-6 py-3.5">
+                        <StatusBadge status={inv.status} />
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          </>
         )}
       </div>
     </div>
