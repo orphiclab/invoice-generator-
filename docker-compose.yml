@@ -1,6 +1,21 @@
 version: '3.8'
 
 services:
+  app:
+    build: .
+    container_name: invoice_app_web
+    restart: unless-stopped
+    ports:
+      - '3000:3000'
+    environment:
+      # Use the container name 'postgres' as the hostname
+      - DATABASE_URL=postgresql://${POSTGRES_USER:-invoice_user}:${POSTGRES_PASSWORD:-invoice_pass}@postgres:5432/${POSTGRES_DB:-invoice_db}
+      - NEXTAUTH_SECRET=${NEXTAUTH_SECRET:-your_secret_here}
+      - NEXTAUTH_URL=${NEXTAUTH_URL:-http://localhost:3000}
+    depends_on:
+      postgres:
+        condition: service_healthy
+
   postgres:
     image: postgres:16-alpine
     container_name: invoice_app_db

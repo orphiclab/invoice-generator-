@@ -13,7 +13,7 @@ import { ClientSelect } from '@/components/ClientSelect'
 
 interface Client { id: string; name: string; company?: string }
 interface Currency { id: string; code: string; symbol: string; name: string }
-interface Item { description: string; quantity: number; unitPrice: number }
+interface Item { description: string; quantity: number; unitPrice: number; productId?: string }
 
 const inputStyle = { background: '#ffffff', borderColor: '#e5e7eb' }
 const labelStyle = { color: '#6b7280' }
@@ -40,6 +40,7 @@ export default function NewInvoicePage() {
   })
   const [items, setItems] = useState<Item[]>([{ description: '', quantity: 1, unitPrice: 0 }])
   const [bankAccounts, setBankAccounts] = useState<any[]>([])
+  const [availableProducts, setAvailableProducts] = useState<any[]>([])
 
   useEffect(() => {
     fetch('/api/clients').then((r) => r.json()).then((d) => setClients(Array.isArray(d) ? d : []))
@@ -65,6 +66,7 @@ export default function NewInvoicePage() {
         setForm(prev => ({ ...prev, bankDetails: def.details }))
       }
     })
+    fetch('/api/products').then(r => r.json()).then(d => setAvailableProducts(Array.isArray(d) ? d : []))
   }, [])
 
   const currSymbol = currencies.find(c => c.id === form.currencyId)?.symbol ?? 'Rs'
@@ -212,9 +214,41 @@ export default function NewInvoicePage() {
             </div>
             {items.map((item, idx) => (
               <div key={idx} className="grid grid-cols-12 gap-3 items-center">
-                <div className="col-span-5">
-                  <Input className="text-gray-900 w-full" style={inputStyle} placeholder="Service or product description"
-                    value={item.description} onChange={(e) => updateItem(idx, 'description', e.target.value)} required />
+                <div className="col-span-5 relative group">
+                  <Select
+                    value={item.productId || "custom"}
+                    onValueChange={(val) => {
+                      if (val === "custom") {
+                        updateItem(idx, 'productId', '')
+                      } else {
+                        const p = availableProducts.find(x => x.id === val)
+                        if (p) {
+                          setItems(items.map((it, i) => i === idx ? { 
+                            ...it, 
+                            productId: p.id, 
+                            description: p.name, 
+                            unitPrice: p.unitPrice 
+                          } : it))
+                        }
+                      }
+                    }}
+                  >
+                    <SelectTrigger className="text-gray-900 w-full" style={inputStyle}>
+                      <SelectValue placeholder="Select or type..." />
+                    </SelectTrigger>
+                    <SelectContent style={{ background: '#ffffff', borderColor: '#e5e7eb' }}>
+                      <SelectItem value="custom">Custom Item / Service</SelectItem>
+                      {availableProducts.filter(p => p.isActive).map(p => (
+                        <SelectItem key={p.id} value={p.id}>
+                          {p.name} (Rs {p.unitPrice}) {p.trackInventory ? `— ${p.stockQuantity} in stock` : ''}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                  {!item.productId && (
+                    <Input className="text-gray-900 w-full mt-1" style={inputStyle} placeholder="Add custom description..."
+                      value={item.description} onChange={(e) => updateItem(idx, 'description', e.target.value)} required />
+                  )}
                 </div>
                 <div className="col-span-2">
                   <Input className="text-gray-900 w-full" style={inputStyle} type="number" min={0.01} step={0.01}

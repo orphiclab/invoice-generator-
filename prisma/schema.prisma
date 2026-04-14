@@ -40,6 +40,7 @@ model User {
   products          Product[]
   activityLogs      ActivityLog[]
   bankAccounts      BankAccount[]
+  stockMovements    StockMovement[]
 }
 
 enum UserRole {
@@ -82,11 +83,38 @@ model Product {
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
 
+  trackInventory    Boolean  @default(false)
+  stockQuantity     Float    @default(0)
+  lowStockThreshold Float    @default(5)
+  sku               String?  // Stock Keeping Unit
+
   userId String
   user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+  
+  stockMovements StockMovement[]
+  invoiceItems   InvoiceItem[]
+  estimateItems  EstimateItem[]
 
   @@index([userId, isActive])
 }
+
+model StockMovement {
+  id        String   @id @default(cuid())
+  type      String   // IN, OUT, ADJUST, RETURN
+  quantity  Float
+  reason    String?  // "Invoice #123", "Manual Adjustment", etc.
+  createdAt DateTime @default(now())
+
+  productId String
+  product   Product  @relation(fields: [productId], references: [id], onDelete: Cascade)
+
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([productId])
+  @@index([userId])
+}
+
 
 // ─── Activity Log / Audit Trail ───────────────────────────────────────────────
 
@@ -252,6 +280,9 @@ model InvoiceItem {
 
   invoiceId String
   invoice   Invoice @relation(fields: [invoiceId], references: [id], onDelete: Cascade)
+
+  productId String?
+  product   Product? @relation(fields: [productId], references: [id], onDelete: SetNull)
 }
 
 model InvoiceComment {
@@ -341,6 +372,9 @@ model EstimateItem {
 
   estimateId String
   estimate   Estimate @relation(fields: [estimateId], references: [id], onDelete: Cascade)
+
+  productId String?
+  product   Product? @relation(fields: [productId], references: [id], onDelete: SetNull)
 }
 
 // ─── Expense ─────────────────────────────────────────────────────────────────

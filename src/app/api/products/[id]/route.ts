@@ -10,7 +10,10 @@ export async function PUT(req: NextRequest, { params }: { params: Promise<{ id: 
 
   const { id } = await params
   const body = await req.json()
-  const { name, description, unitPrice, unit, category, taxable, isActive } = body
+  const { 
+    name, description, unitPrice, unit, category, taxable, isActive,
+    trackInventory, stockQuantity, lowStockThreshold, sku 
+  } = body
 
   const existing = await prisma.product.findUnique({ where: { id } })
   if (!existing || existing.userId !== session.userId) {
@@ -27,6 +30,10 @@ export async function PUT(req: NextRequest, { params }: { params: Promise<{ id: 
       ...(category !== undefined && { category }),
       ...(taxable !== undefined && { taxable }),
       ...(isActive !== undefined && { isActive }),
+      ...(trackInventory !== undefined && { trackInventory }),
+      ...(stockQuantity !== undefined && { stockQuantity: parseFloat(stockQuantity) }),
+      ...(lowStockThreshold !== undefined && { lowStockThreshold: parseFloat(lowStockThreshold) }),
+      ...(sku !== undefined && { sku }),
     },
   })
 

@@ -66,16 +66,51 @@ export async function POST(request: Request) {
       shareToken,
       ...(currencyId && { currencyId }),
       items: {
-        create: items.map((item: { description: string; quantity: number; unitPrice: number }) => ({
+        create: items.map((item: any) => ({
           description: item.description,
           quantity: item.quantity,
           unitPrice: item.unitPrice,
           total: item.quantity * item.unitPrice,
+          productId: item.productId || null,
         })),
       },
     },
     include: { client: true, items: true },
   })
+
+  // Stock deduction for products with trackInventory = true
+  await Promise.all(items.filter((i: any) => i.productId).map(async (item: any) => {
+    const product = await prisma.product.findFirst({
+      where: { id: item.productId, userId: session!.userId, trackInventory: true }
+    })
+    if (product) {
+      await prisma.product.update({
+        where: { id: product.id },
+        data: { stockQuantity: { decrement: item.quantity } }
+      })
+      await prisma.stockMovement.create({
+        data: {
+          productId: product.id,
+          userId: session!.userId,
+          type: 'OUT',
+          quantity: item.quantity,
+          reason: `Invoice ${invoice.invoiceNo}`
+        }
+      })
+      
+      // Stock Alert Notification
+      const newStock = product.stockQuantity - item.quantity
+      if (newStock <= product.lowStockThreshold) {
+        await createNotification({
+          userId: session!.userId,
+          type: 'low_stock',
+          title: 'Low Stock Alert',
+          message: `Product "${product.name}" is low on stock (${newStock} units remaining)`,
+          linkTo: `/products`,
+        })
+      }
+    }
+  }))
 
   await logActivity({
     userId: session!.userId,

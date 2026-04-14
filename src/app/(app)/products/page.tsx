@@ -17,12 +17,19 @@ interface Product {
   taxable: boolean
   isActive: boolean
   createdAt: string
+  trackInventory: boolean
+  stockQuantity: number
+  lowStockThreshold: number
+  sku: string | null
 }
 
 const UNITS = ['unit', 'hour', 'day', 'week', 'month', 'project', 'piece', 'kg', 'liter']
 const CATEGORIES = ['Development', 'Design', 'Marketing', 'Consulting', 'Support', 'Hardware', 'Software', 'Other']
 
-const emptyForm = { name: '', description: '', unitPrice: '', unit: 'unit', category: '', taxable: true }
+const emptyForm = { 
+  name: '', description: '', unitPrice: '', unit: 'unit', category: '', taxable: true,
+  trackInventory: false, stockQuantity: '0', lowStockThreshold: '5', sku: ''
+}
 
 export default function ProductsPage() {
   const [products, setProducts] = useState<Product[]>([])
@@ -57,6 +64,10 @@ export default function ProductsPage() {
       unit: p.unit,
       category: p.category || '',
       taxable: p.taxable,
+      trackInventory: p.trackInventory,
+      stockQuantity: String(p.stockQuantity),
+      lowStockThreshold: String(p.lowStockThreshold),
+      sku: p.sku || '',
     })
     setShowModal(true)
   }
@@ -198,12 +209,17 @@ export default function ProductsPage() {
                   </div>
                   <div>
                     <p className="text-sm font-bold" style={{ color: '#111827' }}>{p.name}</p>
-                    {p.category && (
-                      <span className="inline-flex items-center gap-1 text-[10px] font-semibold px-2 py-0.5 rounded-full mt-0.5"
-                        style={{ background: '#f3f4f6', color: '#6b7280' }}>
-                        <Tag className="w-2.5 h-2.5" /> {p.category}
-                      </span>
-                    )}
+                    <div className="flex items-center gap-1.5 mt-0.5">
+                      {p.category && (
+                        <span className="inline-flex items-center gap-1 text-[10px] font-semibold px-2 py-0.5 rounded-full"
+                          style={{ background: '#f3f4f6', color: '#6b7280' }}>
+                          <Tag className="w-2.5 h-2.5" /> {p.category}
+                        </span>
+                      )}
+                      {p.sku && (
+                        <span className="text-[10px] font-medium" style={{ color: '#9ca3af' }}>SKU: {p.sku}</span>
+                      )}
+                    </div>
                   </div>
                 </div>
                 {/* Actions */}
@@ -225,6 +241,18 @@ export default function ProductsPage() {
 
               {p.description && (
                 <p className="text-xs mb-3 line-clamp-2" style={{ color: '#6b7280' }}>{p.description}</p>
+              )}
+
+              {p.trackInventory && (
+                <div className="mb-4 p-2.5 rounded-xl bg-gray-50 flex items-center justify-between" style={{ border: '1px solid #e5e7eb' }}>
+                  <div className="flex items-center gap-2">
+                    <Archive className="w-3.5 h-3.5" style={{ color: p.stockQuantity <= p.lowStockThreshold ? '#ef4444' : '#6b7280' }} />
+                    <span className="text-xs font-semibold" style={{ color: '#374151' }}>Stock Level</span>
+                  </div>
+                  <span className={`text-xs font-bold ${p.stockQuantity <= p.lowStockThreshold ? 'text-red-500' : 'text-gray-900'}`}>
+                    {p.stockQuantity} {p.unit}s
+                  </span>
+                </div>
               )}
 
               <div className="flex items-end justify-between">
@@ -330,6 +358,48 @@ export default function ProductsPage() {
                   </button>
                 </div>
               </div>
+
+              <div className="pt-2 border-t border-gray-100 flex items-center justify-between">
+                <div>
+                  <label className="text-xs font-bold" style={{ color: '#111827' }}>Track Inventory / Stock</label>
+                  <p className="text-[10px]" style={{ color: '#9ca3af' }}>Enable to deduct stock on invoices</p>
+                </div>
+                <button type="button" onClick={() => setForm(f => ({ ...f, trackInventory: !f.trackInventory }))}>
+                  {form.trackInventory
+                    ? <ToggleRight className="w-7 h-7" style={{ color: '#a28ef9' }} />
+                    : <ToggleLeft className="w-7 h-7" style={{ color: '#e5e7eb' }} />}
+                </button>
+              </div>
+
+              {form.trackInventory && (
+                <div className="space-y-4 animate-in fade-in slide-in-from-top-2 duration-200">
+                  <div className="grid grid-cols-2 gap-3">
+                    <div className="space-y-1.5">
+                      <label className="text-xs font-semibold" style={{ color: '#6b7280' }}>Current Stock *</label>
+                      <input type="number" step="1" value={form.stockQuantity}
+                        onChange={e => setForm(f => ({ ...f, stockQuantity: e.target.value }))}
+                        placeholder="0" required
+                        className="w-full h-10 px-4 rounded-xl text-sm"
+                        style={{ background: '#f9fafb', border: '1px solid #e5e7eb' }} />
+                    </div>
+                    <div className="space-y-1.5">
+                      <label className="text-xs font-semibold" style={{ color: '#6b7280' }}>Low Stock Alert Threshold</label>
+                      <input type="number" step="1" value={form.lowStockThreshold}
+                        onChange={e => setForm(f => ({ ...f, lowStockThreshold: e.target.value }))}
+                        placeholder="5" required
+                        className="w-full h-10 px-4 rounded-xl text-sm"
+                        style={{ background: '#f9fafb', border: '1px solid #e5e7eb' }} />
+                    </div>
+                  </div>
+                  <div className="space-y-1.5">
+                    <label className="text-xs font-semibold" style={{ color: '#6b7280' }}>SKU (Stock Keeping Unit)</label>
+                    <input value={form.sku} onChange={e => setForm(f => ({ ...f, sku: e.target.value }))}
+                      placeholder="e.g. PRD-1001"
+                      className="w-full h-10 px-4 rounded-xl text-sm"
+                      style={{ background: '#f9fafb', border: '1px solid #e5e7eb' }} />
+                  </div>
+                </div>
+              )}
 
               <div className="flex justify-end gap-2 pt-2">
                 <button type="button" onClick={() => setShowModal(false)}

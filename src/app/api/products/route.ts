@@ -16,37 +16,45 @@ export async function GET() {
   return NextResponse.json(products)
 }
 
-// POST /api/products — create a new product/service
 export async function POST(req: NextRequest) {
-  const session = await getSession()
-  if (!session) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
+  try {
+    const session = await getSession()
+    if (!session) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
 
-  const body = await req.json()
-  const { name, description, unitPrice, unit, category, taxable } = body
+    const body = await req.json()
+    const { name, description, unitPrice, unit, category, taxable, trackInventory, stockQuantity, lowStockThreshold, sku } = body
 
-  if (!name || unitPrice === undefined) {
-    return NextResponse.json({ error: 'Name and unit price are required' }, { status: 400 })
-  }
+    if (!name || unitPrice === undefined) {
+      return NextResponse.json({ error: 'Name and unit price are required' }, { status: 400 })
+    }
 
-  const product = await prisma.product.create({
-    data: {
-      name,
-      description: description || null,
-      unitPrice: parseFloat(unitPrice),
-      unit: unit || 'unit',
-      category: category || null,
-      taxable: taxable !== false,
+    const product = await prisma.product.create({
+      data: {
+        name,
+        description: description || null,
+        unitPrice: parseFloat(unitPrice),
+        unit: unit || 'unit',
+        category: category || null,
+        taxable: taxable !== false,
+        trackInventory: !!trackInventory,
+        stockQuantity: parseFloat(stockQuantity) || 0,
+        lowStockThreshold: parseFloat(lowStockThreshold) || 5,
+        sku: sku || null,
+        userId: session.userId,
+      },
+    })
+
+    await logActivity({
       userId: session.userId,
-    },
-  })
+      action: 'created',
+      entityType: 'product',
+      entityId: product.id,
+      entityName: product.name,
+    })
 
-  await logActivity({
-    userId: session.userId,
-    action: 'created',
-    entityType: 'product',
-    entityId: product.id,
-    entityName: product.name,
-  })
-
-  return NextResponse.json(product, { status: 201 })
+    return NextResponse.json(product, { status: 201 })
+  } catch (err: any) {
+    console.error('[POST /api/products] Error:', err)
+    return NextResponse.json({ error: err.message || 'Internal Server Error' }, { status: 500 })
+  }
 }

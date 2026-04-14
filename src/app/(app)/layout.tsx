@@ -173,13 +173,8 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
         ))}
       </nav>
 
-      {/* Bottom — Settings + Logout */}
-      <div className="pt-3 mt-2 space-y-0.5" style={{ borderTop: `1px solid ${BORDER_COLOR}` }}>
-        <Link href="/settings"
-          className="flex items-center gap-2.5 px-3 py-2.5 sm:py-2 rounded-xl text-[13px] font-semibold w-full transition-colors"
-          style={{ color: INACTIVE_COLOR }}>
-          <Settings className="w-4 h-4" /> Settings
-        </Link>
+      {/* Bottom — Logout only */}
+      <div className="pt-3 mt-2" style={{ borderTop: `1px solid ${BORDER_COLOR}` }}>
         <button onClick={handleLogout}
           className="flex items-center gap-2.5 px-3 py-2.5 sm:py-2 rounded-xl text-[13px] font-semibold w-full transition-colors hover:bg-gray-50 active:scale-[0.97]"
           style={{ color: INACTIVE_COLOR }}>
