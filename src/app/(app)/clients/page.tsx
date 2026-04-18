@@ -74,7 +74,7 @@ export default function ClientsPage() {
       <div className="relative w-full sm:w-72">
         <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4" style={{ color: '#9ca3af' }} />
         <input placeholder="Search clients…" value={search} onChange={(e) => setSearch(e.target.value)}
-          className="w-full pl-9 pr-4 h-9 rounded-xl text-sm outline-none"
+          className="w-full pl-9 pr-4 h-9 rounded-2xl text-sm outline-none"
           style={{ background: '#ffffff', border: '1px solid #e5e7eb', color: '#111827' }} />
       </div>
 
@@ -136,7 +136,7 @@ export default function ClientsPage() {
               style={{ border: '1px solid #f0f2f0', boxShadow: '0 2px 8px rgba(0,0,0,0.05)' }}>
               <div className="flex items-start justify-between mb-4">
                 {/* Avatar */}
-                <div className="w-11 h-11 rounded-xl flex items-center justify-center text-white text-base font-bold flex-shrink-0"
+                <div className="w-11 h-11 rounded-2xl flex items-center justify-center text-white text-base font-bold flex-shrink-0"
                   style={{ background: 'linear-gradient(135deg, #a28ef9, #7c5cfc)' }}>
                   {c.name.charAt(0).toUpperCase()}
                 </div>

@@ -1,217 +1,170 @@
 'use client'
 
-import { useState } from 'react'
+import React, { useState } from 'react'
 import { useRouter } from 'next/navigation'
 import Link from 'next/link'
 import { toast } from 'sonner'
-import { Eye, EyeOff, Zap, ArrowLeft } from 'lucide-react'
+import { Eye, EyeOff, Zap, UserPlus } from 'lucide-react'
 
-const B  = '#09090b'; const P  = '#1e0a4a'; const M  = '#4c1d95'
-const Gm = '#6d28d9'; const L  = '#7c5cfc'; const La = '#a28ef9'
-const W  = '#ffffff';  const G  = '#ddd6fe'
-
-type T = { bg: string; sh: string; c: string }
-// 8 cols × 6 rows = 48 tiles, each with 4:5 aspect ratio
-const TILES: T[] = [
-  { bg: M,  sh: 'half-t',  c: P  }, { bg: B,  sh: 'slash',   c: M  },
-  { bg: P,  sh: 'circ',   c: La }, { bg: B,  sh: 'none',    c: B  },
-  { bg: Gm, sh: 'none',   c: Gm }, { bg: B,  sh: 'diamond', c: P  },
-  { bg: P,  sh: 'q-tl',   c: M  }, { bg: B,  sh: 'big-circ',c: P  },
-
-  { bg: B,  sh: 'square', c: Gm }, { bg: P,  sh: 'none',    c: P  },
-  { bg: B,  sh: 'q-br',   c: M  }, { bg: M,  sh: 'dots',    c: P  },
-  { bg: B,  sh: 'none',   c: B  }, { bg: P,  sh: 'half-r',  c: B  },
-  { bg: B,  sh: 'diamond',c: Gm }, { bg: M,  sh: 'ring',    c: L  },
-
-  { bg: P,  sh: 'big-circ',c: M  }, { bg: B,  sh: 'none',   c: B  },
-  { bg: M,  sh: 'slash',  c: P  }, { bg: B,  sh: 'q-tr',    c: P  },
-  { bg: La, sh: 'none',   c: La }, { bg: B,  sh: 'tri',     c: M  },
-  { bg: P,  sh: 'none',   c: P  }, { bg: G,  sh: 'q-bl',    c: La },
-
-  { bg: B,  sh: 'ring',   c: L  }, { bg: M,  sh: 'square',  c: P  },
-  { bg: B,  sh: 'none',   c: B  }, { bg: P,  sh: 'half-b',  c: B  },
-  { bg: B,  sh: 'none',   c: B  }, { bg: Gm, sh: 'diamond', c: M  },
-  { bg: B,  sh: 'plus',   c: W  }, { bg: M,  sh: 'none',    c: M  },
-
-  { bg: P,  sh: 'diamond',c: Gm }, { bg: B,  sh: 'dots',    c: La },
-  { bg: M,  sh: 'q-tr',   c: L  }, { bg: B,  sh: 'big-circ',c: M  },
-  { bg: B,  sh: 'none',   c: B  }, { bg: P,  sh: 'none',    c: P  },
-  { bg: B,  sh: 'tri',    c: P  }, { bg: L,  sh: 'q-br',    c: B  },
-
-  { bg: B,  sh: 'big-circ',c: P  }, { bg: Gm, sh: 'slash',  c: M  },
-  { bg: P,  sh: 'square', c: La }, { bg: B,  sh: 'half-l',  c: P  },
-  { bg: M,  sh: 'dots',   c: B  }, { bg: B,  sh: 'none',    c: B  },
-  { bg: P,  sh: 'ring',   c: Gm }, { bg: M,  sh: 'diamond', c: P  },
-
-  { bg: M,  sh: 'tri',     c: P  }, { bg: B,  sh: 'none',   c: B  },
-  { bg: P,  sh: 'q-tl',    c: L  }, { bg: B,  sh: 'square', c: M  },
-  { bg: La, sh: 'none',    c: B  }, { bg: Gm, sh: 'circ',   c: P  },
-  { bg: B,  sh: 'slash',   c: La }, { bg: P,  sh: 'big-circ',c: B },
-  
-  { bg: B,  sh: 'half-t',  c: M  }, { bg: P,  sh: 'ring',   c: Gm },
-  { bg: M,  sh: 'dots',    c: B  }, { bg: B,  sh: 'q-br',   c: La },
-  { bg: B,  sh: 'none',    c: B  }, { bg: L,  sh: 'diamond',c: P  },
-  { bg: Gm, sh: 'half-b',  c: B  }, { bg: B,  sh: 'none',   c: B  },
+const testimonials = [
+  {
+    avatarSrc: 'https://randomuser.me/api/portraits/women/44.jpg',
+    name: 'Meera Kapoor',
+    handle: '@meeradesigns',
+    text: 'Started using InvoiceFlow a month ago. Already saved hours on billing. My clients love the professional look.',
+  },
+  {
+    avatarSrc: 'https://randomuser.me/api/portraits/men/75.jpg',
+    name: 'Arjun Nair',
+    handle: '@arjunbuilds',
+    text: 'The free plan has everything I need. PDF export, WhatsApp sharing, client management — all in one place.',
+  },
+  {
+    avatarSrc: 'https://randomuser.me/api/portraits/women/68.jpg',
+    name: 'Kavita Reddy',
+    handle: '@kavitafreelance',
+    text: 'Best invoicing tool for Indian freelancers. Simple, fast, and the revenue dashboard is incredibly useful.',
+  },
 ]
-
-function Shape({ t, c }: { t: string; c: string }) {
-  if (t === 'none') return null
-  return (
-    <svg viewBox="0 0 100 100" style={{ width: '100%', height: '100%', display: 'block', overflow: 'visible' }}>
-      {t === 'big-circ' && <circle cx="50" cy="50" r="50" fill={c} />}
-      {t === 'circ'     && <circle cx="50" cy="50" r="36" fill={c} />}
-      {t === 'ring'     && <circle cx="50" cy="50" r="34" fill="none" stroke={c} strokeWidth="12" />}
-      {t === 'half-t'   && <path d="M 0 50 A 50 50 0 0 1 100 50 Z" fill={c} />}
-      {t === 'half-b'   && <path d="M 0 50 A 50 50 0 0 0 100 50 Z" fill={c} />}
-      {t === 'half-l'   && <path d="M 50 0 A 50 50 0 0 0 50 100 Z" fill={c} />}
-      {t === 'half-r'   && <path d="M 50 0 A 50 50 0 0 1 50 100 Z" fill={c} />}
-      {t === 'q-tl'     && <circle cx="0"   cy="0"   r="100" fill={c} />}
-      {t === 'q-tr'     && <circle cx="100" cy="0"   r="100" fill={c} />}
-      {t === 'q-bl'     && <circle cx="0"   cy="100" r="100" fill={c} />}
-      {t === 'q-br'     && <circle cx="100" cy="100" r="100" fill={c} />}
-      {t === 'diamond'  && <polygon points="50,10 90,50 50,90 10,50" fill={c} />}
-      {t === 'slash'    && <polygon points="55,0 100,0 45,100 0,100" fill={c} />}
-      {t === 'square'   && <rect x="22" y="22" width="56" height="56" fill={c} />}
-      {t === 'tri'      && <polygon points="0,100 100,0 100,100" fill={c} />}
-      {t === 'dots'     && [22,50,78].flatMap(x => [22,50,78].map(y =>
-          <circle key={`${x}-${y}`} cx={x} cy={y} r="8" fill={c} /> ))}
-      {t === 'plus'     && <>
-        <line x1="28" y1="72" x2="72" y2="28" stroke={c} strokeWidth="9" strokeLinecap="round" />
-        <line x1="52" y1="28" x2="72" y2="28" stroke={c} strokeWidth="9" strokeLinecap="round" />
-        <line x1="72" y1="28" x2="72" y2="48" stroke={c} strokeWidth="9" strokeLinecap="round" />
-      </>}
-    </svg>
-  )
-}
-
-function GeometricGrid() {
-  return (
-    <div style={{ width: '100%', height: '100%', background: B }}>
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(8, 1fr)', width: '100%' }}>
-        {TILES.map((tile, i) => (
-          <div key={i} style={{ background: tile.bg, overflow: 'hidden', aspectRatio: '4 / 5' }}>
-            <Shape t={tile.sh} c={tile.c} />
-          </div>
-        ))}
-      </div>
-    </div>
-  )
-}
 
 export default function RegisterPage() {
   const router = useRouter()
   const [loading, setLoading] = useState(false)
-  const [showPw, setShowPw]   = useState(false)
-  const [form, setForm]       = useState({ name: '', email: '', password: '' })
+  const [showPassword, setShowPassword] = useState(false)
 
-  async function handleSubmit(e: React.FormEvent) {
-    e.preventDefault()
-    if (form.password.length < 6) { toast.error('Password must be at least 6 characters'); return }
+  const handleSignUp = async (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault()
+    const formData = new FormData(event.currentTarget)
+    const name = formData.get('name') as string
+    const email = formData.get('email') as string
+    const password = formData.get('password') as string
+
+    if (!name || !email || !password) {
+      toast.error('Please fill in all fields')
+      return
+    }
+    if (password.length < 6) {
+      toast.error('Password must be at least 6 characters')
+      return
+    }
+
     setLoading(true)
     try {
-      const res  = await fetch('/api/auth/register', {
-        method: 'POST', headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(form),
+      const res = await fetch('/api/auth/register', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ name, email, password }),
       })
       const data = await res.json()
-      if (!res.ok) toast.error(data.error || 'Registration failed')
-      else { toast.success('Account created! Welcome 🎉'); router.push('/dashboard'); router.refresh() }
-    } catch { toast.error('Something went wrong') }
-    finally  { setLoading(false) }
-  }
-
-  const inp: React.CSSProperties = {
-    width: '100%', height: '42px', padding: '0 12px',
-    border: '1px solid #e5e7eb', borderRadius: '6px',
-    fontSize: '14px', color: '#111827', outline: 'none',
-    background: '#fff', display: 'block',
+      if (!res.ok) {
+        toast.error(data.error || 'Registration failed')
+      } else {
+        toast.success('Account created! Welcome 🎉')
+        router.push('/dashboard')
+        router.refresh()
+      }
+    } catch {
+      toast.error('Something went wrong')
+    } finally {
+      setLoading(false)
+    }
   }
 
   return (
-    <>
-      <style>{`
-        .auth-split { display: flex; flex-direction: row; min-height: 100vh; font-family: var(--font-fustat, system-ui, sans-serif); }
-        .auth-left  { flex: 0 0 48%; min-width: 420px; background: #fff; display: flex; flex-direction: column; padding: 36px 56px; }
-        .auth-right { flex: 1; background: ${B}; overflow: hidden; }
-        @media (max-width: 800px) {
-          .auth-split { flex-direction: column; }
-          .auth-left  { flex: 1; min-width: 100%; padding: 24px 20px; }
-          .auth-right { display: none; }
-        }
-      `}</style>
-      <div className="auth-split">
+    <div className="h-[100dvh] flex flex-col md:flex-row font-geist w-[100dvw] bg-background text-foreground">
+      {/* Left column: sign-up form */}
+      <section className="flex-1 flex items-center justify-center p-8">
+        <div className="w-full max-w-md">
+          <div className="flex flex-col gap-6">
+            <h1 className="animate-element animate-delay-100 text-4xl md:text-5xl font-semibold leading-tight">
+              <span className="font-light text-foreground tracking-tighter">Create account</span>
+            </h1>
+            <p className="animate-element animate-delay-200 text-muted-foreground">
+              Free forever · No credit card required · Start invoicing in 60 seconds
+            </p>
 
-        {/* ── Left: white form ── */}
-        <div className="auth-left">
-        <Link href="/login" style={{ display: 'inline-flex', alignItems: 'center', gap: 6, fontSize: 13, color: '#6b7280', textDecoration: 'none', marginBottom: 'auto' }}>
-          <ArrowLeft size={14} /> Back to sign in
-        </Link>
+            <form className="space-y-5" onSubmit={handleSignUp}>
+              <div className="animate-element animate-delay-300">
+                <label className="text-sm font-medium text-muted-foreground">Full Name</label>
+                <div className="rounded-2xl border border-border bg-foreground/5 backdrop-blur-sm transition-colors focus-within:border-violet-400/70 focus-within:bg-violet-500/10">
+                  <input name="name" type="text" placeholder="Enter your full name" required minLength={2} maxLength={50} className="w-full bg-transparent text-sm p-4 rounded-2xl focus:outline-none" />
+                </div>
+              </div>
 
-        <div style={{ flex: 1, display: 'flex', flexDirection: 'column', justifyContent: 'center', maxWidth: 340, width: '100%', margin: '0 auto', paddingBottom: 64 }}>
-          <div style={{ width: 40, height: 40, border: '1.5px solid #111827', borderRadius: 10, display: 'flex', alignItems: 'center', justifyContent: 'center', marginBottom: 28 }}>
-            <Zap size={18} color="#111827" />
-          </div>
+              <div className="animate-element animate-delay-400">
+                <label className="text-sm font-medium text-muted-foreground">Email Address</label>
+                <div className="rounded-2xl border border-border bg-foreground/5 backdrop-blur-sm transition-colors focus-within:border-violet-400/70 focus-within:bg-violet-500/10">
+                  <input name="email" type="email" placeholder="Enter your email address" required maxLength={100} className="w-full bg-transparent text-sm p-4 rounded-2xl focus:outline-none" />
+                </div>
+              </div>
 
-          <h1 style={{ fontSize: 26, fontWeight: 800, color: '#111827', margin: '0 0 8px' }}>Create your account</h1>
-          <p style={{ fontSize: 14, color: '#9ca3af', margin: '0 0 36px', lineHeight: 1.6 }}>Free forever · No credit card required</p>
+              <div className="animate-element animate-delay-500">
+                <label className="text-sm font-medium text-muted-foreground">Password</label>
+                <div className="rounded-2xl border border-border bg-foreground/5 backdrop-blur-sm transition-colors focus-within:border-violet-400/70 focus-within:bg-violet-500/10">
+                  <div className="relative">
+                    <input name="password" type={showPassword ? 'text' : 'password'} placeholder="Password (min. 6 chars)" required minLength={6} maxLength={100} className="w-full bg-transparent text-sm p-4 pr-12 rounded-2xl focus:outline-none" />
+                    <button type="button" onClick={() => setShowPassword(!showPassword)} className="absolute inset-y-0 right-3 flex items-center">
+                      {showPassword ? <EyeOff className="w-5 h-5 text-muted-foreground hover:text-foreground transition-colors" /> : <Eye className="w-5 h-5 text-muted-foreground hover:text-foreground transition-colors" />}
+                    </button>
+                  </div>
+                </div>
+              </div>
 
-          <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
-            <input
-              type="text" placeholder="Full name" value={form.name} required minLength={2} maxLength={50}
-              onChange={e => setForm({ ...form, name: e.target.value })}
-              style={inp}
-              onFocus={e => { e.currentTarget.style.border = '1px solid #a28ef9'; e.currentTarget.style.boxShadow = '0 0 0 3px rgba(162,142,249,.15)' }}
-              onBlur={e  => { e.currentTarget.style.border = '1px solid #e5e7eb'; e.currentTarget.style.boxShadow = 'none' }}
-            />
-            <input
-              type="email" placeholder="Enter your email" value={form.email} required maxLength={100}
-              onChange={e => setForm({ ...form, email: e.target.value })}
-              style={inp}
-              onFocus={e => { e.currentTarget.style.border = '1px solid #a28ef9'; e.currentTarget.style.boxShadow = '0 0 0 3px rgba(162,142,249,.15)' }}
-              onBlur={e  => { e.currentTarget.style.border = '1px solid #e5e7eb'; e.currentTarget.style.boxShadow = 'none' }}
-            />
-            <div style={{ position: 'relative' }}>
-              <input
-                type={showPw ? 'text' : 'password'} placeholder="Password (min. 6 chars)" value={form.password} required minLength={6} maxLength={100}
-                onChange={e => setForm({ ...form, password: e.target.value })}
-                style={{ ...inp, paddingRight: 36 }}
-                onFocus={e => { e.currentTarget.style.border = '1px solid #a28ef9'; e.currentTarget.style.boxShadow = '0 0 0 3px rgba(162,142,249,.15)' }}
-                onBlur={e  => { e.currentTarget.style.border = '1px solid #e5e7eb'; e.currentTarget.style.boxShadow = 'none' }}
-              />
-              <button type="button" onClick={() => setShowPw(!showPw)}
-                style={{ position: 'absolute', right: 10, top: '50%', transform: 'translateY(-50%)', background: 'none', border: 'none', cursor: 'pointer', color: '#9ca3af', padding: 0, display: 'flex' }}>
-                {showPw ? <EyeOff size={15} /> : <Eye size={15} />}
+              <button type="submit" disabled={loading} className="animate-element animate-delay-600 w-full rounded-2xl py-4 font-semibold transition-all hover:opacity-90 disabled:opacity-60" style={{ backgroundColor: 'rgba(255,255,255,0.97)', color: '#18181b' }}>
+                {loading ? 'Creating account…' : 'Create Account'}
               </button>
+            </form>
+
+            <div className="animate-element animate-delay-700 relative flex items-center justify-center">
+              <span className="w-full border-t border-border"></span>
+              <span className="px-4 text-sm text-muted-foreground bg-background absolute">Or</span>
             </div>
 
-            <button type="submit" disabled={loading}
-              style={{ width: '100%', height: 46, borderRadius: 8, border: 'none', background: '#111827', color: '#fff', fontSize: 14, fontWeight: 700, cursor: 'pointer', marginTop: 8, opacity: loading ? 0.7 : 1, transition: 'opacity .2s' }}>
-              {loading ? 'Creating account…' : 'Continue'}
-            </button>
-          </form>
+            <p className="animate-element animate-delay-800 text-center text-sm text-muted-foreground">
+              Already have an account?{' '}
+              <Link href="/login" className="text-violet-400 hover:underline transition-colors font-medium">
+                Sign in
+              </Link>
+            </p>
 
-          <div style={{ display: 'flex', alignItems: 'center', gap: 10, margin: '28px 0' }}>
-            <div style={{ flex: 1, height: 1, background: '#f3f4f6' }} />
-            <span style={{ fontSize: 11, color: '#9ca3af', fontWeight: 600, letterSpacing: 1 }}>OR</span>
-            <div style={{ flex: 1, height: 1, background: '#f3f4f6' }} />
+            <p className="animate-element animate-delay-900 text-center text-xs text-muted-foreground/60">
+              By continuing you agree to our Terms &amp; Privacy Policy.
+            </p>
           </div>
-
-          <p style={{ fontSize: 13, color: '#6b7280', textAlign: 'center', margin: 0 }}>
-            Already have an account?{' '}
-            <Link href="/login" style={{ color: '#a28ef9', fontWeight: 700, textDecoration: 'none' }}>Sign in</Link>
-          </p>
-
-          <p style={{ fontSize: 11, color: '#d1d5db', textAlign: 'center', marginTop: 12 }}>
-            By continuing you agree to our Terms &amp; Privacy Policy.
-          </p>
         </div>
-      </div>
+      </section>
 
-      {/* ── Right: geometric mosaic ── */}
-      <div className="auth-right">
-        <GeometricGrid />
-      </div>
+      {/* Right column: hero image + testimonials */}
+      <section className="hidden md:block flex-1 relative p-4">
+        <div
+          className="animate-slide-right animate-delay-300 absolute inset-4 rounded-3xl bg-cover bg-center"
+          style={{ backgroundImage: `url(https://images.unsplash.com/photo-1553877522-43269d4ea984?w=2160&q=80)` }}
+        ></div>
+        {testimonials.length > 0 && (
+          <div className="absolute bottom-8 left-1/2 -translate-x-1/2 flex gap-4 px-8 w-full justify-center">
+            <div className={`animate-testimonial animate-delay-1000 flex items-start gap-3 rounded-3xl bg-card/40 backdrop-blur-xl border border-white/10 p-5 w-64`}>
+              <img src={testimonials[0].avatarSrc} className="h-10 w-10 object-cover rounded-2xl" alt="avatar" />
+              <div className="text-sm leading-snug">
+                <p className="flex items-center gap-1 font-medium">{testimonials[0].name}</p>
+                <p className="text-muted-foreground">{testimonials[0].handle}</p>
+                <p className="mt-1 text-foreground/80">{testimonials[0].text}</p>
+              </div>
+            </div>
+            {testimonials[1] && (
+              <div className="hidden xl:flex">
+                <div className={`animate-testimonial animate-delay-1200 flex items-start gap-3 rounded-3xl bg-card/40 backdrop-blur-xl border border-white/10 p-5 w-64`}>
+                  <img src={testimonials[1].avatarSrc} className="h-10 w-10 object-cover rounded-2xl" alt="avatar" />
+                  <div className="text-sm leading-snug">
+                    <p className="flex items-center gap-1 font-medium">{testimonials[1].name}</p>
+                    <p className="text-muted-foreground">{testimonials[1].handle}</p>
+                    <p className="mt-1 text-foreground/80">{testimonials[1].text}</p>
+                  </div>
+                </div>
+              </div>
+            )}
+          </div>
+        )}
+      </section>
     </div>
-    </>
   )
 }

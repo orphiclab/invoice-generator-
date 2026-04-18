@@ -279,7 +279,7 @@ export default function InvoiceDetailPage() {
       <div className="flex flex-col gap-3 mb-6">
         <div className="flex items-center gap-3">
           <Link href="/invoices">
-            <button className="p-2 rounded-xl hover:bg-slate-100 transition-colors" style={{ color: '#64748B' }}>
+            <button className="p-2 rounded-2xl hover:bg-slate-100 transition-colors" style={{ color: '#64748B' }}>
               <ArrowLeft className="w-5 h-5" />
             </button>
           </Link>
@@ -300,7 +300,7 @@ export default function InvoiceDetailPage() {
               value={invoice.status}
               onChange={(e) => updateStatus(e.target.value)}
               disabled={updatingStatus}
-              className="w-full h-9 px-3 rounded-xl text-xs font-semibold border outline-none transition-all cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
+              className="w-full h-9 px-3 rounded-2xl text-xs font-semibold border outline-none transition-all cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
               style={{
                 background: '#ffffff',
                 borderColor: '#e5e7eb',
@@ -323,21 +323,21 @@ export default function InvoiceDetailPage() {
             </select>
           </div>
           <button onClick={openWhatsappModal} title="Send via WhatsApp"
-            className="flex items-center gap-1.5 px-2.5 sm:px-3 py-1.5 rounded-xl text-xs font-semibold transition-all hover:bg-green-500/10 flex-shrink-0 whitespace-nowrap"
+            className="flex items-center gap-1.5 px-2.5 sm:px-3 py-1.5 rounded-2xl text-xs font-semibold transition-all hover:bg-green-500/10 flex-shrink-0 whitespace-nowrap"
             style={{ color: '#16a34a', border: '1px solid rgba(22,163,74,0.3)' }}>
             <MessageCircle className="w-3.5 h-3.5" /> <span className="hidden sm:inline">WhatsApp</span><span className="sm:hidden">WA</span>
           </button>
-          <button onClick={copyShareLink} title="Copy share link" className="p-2 rounded-xl hover:bg-gray-50 transition-colors flex-shrink-0" style={{ color: '#6b7280' }}>
+          <button onClick={copyShareLink} title="Copy share link" className="p-2 rounded-2xl hover:bg-gray-50 transition-colors flex-shrink-0" style={{ color: '#6b7280' }}>
             <Share2 className="w-4 h-4" />
           </button>
           {/* Preview button */}
           <button onClick={() => setShowPreview(true)} title="Preview invoice PDF"
-            className="flex items-center gap-1.5 px-2.5 sm:px-3 py-1.5 rounded-xl text-xs font-semibold transition-all hover:bg-emerald-500/10 flex-shrink-0 whitespace-nowrap"
+            className="flex items-center gap-1.5 px-2.5 sm:px-3 py-1.5 rounded-2xl text-xs font-semibold transition-all hover:bg-emerald-500/10 flex-shrink-0 whitespace-nowrap"
             style={{ color: '#10B981', border: '1px solid rgba(16,185,129,0.3)' }}>
             <Eye className="w-3.5 h-3.5" /> <span className="hidden sm:inline">Preview</span>
           </button>
           {/* Download with template picker */}
-          <div className="flex items-center rounded-xl overflow-hidden flex-shrink-0" style={{ border: '1px solid rgba(123,97,255,0.4)' }}>
+          <div className="flex items-center rounded-2xl overflow-hidden flex-shrink-0" style={{ border: '1px solid rgba(123,97,255,0.4)' }}>
             <button onClick={downloadPDF} title="Download PDF"
               className="flex items-center gap-1.5 px-3 py-1.5 text-xs font-semibold transition-all hover:bg-gray-50"
               style={{ color: '#a28ef9' }}>
@@ -364,21 +364,21 @@ export default function InvoiceDetailPage() {
             </button>
           </div>
           <button onClick={() => { setEmailForm(f => ({ ...f, to: invoice.client.email, subject: `Invoice ${invoice.invoiceNo}` })); setEmailModal(true) }}
-            title="Send email" className="p-2 rounded-xl hover:bg-blue-500/10 transition-colors flex-shrink-0" style={{ color: '#3b82f6' }}>
+            title="Send email" className="p-2 rounded-2xl hover:bg-blue-500/10 transition-colors flex-shrink-0" style={{ color: '#3b82f6' }}>
             <Mail className="w-4 h-4" />
           </button>
-          <button onClick={duplicateInvoice} disabled={duplicating} title="Duplicate invoice" className="p-2 rounded-xl hover:bg-gray-50 transition-colors flex-shrink-0" style={{ color: '#6b7280' }}>
+          <button onClick={duplicateInvoice} disabled={duplicating} title="Duplicate invoice" className="p-2 rounded-2xl hover:bg-gray-50 transition-colors flex-shrink-0" style={{ color: '#6b7280' }}>
             <Copy className="w-4 h-4" />
           </button>
           <Link href={`/invoices/${id}/edit`}>
-            <button className="p-2 rounded-xl hover:bg-gray-50 transition-colors flex-shrink-0" style={{ color: '#6b7280' }}><Edit2 className="w-4 h-4" /></button>
+            <button className="p-2 rounded-2xl hover:bg-gray-50 transition-colors flex-shrink-0" style={{ color: '#6b7280' }}><Edit2 className="w-4 h-4" /></button>
           </Link>
         </div>
         {/* Template dropdown — rendered OUTSIDE overflow container */}
         {showTemplateMenu && (
           <>
             <div className="fixed inset-0 z-40" onClick={() => setShowTemplateMenu(false)} />
-            <div className="absolute right-4 top-[110px] z-50 rounded-xl shadow-2xl py-1" style={{ background: '#ffffff', border: '1px solid #e5e7eb', minWidth: 200, maxHeight: 420, overflowY: 'auto' }}>
+            <div className="absolute right-4 top-[110px] z-50 rounded-2xl shadow-2xl py-1" style={{ background: '#ffffff', border: '1px solid #e5e7eb', minWidth: 200, maxHeight: 420, overflowY: 'auto' }}>
               <p className="text-[10px] font-bold px-3 pt-2 pb-1 sticky top-0" style={{ color: '#9ca3af', background: '#ffffff' }}>Choose Template</p>
               {([
                 { id: 'green',    label: '🌿 Green Modern'  },
@@ -412,7 +412,7 @@ export default function InvoiceDetailPage() {
         <div className="px-4 sm:px-10 py-6 sm:py-8 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4" style={{ background: 'linear-gradient(135deg, #1a2744 0%, #0f172a 100%)' }}>
           <div>
             <div className="flex items-center gap-3 mb-3">
-              <div className="w-10 h-10 rounded-xl flex items-center justify-center flex-shrink-0" style={{ background: 'linear-gradient(135deg, #a28ef9, #60A5FA)' }}>
+              <div className="w-10 h-10 rounded-2xl flex items-center justify-center flex-shrink-0" style={{ background: 'linear-gradient(135deg, #a28ef9, #60A5FA)' }}>
                 <Building2 className="text-gray-900" />
               </div>
               <div>
@@ -509,13 +509,13 @@ export default function InvoiceDetailPage() {
           {/* Notes & Bank Details */}
           <div className="flex-1 w-full space-y-4">
             {invoice.notes && (
-              <div className="p-4 rounded-xl border-l-4" style={{ background: '#f9fafb', borderLeftColor: '#6366f1' }}>
+              <div className="p-4 rounded-2xl border-l-4" style={{ background: '#f9fafb', borderLeftColor: '#6366f1' }}>
                 <p className="text-xs font-bold uppercase tracking-wider mb-2" style={{ color: '#9ca3af' }}>Notes & Payment Terms</p>
                 <p className="text-sm leading-relaxed whitespace-pre-line" style={{ color: '#6b7280' }}>{invoice.notes}</p>
               </div>
             )}
             {invoice.bankDetails && (
-              <div className="p-4 rounded-xl border-l-4" style={{ background: '#f9fafb', borderLeftColor: '#10B981' }}>
+              <div className="p-4 rounded-2xl border-l-4" style={{ background: '#f9fafb', borderLeftColor: '#10B981' }}>
                 <p className="text-xs font-bold uppercase tracking-wider mb-2" style={{ color: '#9ca3af' }}>Bank Details</p>
                 <p className="text-sm leading-relaxed whitespace-pre-line" style={{ color: '#6b7280' }}>{invoice.bankDetails}</p>
               </div>
@@ -551,7 +551,7 @@ export default function InvoiceDetailPage() {
 
         {/* Paid stamp */}
         {invoice.status === 'PAID' && (
-          <div className="mx-10 mb-8 flex items-center justify-center gap-2 py-3 rounded-xl" style={{ background: 'rgba(34,197,94,0.08)', border: '2px solid rgba(34,197,94,0.3)' }}>
+          <div className="mx-10 mb-8 flex items-center justify-center gap-2 py-3 rounded-2xl" style={{ background: 'rgba(34,197,94,0.08)', border: '2px solid rgba(34,197,94,0.3)' }}>
             <Check className="w-5 h-5" style={{ color: '#16a34a' }} />
             <span className="font-bold text-lg tracking-widest uppercase" style={{ color: '#16a34a' }}>Paid</span>
           </div>
@@ -594,7 +594,7 @@ export default function InvoiceDetailPage() {
           ) : (
             <div className="space-y-2">
               {payments.map(p => (
-                <div key={p.id} className="flex items-center justify-between px-3 py-2.5 rounded-xl" style={{ background: '#f9fafb' }}>
+                <div key={p.id} className="flex items-center justify-between px-3 py-2.5 rounded-2xl" style={{ background: '#f9fafb' }}>
                   <div className="flex items-center gap-3">
                     <div className="w-7 h-7 rounded-lg flex items-center justify-center" style={{ background: 'rgba(16,185,129,0.15)' }}>
                       <Check className="w-3.5 h-3.5" style={{ color: '#10B981' }} />
@@ -629,7 +629,7 @@ export default function InvoiceDetailPage() {
               </p>
             )}
             <button onClick={sendReminder} disabled={sendingReminder || invoice.status === 'PAID'}
-              className="w-full flex items-center justify-center gap-2 py-2 rounded-xl text-xs font-semibold transition-all disabled:opacity-40"
+              className="w-full flex items-center justify-center gap-2 py-2 rounded-2xl text-xs font-semibold transition-all disabled:opacity-40"
               style={{ background: 'rgba(245,158,11,0.15)', border: '1px solid rgba(245,158,11,0.3)', color: '#F59E0B' }}>
               <Send className="w-3 h-3" />
               {sendingReminder ? 'Sending...' : 'Send Reminder'}
@@ -658,7 +658,7 @@ export default function InvoiceDetailPage() {
                   <span className="text-xs" style={{ color: '#6b7280' }}>% / month</span>
                 </div>
                 <button onClick={applyLateFee} disabled={applyingLateFee || invoice.status === 'PAID' || invoice.lateFeeApplied}
-                  className="w-full flex items-center justify-center gap-2 py-2 rounded-xl text-xs font-semibold transition-all disabled:opacity-40"
+                  className="w-full flex items-center justify-center gap-2 py-2 rounded-2xl text-xs font-semibold transition-all disabled:opacity-40"
                   style={{ background: 'rgba(239,68,68,0.12)', border: '1px solid rgba(239,68,68,0.3)', color: '#EF4444' }}>
                   <AlertTriangle className="w-3 h-3" />
                   {applyingLateFee ? 'Applying...' : 'Apply Late Fee'}
@@ -718,10 +718,10 @@ export default function InvoiceDetailPage() {
         }} className="flex gap-2 mb-4">
           <input value={commentText} onChange={e => setCommentText(e.target.value)}
             placeholder="Add a note... (visible only to your team)"
-            className="flex-1 px-3 py-2 rounded-xl text-sm outline-none"
+            className="flex-1 px-3 py-2 rounded-2xl text-sm outline-none"
             style={{ background: '#f9fafb', border: '1px solid #e5e7eb', color: '#111827' }} />
           <button type="submit" disabled={postingComment || !commentText.trim()}
-            className="px-4 py-2 rounded-xl text-xs font-semibold text-white transition-all hover:opacity-90 disabled:opacity-40"
+            className="px-4 py-2 rounded-2xl text-xs font-semibold text-white transition-all hover:opacity-90 disabled:opacity-40"
             style={{ background: '#a28ef9' }}>
             {postingComment ? '...' : 'Post'}
           </button>
@@ -853,7 +853,7 @@ export default function InvoiceDetailPage() {
           <div className="flex items-center justify-between px-5 py-4 border-b flex-shrink-0"
             style={{ borderColor: 'rgba(255,255,255,0.07)', background: 'linear-gradient(135deg, #0d1117, #111827)' }}>
             <div className="flex items-center gap-3">
-              <div className="w-9 h-9 rounded-xl flex items-center justify-center"
+              <div className="w-9 h-9 rounded-2xl flex items-center justify-center"
                 style={{ background: 'linear-gradient(135deg, #25d366, #128c7e)' }}>
                 <MessageCircle className="w-4.5 h-4.5 text-white" style={{ width: 18, height: 18 }} />
               </div>
@@ -874,7 +874,7 @@ export default function InvoiceDetailPage() {
               <label className="text-xs font-semibold block mb-1.5" style={{ color: '#9ca3af' }}>WhatsApp Number</label>
               <div className="flex gap-2">
                 <select value={waCountryCode} onChange={e => setWaCountryCode(e.target.value)}
-                  className="h-10 px-2 rounded-xl text-xs font-semibold outline-none"
+                  className="h-10 px-2 rounded-2xl text-xs font-semibold outline-none"
                   style={{ background: '#1a2035', border: '1px solid rgba(255,255,255,0.08)', color: '#e5e7eb', minWidth: 80 }}>
                   {['+91 🇮🇳','+94 🇱🇰','+1 🇺🇸','+44 🇬🇧','+971 🇦🇪','+60 🇲🇾','+65 🇸🇬','+61 🇦🇺','+92 🇵🇰','+880 🇧🇩'].map(c => {
                     const code = c.split(' ')[0]
@@ -886,7 +886,7 @@ export default function InvoiceDetailPage() {
                   placeholder="Phone number"
                   value={waPhone}
                   onChange={e => setWaPhone(e.target.value.replace(/[^\d\s\-]/g, ''))}
-                  className="flex-1 h-10 px-3 rounded-xl text-sm outline-none"
+                  className="flex-1 h-10 px-3 rounded-2xl text-sm outline-none"
                   style={{ background: '#1a2035', border: '1px solid rgba(255,255,255,0.08)', color: '#e5e7eb' }}
                 />
               </div>
@@ -901,7 +901,7 @@ export default function InvoiceDetailPage() {
               <div className="grid grid-cols-3 gap-2">
                 {([['friendly','😊 Friendly'],['formal','🤝 Formal'],['reminder','⚠️ Reminder']] as const).map(([id, label]) => (
                   <button key={id} onClick={() => { setWaMsgTemplate(id); setWaMessage(buildWaMessage(id, invoice)) }}
-                    className="py-2 px-2 rounded-xl text-[11px] font-semibold transition-all"
+                    className="py-2 px-2 rounded-2xl text-[11px] font-semibold transition-all"
                     style={waMsgTemplate === id
                       ? { background: 'rgba(37,211,102,0.2)', border: '1px solid rgba(37,211,102,0.5)', color: '#25d366' }
                       : { background: '#1a2035', border: '1px solid rgba(255,255,255,0.06)', color: '#9ca3af' }}>
@@ -925,7 +925,7 @@ export default function InvoiceDetailPage() {
                 value={waMessage}
                 onChange={e => setWaMessage(e.target.value)}
                 rows={7}
-                className="w-full px-3 py-2.5 rounded-xl text-sm resize-none outline-none leading-relaxed"
+                className="w-full px-3 py-2.5 rounded-2xl text-sm resize-none outline-none leading-relaxed"
                 style={{ background: '#1a2035', border: '1px solid rgba(255,255,255,0.08)', color: '#e5e7eb', fontFamily: 'inherit' }}
               />
               <p className="text-[10px] mt-1" style={{ color: '#4b5563' }}>{waMessage.length} chars · *text* = bold in WhatsApp</p>
@@ -934,7 +934,7 @@ export default function InvoiceDetailPage() {
             {/* WhatsApp preview bubble */}
             <div>
               <label className="text-xs font-semibold block mb-2" style={{ color: '#9ca3af' }}>Preview</label>
-              <div className="rounded-xl p-3" style={{ background: '#0a1628' }}>
+              <div className="rounded-2xl p-3" style={{ background: '#0a1628' }}>
                 <div className="inline-block max-w-[85%] px-3 py-2 rounded-2xl rounded-tl-sm text-sm leading-relaxed whitespace-pre-wrap break-words"
                   style={{ background: '#1f2b1f', color: '#e5e7eb', fontSize: 12.5 }}>
                   {waMessage || <span style={{ color: '#4b5563' }}>Your message will appear here…</span>}
@@ -947,10 +947,10 @@ export default function InvoiceDetailPage() {
           <div className="flex-shrink-0 px-5 py-4 border-t flex gap-3"
             style={{ borderColor: 'rgba(255,255,255,0.07)', background: '#0d1117' }}>
             <button onClick={() => setWhatsappModal(false)}
-              className="flex-1 h-10 rounded-xl text-sm font-semibold transition-all hover:bg-white/5"
+              className="flex-1 h-10 rounded-2xl text-sm font-semibold transition-all hover:bg-white/5"
               style={{ border: '1px solid rgba(255,255,255,0.08)', color: '#9ca3af' }}>Cancel</button>
             <button onClick={sendViaWhatsApp}
-              className="flex-1 h-10 rounded-xl text-sm font-bold text-white flex items-center justify-center gap-2 transition-all hover:opacity-90 active:scale-[0.97]"
+              className="flex-1 h-10 rounded-2xl text-sm font-bold text-white flex items-center justify-center gap-2 transition-all hover:opacity-90 active:scale-[0.97]"
               style={{ background: 'linear-gradient(135deg, #25d366, #128c7e)' }}>
               <MessageCircle className="w-4 h-4" /> Open in WhatsApp
             </button>

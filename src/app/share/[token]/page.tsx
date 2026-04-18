@@ -181,7 +181,7 @@ export default function SharePage() {
           </div>
 
           {/* Dates */}
-          <div className="flex gap-8 mb-8 p-4 rounded-xl" style={{ background: 'rgba(255,255,255,0.03)' }}>
+          <div className="flex gap-8 mb-8 p-4 rounded-2xl" style={{ background: 'rgba(255,255,255,0.03)' }}>
             <div><p className="text-xs" style={{ color: 'hsl(215 20% 45%)' }}>Issue Date</p><p className="text-sm font-medium text-white mt-1">{new Date(invoice.issueDate).toLocaleDateString('en-IN', { day: 'numeric', month: 'long', year: 'numeric' })}</p></div>
             <div><p className="text-xs" style={{ color: 'hsl(215 20% 45%)' }}>Due Date</p><p className="text-sm font-medium text-white mt-1">{new Date(invoice.dueDate).toLocaleDateString('en-IN', { day: 'numeric', month: 'long', year: 'numeric' })}</p></div>
           </div>
@@ -219,7 +219,7 @@ export default function SharePage() {
           </div>
 
           {invoice.notes && (
-            <div className="p-4 rounded-xl border" style={{ borderColor: 'hsl(222 30% 18%)', background: 'rgba(255,255,255,0.02)' }}>
+            <div className="p-4 rounded-2xl border" style={{ borderColor: 'hsl(222 30% 18%)', background: 'rgba(255,255,255,0.02)' }}>
               <p className="text-xs font-semibold uppercase tracking-wider mb-2" style={{ color: 'hsl(215 20% 45%)' }}>Notes</p>
               <p className="text-sm" style={{ color: 'hsl(215 20% 65%)' }}>{invoice.notes}</p>
             </div>

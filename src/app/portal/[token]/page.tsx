@@ -89,7 +89,7 @@ export default function ClientPortalPage() {
             { label: 'Outstanding', value: `₹${outstanding.toLocaleString('en-IN', { maximumFractionDigits: 0 })}`, icon: Clock, color: 'hsl(38 92% 50%)' },
           ].map(({ label, value, icon: Icon, color }) => (
             <div key={label} className="rounded-2xl p-5" style={{ background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(255,255,255,0.08)' }}>
-              <div className="p-2 rounded-xl w-fit mb-3" style={{ background: `${color}20` }}>
+              <div className="p-2 rounded-2xl w-fit mb-3" style={{ background: `${color}20` }}>
                 <Icon className="w-4 h-4" style={{ color }} />
               </div>
               <p className="text-xl font-bold text-white">{value}</p>
@@ -99,7 +99,7 @@ export default function ClientPortalPage() {
         </div>
 
         {/* Tabs */}
-        <div className="flex gap-1 p-1 rounded-xl w-fit" style={{ background: 'rgba(255,255,255,0.05)' }}>
+        <div className="flex gap-1 p-1 rounded-2xl w-fit" style={{ background: 'rgba(255,255,255,0.05)' }}>
           <button style={tabStyle(tab === 'invoices')} onClick={() => setTab('invoices')}>Invoices ({data.invoices.length})</button>
           <button style={tabStyle(tab === 'estimates')} onClick={() => setTab('estimates')}>Estimates ({data.estimates.length})</button>
         </div>
@@ -113,7 +113,7 @@ export default function ClientPortalPage() {
               </div>
             ) : data.invoices.map(inv => (
               <div key={inv.id} className="flex items-center gap-4 p-4 rounded-2xl" style={{ background: 'rgba(255,255,255,0.03)', border: '1px solid rgba(255,255,255,0.07)' }}>
-                <div className="p-2.5 rounded-xl" style={{ background: `${statusColor[inv.status]}20` }}>
+                <div className="p-2.5 rounded-2xl" style={{ background: `${statusColor[inv.status]}20` }}>
                   <FileText className="w-4 h-4" style={{ color: statusColor[inv.status] }} />
                 </div>
                 <div className="flex-1">

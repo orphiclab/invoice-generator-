@@ -96,7 +96,7 @@ export function BankAccountManager() {
             <div>
               <Label className="text-xs mb-1.5 block" style={{ color: '#6b7280' }}>Bank Details (This text is appended to your invoice)</Label>
               <textarea required rows={3} value={form.details} onChange={e => setForm({ ...form, details: e.target.value })}
-                className="w-full px-3 py-2 rounded-xl text-sm outline-none resize-none" 
+                className="w-full px-3 py-2 rounded-2xl text-sm outline-none resize-none" 
                 style={{ background: '#ffffff', border: '1px solid #d1d5db', color: '#111827' }} 
                 placeholder="Bank Name: Example Bank&#10;Account Name: Acme Corp&#10;Account No: 12345678" />
             </div>
@@ -107,11 +107,11 @@ export function BankAccountManager() {
             </div>
           </div>
           <div className="flex gap-2 pt-2">
-            <Button type="submit" disabled={saving} className="h-9 px-6 text-sm font-semibold rounded-xl" style={{ background: 'linear-gradient(135deg, #6B50EE, #3B82F6)', color: 'white' }}>
+            <Button type="submit" disabled={saving} className="h-9 px-6 text-sm font-semibold rounded-2xl" style={{ background: 'linear-gradient(135deg, #6B50EE, #3B82F6)', color: 'white' }}>
               {saving ? 'Saving...' : (editingId ? 'Update Account' : 'Add Account')}
             </Button>
             {editingId && (
-              <Button type="button" variant="outline" onClick={reset} className="h-9 px-6 text-sm font-medium rounded-xl border-gray-300 hover:bg-gray-50" style={{ color: '#374151' }}>
+              <Button type="button" variant="outline" onClick={reset} className="h-9 px-6 text-sm font-medium rounded-2xl border-gray-300 hover:bg-gray-50" style={{ color: '#374151' }}>
                 Cancel
               </Button>
             )}
@@ -141,10 +141,10 @@ export function BankAccountManager() {
                   <p className="text-xs whitespace-pre-line leading-relaxed" style={{ color: '#6b7280' }}>{a.details}</p>
                 </div>
                 <div className="flex gap-1 ml-4 flex-shrink-0">
-                  <button onClick={() => edit(a)} type="button" className="p-2 rounded-xl hover:bg-gray-50 transition-colors" style={{ color: '#6b7280' }}>
+                  <button onClick={() => edit(a)} type="button" className="p-2 rounded-2xl hover:bg-gray-50 transition-colors" style={{ color: '#6b7280' }}>
                     <PenSquare className="w-4 h-4" />
                   </button>
-                  <button onClick={() => handleDelete(a.id)} type="button" className="p-2 rounded-xl hover:bg-red-50 transition-colors" style={{ color: '#ef4444' }}>
+                  <button onClick={() => handleDelete(a.id)} type="button" className="p-2 rounded-2xl hover:bg-red-50 transition-colors" style={{ color: '#ef4444' }}>
                     <Trash2 className="w-4 h-4" />
                   </button>
                 </div>

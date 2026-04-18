@@ -122,7 +122,7 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
     <div className="flex flex-col h-full py-5 px-3">
       {/* Logo */}
       <div className="flex items-center gap-2.5 px-3 mb-7">
-        <div className="w-9 h-9 rounded-xl flex items-center justify-center flex-shrink-0"
+        <div className="w-9 h-9 rounded-2xl flex items-center justify-center flex-shrink-0"
           style={{ background: '#222222' }}>
           <Zap className="w-4 h-4" style={{ color: '#a4f5a6' }} />
         </div>
@@ -139,7 +139,7 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
 
       {/* New Invoice button */}
       <Link href="/invoices/new" className="mb-6 px-1">
-        <button className="w-full h-10 sm:h-9 rounded-xl text-xs font-semibold flex items-center justify-center gap-1.5 transition-all hover:opacity-90 active:scale-[0.97]"
+        <button className="w-full h-10 sm:h-9 rounded-2xl text-xs font-semibold flex items-center justify-center gap-1.5 transition-all hover:opacity-90 active:scale-[0.97]"
           style={{ background: '#a28ef9', color: '#ffffff', boxShadow: '0 4px 14px rgba(162,142,249,0.35)' }}>
           <Plus className="w-3.5 h-3.5" /> New Invoice
         </button>
@@ -156,7 +156,7 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
                 const active = pathname === href || (href !== '/dashboard' && pathname.startsWith(href))
                 return (
                   <Link key={href} href={href}
-                    className="flex items-center gap-2.5 px-3 py-2.5 sm:py-2 rounded-xl text-[13px] font-semibold transition-all duration-150 active:scale-[0.97]"
+                    className="flex items-center gap-2.5 px-3 py-2.5 sm:py-2 rounded-2xl text-[13px] font-semibold transition-all duration-150 active:scale-[0.97]"
                     style={active
                       ? { background: ACTIVE_BG, color: ACTIVE_COLOR }
                       : { color: INACTIVE_COLOR }}>
@@ -176,7 +176,7 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
       {/* Bottom — Logout only */}
       <div className="pt-3 mt-2" style={{ borderTop: `1px solid ${BORDER_COLOR}` }}>
         <button onClick={handleLogout}
-          className="flex items-center gap-2.5 px-3 py-2.5 sm:py-2 rounded-xl text-[13px] font-semibold w-full transition-colors hover:bg-gray-50 dark:hover:bg-gray-800 active:scale-[0.97]"
+          className="flex items-center gap-2.5 px-3 py-2.5 sm:py-2 rounded-2xl text-[13px] font-semibold w-full transition-colors hover:bg-gray-50 dark:hover:bg-gray-800 active:scale-[0.97]"
           style={{ color: INACTIVE_COLOR }}>
           <LogOut className="w-4 h-4" /> Log out
         </button>
@@ -222,7 +222,7 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
         {/* Topbar */}
         <header className="flex items-center gap-3 sm:gap-4 px-4 sm:px-6 h-[56px] sm:h-[60px] flex-shrink-0 relative z-20"
           style={{ background: TOPBAR_BG, borderBottom: `1px solid ${BORDER_COLOR}` }}>
-          <button className="lg:hidden p-2 -ml-1 rounded-xl hover:bg-gray-100 dark:hover:bg-gray-800 active:scale-95 transition-transform" onClick={() => setSidebarOpen(true)}
+          <button className="lg:hidden p-2 -ml-1 rounded-2xl hover:bg-gray-100 dark:hover:bg-gray-800 active:scale-95 transition-transform" onClick={() => setSidebarOpen(true)}
             style={{ color: INACTIVE_COLOR }}>
             <Menu className="w-5 h-5" />
           </button>
@@ -237,7 +237,7 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
           <div className="hidden sm:block">
             <GlobalSearch />
           </div>
-          <button onClick={toggleTheme} className="p-2 rounded-xl hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors" title={theme === 'dark' ? 'Switch to light' : 'Switch to dark'}>
+          <button onClick={toggleTheme} className="p-2 rounded-2xl hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors" title={theme === 'dark' ? 'Switch to light' : 'Switch to dark'}>
             {theme === 'dark' ? <Sun className="w-4 h-4" style={{ color: '#f59e0b' }} /> : <Moon className="w-4 h-4" style={{ color: INACTIVE_COLOR }} />}
           </button>
           <NotificationDropdown />

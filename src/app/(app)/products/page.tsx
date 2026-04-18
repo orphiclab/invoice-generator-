@@ -167,7 +167,7 @@ export default function ProductsPage() {
             value={search}
             onChange={e => setSearch(e.target.value)}
             placeholder="Search products..."
-            className="w-full h-9 pl-10 pr-4 rounded-xl text-sm"
+            className="w-full h-9 pl-10 pr-4 rounded-2xl text-sm"
             style={{ background: '#ffffff', border: '1px solid #e5e7eb' }}
           />
         </div>
@@ -204,7 +204,7 @@ export default function ProductsPage() {
               }}>
               <div className="flex items-start justify-between mb-3">
                 <div className="flex items-center gap-2.5">
-                  <div className="w-9 h-9 rounded-xl flex items-center justify-center" style={{ background: '#f5f3ff' }}>
+                  <div className="w-9 h-9 rounded-2xl flex items-center justify-center" style={{ background: '#f5f3ff' }}>
                     <Package className="w-4.5 h-4.5" style={{ color: '#a28ef9', width: 18, height: 18 }} />
                   </div>
                   <div>
@@ -244,7 +244,7 @@ export default function ProductsPage() {
               )}
 
               {p.trackInventory && (
-                <div className="mb-4 p-2.5 rounded-xl bg-gray-50 flex items-center justify-between" style={{ border: '1px solid #e5e7eb' }}>
+                <div className="mb-4 p-2.5 rounded-2xl bg-gray-50 flex items-center justify-between" style={{ border: '1px solid #e5e7eb' }}>
                   <div className="flex items-center gap-2">
                     <Archive className="w-3.5 h-3.5" style={{ color: p.stockQuantity <= p.lowStockThreshold ? '#ef4444' : '#6b7280' }} />
                     <span className="text-xs font-semibold" style={{ color: '#374151' }}>Stock Level</span>
@@ -302,7 +302,7 @@ export default function ProductsPage() {
                 <label className="text-xs font-semibold" style={{ color: '#6b7280' }}>Product / Service Name *</label>
                 <input value={form.name} onChange={e => setForm(f => ({ ...f, name: e.target.value }))}
                   placeholder="e.g. Web Development" required
-                  className="w-full h-10 px-4 rounded-xl text-sm"
+                  className="w-full h-10 px-4 rounded-2xl text-sm"
                   style={{ background: '#f9fafb', border: '1px solid #e5e7eb' }} />
               </div>
 
@@ -310,7 +310,7 @@ export default function ProductsPage() {
                 <label className="text-xs font-semibold" style={{ color: '#6b7280' }}>Description</label>
                 <textarea value={form.description} onChange={e => setForm(f => ({ ...f, description: e.target.value }))}
                   placeholder="Brief description of this product or service..."
-                  rows={2} className="w-full px-4 py-2.5 rounded-xl text-sm"
+                  rows={2} className="w-full px-4 py-2.5 rounded-2xl text-sm"
                   style={{ background: '#f9fafb', border: '1px solid #e5e7eb' }} />
               </div>
 
@@ -320,13 +320,13 @@ export default function ProductsPage() {
                   <input type="number" step="0.01" min="0" value={form.unitPrice}
                     onChange={e => setForm(f => ({ ...f, unitPrice: e.target.value }))}
                     placeholder="0.00" required
-                    className="w-full h-10 px-4 rounded-xl text-sm"
+                    className="w-full h-10 px-4 rounded-2xl text-sm"
                     style={{ background: '#f9fafb', border: '1px solid #e5e7eb' }} />
                 </div>
                 <div className="space-y-1.5">
                   <label className="text-xs font-semibold" style={{ color: '#6b7280' }}>Unit</label>
                   <select value={form.unit} onChange={e => setForm(f => ({ ...f, unit: e.target.value }))}
-                    className="w-full h-10 px-4 rounded-xl text-sm"
+                    className="w-full h-10 px-4 rounded-2xl text-sm"
                     style={{ background: '#f9fafb', border: '1px solid #e5e7eb' }}>
                     {UNITS.map(u => <option key={u} value={u}>{u}</option>)}
                   </select>
@@ -337,7 +337,7 @@ export default function ProductsPage() {
                 <div className="space-y-1.5">
                   <label className="text-xs font-semibold" style={{ color: '#6b7280' }}>Category</label>
                   <select value={form.category} onChange={e => setForm(f => ({ ...f, category: e.target.value }))}
-                    className="w-full h-10 px-4 rounded-xl text-sm"
+                    className="w-full h-10 px-4 rounded-2xl text-sm"
                     style={{ background: '#f9fafb', border: '1px solid #e5e7eb' }}>
                     <option value="">None</option>
                     {CATEGORIES.map(c => <option key={c} value={c}>{c}</option>)}
@@ -347,7 +347,7 @@ export default function ProductsPage() {
                   <label className="text-xs font-semibold" style={{ color: '#6b7280' }}>Taxable</label>
                   <button type="button"
                     onClick={() => setForm(f => ({ ...f, taxable: !f.taxable }))}
-                    className="w-full h-10 px-4 rounded-xl text-sm flex items-center gap-2"
+                    className="w-full h-10 px-4 rounded-2xl text-sm flex items-center gap-2"
                     style={{ background: '#f9fafb', border: '1px solid #e5e7eb' }}>
                     {form.taxable
                       ? <ToggleRight className="w-5 h-5" style={{ color: '#22c55e' }} />
@@ -379,7 +379,7 @@ export default function ProductsPage() {
                       <input type="number" step="1" value={form.stockQuantity}
                         onChange={e => setForm(f => ({ ...f, stockQuantity: e.target.value }))}
                         placeholder="0" required
-                        className="w-full h-10 px-4 rounded-xl text-sm"
+                        className="w-full h-10 px-4 rounded-2xl text-sm"
                         style={{ background: '#f9fafb', border: '1px solid #e5e7eb' }} />
                     </div>
                     <div className="space-y-1.5">
@@ -387,7 +387,7 @@ export default function ProductsPage() {
                       <input type="number" step="1" value={form.lowStockThreshold}
                         onChange={e => setForm(f => ({ ...f, lowStockThreshold: e.target.value }))}
                         placeholder="5" required
-                        className="w-full h-10 px-4 rounded-xl text-sm"
+                        className="w-full h-10 px-4 rounded-2xl text-sm"
                         style={{ background: '#f9fafb', border: '1px solid #e5e7eb' }} />
                     </div>
                   </div>
@@ -395,7 +395,7 @@ export default function ProductsPage() {
                     <label className="text-xs font-semibold" style={{ color: '#6b7280' }}>SKU (Stock Keeping Unit)</label>
                     <input value={form.sku} onChange={e => setForm(f => ({ ...f, sku: e.target.value }))}
                       placeholder="e.g. PRD-1001"
-                      className="w-full h-10 px-4 rounded-xl text-sm"
+                      className="w-full h-10 px-4 rounded-2xl text-sm"
                       style={{ background: '#f9fafb', border: '1px solid #e5e7eb' }} />
                   </div>
                 </div>
@@ -403,7 +403,7 @@ export default function ProductsPage() {
 
               <div className="flex justify-end gap-2 pt-2">
                 <button type="button" onClick={() => setShowModal(false)}
-                  className="h-9 px-5 rounded-xl text-sm font-semibold"
+                  className="h-9 px-5 rounded-2xl text-sm font-semibold"
                   style={{ color: '#6b7280', border: '1px solid #e5e7eb' }}>
                   Cancel
                 </button>

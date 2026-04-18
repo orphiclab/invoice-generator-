@@ -55,7 +55,7 @@ export function GlobalSearch() {
 
   if (!open) return (
     <button onClick={() => setOpen(true)}
-      className="flex items-center gap-2 px-3 py-1.5 rounded-xl text-sm transition-all hover:bg-gray-50"
+      className="flex items-center gap-2 px-3 py-1.5 rounded-2xl text-sm transition-all hover:bg-gray-50"
       style={{ color: '#6b7280', background: '#f9fafb', border: '1px solid #e5e7eb' }}>
       <Search className="w-3.5 h-3.5" />
       <span className="hidden sm:block text-xs">Search...</span>

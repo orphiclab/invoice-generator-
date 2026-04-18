@@ -98,7 +98,7 @@ export default function TeamSettingsPage() {
       {showNewTeam && (
         <form onSubmit={createTeam} className="flex gap-3" >
           <input required placeholder="Team name..." value={newTeamName} onChange={e => setNewTeamName(e.target.value)}
-            className="flex-1 px-3 py-2 rounded-xl text-sm outline-none" style={inputStyle} />
+            className="flex-1 px-3 py-2 rounded-2xl text-sm outline-none" style={inputStyle} />
           <Button type="submit" disabled={creatingTeam} className="text-gray-900" style={{ background: 'linear-gradient(135deg, #6B50EE, #3B82F6)' }}>
             {creatingTeam ? 'Creating...' : 'Create'}
           </Button>
@@ -131,7 +131,7 @@ export default function TeamSettingsPage() {
                   const cfg = ROLE_CONFIG[member.role] ?? ROLE_CONFIG.MEMBER
                   const Icon = cfg.icon
                   return (
-                    <div key={member.id} className="flex items-center gap-3 p-2.5 rounded-xl" style={{ background: '#f9fafb' }}>
+                    <div key={member.id} className="flex items-center gap-3 p-2.5 rounded-2xl" style={{ background: '#f9fafb' }}>
                       <div className="text-gray-900" style={{ background: `${cfg.color}30` }}>
                         {member.user.name.slice(0, 2).toUpperCase()}
                       </div>
@@ -156,9 +156,9 @@ export default function TeamSettingsPage() {
               {/* Invite Form */}
               <form onSubmit={(e) => { setInviteTeamId(team.id); inviteMember(e) }} className="flex gap-2 pt-1">
                 <input required placeholder="Email to invite..." value={inviteTeamId === team.id ? inviteEmail : ''} onChange={e => { setInviteTeamId(team.id); setInviteEmail(e.target.value) }}
-                  className="flex-1 px-3 py-1.5 rounded-xl text-sm outline-none" style={inputStyle} />
+                  className="flex-1 px-3 py-1.5 rounded-2xl text-sm outline-none" style={inputStyle} />
                 <select value={inviteRole} onChange={e => setInviteRole(e.target.value)}
-                  className="px-2 py-1.5 rounded-xl text-sm outline-none" style={inputStyle}>
+                  className="px-2 py-1.5 rounded-2xl text-sm outline-none" style={inputStyle}>
                   {['ADMIN', 'MEMBER', 'VIEWER'].map(r => <option key={r} value={r}>{r}</option>)}
                 </select>
                 <Button type="submit" disabled={inviting} className="text-gray-900" style={{ background: 'linear-gradient(135deg, #6B50EE, #3B82F6)' }}>

@@ -53,7 +53,7 @@ export default function PaymentsPage() {
       <div className="grid grid-cols-3 gap-4">
         <div className="rounded-2xl p-5 relative overflow-hidden" style={{ background: 'linear-gradient(135deg, #a4f5a6 0%, #6ee7b7 100%)', boxShadow: '0 8px 24px rgba(164,245,166,0.35)' }}>
           <div className="absolute -top-5 -right-5 w-20 h-20 rounded-full" style={{ background: 'rgba(255,255,255,0.15)' }} />
-          <div className="w-9 h-9 rounded-xl flex items-center justify-center mb-3" style={{ background: 'rgba(255,255,255,0.3)' }}>
+          <div className="w-9 h-9 rounded-2xl flex items-center justify-center mb-3" style={{ background: 'rgba(255,255,255,0.3)' }}>
             <TrendingUp className="w-5 h-5" style={{ color: '#166534' }} />
           </div>
           <p className="text-xl font-extrabold" style={{ color: '#166534' }}>Rs {totalCollected.toLocaleString('en-LK', { maximumFractionDigits: 0 })}</p>
@@ -61,7 +61,7 @@ export default function PaymentsPage() {
         </div>
         <div className="rounded-2xl p-5 relative overflow-hidden" style={{ background: 'linear-gradient(135deg, #fcd34d 0%, #fde68a 100%)', boxShadow: '0 8px 24px rgba(252,211,77,0.3)' }}>
           <div className="absolute -top-5 -right-5 w-20 h-20 rounded-full" style={{ background: 'rgba(255,255,255,0.15)' }} />
-          <div className="w-9 h-9 rounded-xl flex items-center justify-center mb-3" style={{ background: 'rgba(255,255,255,0.3)' }}>
+          <div className="w-9 h-9 rounded-2xl flex items-center justify-center mb-3" style={{ background: 'rgba(255,255,255,0.3)' }}>
             <Clock className="w-5 h-5" style={{ color: '#92400e' }} />
           </div>
           <p className="text-xl font-extrabold" style={{ color: '#92400e' }}>{pending}</p>
@@ -69,7 +69,7 @@ export default function PaymentsPage() {
         </div>
         <div className="rounded-2xl p-5 relative overflow-hidden" style={{ background: 'linear-gradient(135deg, #f87171 0%, #fda4af 100%)', boxShadow: '0 8px 24px rgba(248,113,113,0.3)' }}>
           <div className="absolute -top-5 -right-5 w-20 h-20 rounded-full" style={{ background: 'rgba(255,255,255,0.15)' }} />
-          <div className="w-9 h-9 rounded-xl flex items-center justify-center mb-3" style={{ background: 'rgba(255,255,255,0.25)' }}>
+          <div className="w-9 h-9 rounded-2xl flex items-center justify-center mb-3" style={{ background: 'rgba(255,255,255,0.25)' }}>
             <XCircle className="w-5 h-5 text-white" />
           </div>
           <p className="text-xl font-extrabold text-white">{failed}</p>

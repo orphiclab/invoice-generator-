@@ -97,7 +97,7 @@ export default function ExpensesPage() {
       <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
         <div className="rounded-2xl p-5 relative overflow-hidden" style={{ background: 'linear-gradient(135deg, #f87171 0%, #fda4af 100%)', boxShadow: '0 8px 24px rgba(248,113,113,0.3)' }}>
           <div className="absolute -top-5 -right-5 w-20 h-20 rounded-full" style={{ background: 'rgba(255,255,255,0.12)' }} />
-          <div className="w-9 h-9 rounded-xl flex items-center justify-center mb-3" style={{ background: 'rgba(255,255,255,0.25)' }}>
+          <div className="w-9 h-9 rounded-2xl flex items-center justify-center mb-3" style={{ background: 'rgba(255,255,255,0.25)' }}>
             <TrendingDown className="w-5 h-5 text-white" />
           </div>
           <p className="text-xl font-extrabold text-white">Rs {total.toLocaleString('en-LK', { maximumFractionDigits: 0 })}</p>
@@ -105,7 +105,7 @@ export default function ExpensesPage() {
         </div>
         <div className="rounded-2xl p-5 relative overflow-hidden" style={{ background: 'linear-gradient(135deg, #a28ef9 0%, #7c5cfc 100%)', boxShadow: '0 8px 24px rgba(162,142,249,0.3)' }}>
           <div className="absolute -top-5 -right-5 w-20 h-20 rounded-full" style={{ background: 'rgba(255,255,255,0.12)' }} />
-          <div className="w-9 h-9 rounded-xl flex items-center justify-center mb-3" style={{ background: 'rgba(255,255,255,0.25)' }}>
+          <div className="w-9 h-9 rounded-2xl flex items-center justify-center mb-3" style={{ background: 'rgba(255,255,255,0.25)' }}>
             <Receipt className="w-5 h-5 text-white" />
           </div>
           <p className="text-xl font-extrabold text-white">{expenses.length}</p>
@@ -113,7 +113,7 @@ export default function ExpensesPage() {
         </div>
         <div className="rounded-2xl p-5 relative overflow-hidden" style={{ background: 'linear-gradient(135deg, #60a5fa 0%, #93c5fd 100%)', boxShadow: '0 8px 24px rgba(96,165,250,0.3)' }}>
           <div className="absolute -top-5 -right-5 w-20 h-20 rounded-full" style={{ background: 'rgba(255,255,255,0.12)' }} />
-          <div className="w-9 h-9 rounded-xl flex items-center justify-center mb-3" style={{ background: 'rgba(255,255,255,0.25)' }}>
+          <div className="w-9 h-9 rounded-2xl flex items-center justify-center mb-3" style={{ background: 'rgba(255,255,255,0.25)' }}>
             <Filter className="w-5 h-5 text-white" />
           </div>
           <p className="text-xl font-extrabold text-white">{topCategory?.[0] ?? '—'}</p>
@@ -127,18 +127,18 @@ export default function ExpensesPage() {
           <h2 className="text-base font-bold" style={{ color: '#111827' }}>New Expense</h2>
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
             <input required placeholder="Title" value={form.title} onChange={e => setForm(p => ({ ...p, title: e.target.value }))}
-              className="px-3 py-2 rounded-xl text-sm outline-none" style={inputStyle} />
+              className="px-3 py-2 rounded-2xl text-sm outline-none" style={inputStyle} />
             <input required type="number" step="0.01" placeholder="Amount (Rs )" value={form.amount} onChange={e => setForm(p => ({ ...p, amount: e.target.value }))}
-              className="px-3 py-2 rounded-xl text-sm outline-none" style={inputStyle} />
+              className="px-3 py-2 rounded-2xl text-sm outline-none" style={inputStyle} />
             <input required type="date" value={form.date} onChange={e => setForm(p => ({ ...p, date: e.target.value }))}
-              className="px-3 py-2 rounded-xl text-sm outline-none" style={{ ...inputStyle, colorScheme: 'dark' }} />
+              className="px-3 py-2 rounded-2xl text-sm outline-none" style={{ ...inputStyle, colorScheme: 'dark' }} />
             <select value={form.category} onChange={e => setForm(p => ({ ...p, category: e.target.value }))}
-              className="px-3 py-2 rounded-xl text-sm outline-none" style={inputStyle}>
+              className="px-3 py-2 rounded-2xl text-sm outline-none" style={inputStyle}>
               {CATEGORIES.map(c => <option key={c} value={c}>{c}</option>)}
             </select>
           </div>
           <input placeholder="Description (optional)" value={form.description} onChange={e => setForm(p => ({ ...p, description: e.target.value }))}
-            className="w-full px-3 py-2 rounded-xl text-sm outline-none" style={inputStyle} />
+            className="w-full px-3 py-2 rounded-2xl text-sm outline-none" style={inputStyle} />
           <div className="flex gap-3">
             <button type="submit" disabled={saving} className="btn-brand h-8 px-5 text-xs">
               {saving ? 'Saving...' : 'Add Expense'}
@@ -180,7 +180,7 @@ export default function ExpensesPage() {
           <div className="divide-y" style={{ borderColor: '#f9fafb' }}>
           {expenses.map(exp => (
                 <div key={exp.id} className="flex items-center gap-4 px-5 py-4 group hover:bg-gray-50 transition-colors">
-              <div className="w-10 h-10 rounded-xl flex items-center justify-center flex-shrink-0 text-xs font-bold"
+              <div className="w-10 h-10 rounded-2xl flex items-center justify-center flex-shrink-0 text-xs font-bold"
                 style={{ background: `${CATEGORY_COLORS[exp.category] ?? '#9ca3af'}18`, color: CATEGORY_COLORS[exp.category] ?? '#6b7280' }}>
                 {exp.category.slice(0, 2).toUpperCase()}
               </div>

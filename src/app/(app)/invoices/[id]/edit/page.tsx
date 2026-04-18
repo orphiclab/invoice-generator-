@@ -120,7 +120,7 @@ export default function EditInvoicePage() {
     <div className="p-4 sm:p-6 lg:p-8 max-w-4xl mx-auto">
       <div className="flex items-center gap-3 mb-8">
         <Link href={`/invoices/${id}`}>
-          <button className="p-2 rounded-xl hover:bg-gray-50 transition-colors" style={{ color: '#6b7280' }}>
+          <button className="p-2 rounded-2xl hover:bg-gray-50 transition-colors" style={{ color: '#6b7280' }}>
             <ArrowLeft className="w-5 h-5" />
           </button>
         </Link>
@@ -262,7 +262,7 @@ export default function EditInvoicePage() {
               <div className="mt-4">
                 <h3 className="text-sm font-bold mb-2" style={{ color: '#111827' }}>Bank Details</h3>
                 <select 
-                  className="w-full px-3 py-2 rounded-xl text-sm outline-none text-gray-900 focus:ring-2 focus:ring-[#a28ef9] focus:border-transparent" 
+                  className="w-full px-3 py-2 rounded-2xl text-sm outline-none text-gray-900 focus:ring-2 focus:ring-[#a28ef9] focus:border-transparent" 
                   style={{ border: '1px solid #e5e7eb', background: '#f9fafb' }}
                   onChange={(e) => setForm({ ...form, bankDetails: e.target.value || null })}
                   value={form.bankDetails || ""}
@@ -273,7 +273,7 @@ export default function EditInvoicePage() {
                   ))}
                 </select>
                 {form.bankDetails && (
-                  <div className="mt-3 p-3 rounded-xl" style={{ background: '#f9fafb', border: '1px solid #e5e7eb' }}>
+                  <div className="mt-3 p-3 rounded-2xl" style={{ background: '#f9fafb', border: '1px solid #e5e7eb' }}>
                     <p className="whitespace-pre-line text-xs" style={{ color: '#6b7280' }}>{form.bankDetails}</p>
                   </div>
                 )}

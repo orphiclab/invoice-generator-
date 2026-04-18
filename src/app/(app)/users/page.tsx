@@ -142,7 +142,7 @@ export default function UserManagementPage() {
           return (
             <div key={key} className="bg-white rounded-2xl p-4" style={{ border: '1px solid #f0f2f0' }}>
               <div className="flex items-center gap-2 mb-2">
-                <div className="w-8 h-8 rounded-xl flex items-center justify-center" style={{ background: cfg.bg }}>
+                <div className="w-8 h-8 rounded-2xl flex items-center justify-center" style={{ background: cfg.bg }}>
                   <Icon className="w-4 h-4" style={{ color: cfg.color }} />
                 </div>
                 <div>
@@ -250,23 +250,23 @@ export default function UserManagementPage() {
               <div>
                 <label className="text-xs font-medium block mb-1" style={{ color: '#6b7280' }}>Full Name *</label>
                 <input required value={form.name} onChange={e => setForm({ ...form, name: e.target.value })}
-                  className="w-full px-3 py-2.5 rounded-xl text-sm outline-none" style={{ background: '#f9fafb', border: '1px solid #e5e7eb', color: '#111827' }} />
+                  className="w-full px-3 py-2.5 rounded-2xl text-sm outline-none" style={{ background: '#f9fafb', border: '1px solid #e5e7eb', color: '#111827' }} />
               </div>
               <div>
                 <label className="text-xs font-medium block mb-1" style={{ color: '#6b7280' }}>Email *</label>
                 <input required type="email" value={form.email} onChange={e => setForm({ ...form, email: e.target.value })}
-                  className="w-full px-3 py-2.5 rounded-xl text-sm outline-none" style={{ background: '#f9fafb', border: '1px solid #e5e7eb', color: '#111827' }} />
+                  className="w-full px-3 py-2.5 rounded-2xl text-sm outline-none" style={{ background: '#f9fafb', border: '1px solid #e5e7eb', color: '#111827' }} />
               </div>
               <div>
                 <label className="text-xs font-medium block mb-1" style={{ color: '#6b7280' }}>Password *</label>
                 <input required type="password" minLength={6} value={form.password} onChange={e => setForm({ ...form, password: e.target.value })}
-                  className="w-full px-3 py-2.5 rounded-xl text-sm outline-none" style={{ background: '#f9fafb', border: '1px solid #e5e7eb', color: '#111827' }}
+                  className="w-full px-3 py-2.5 rounded-2xl text-sm outline-none" style={{ background: '#f9fafb', border: '1px solid #e5e7eb', color: '#111827' }}
                   placeholder="Min. 6 characters" />
               </div>
               <div>
                 <label className="text-xs font-medium block mb-1" style={{ color: '#6b7280' }}>Phone</label>
                 <input value={form.phone} onChange={e => setForm({ ...form, phone: e.target.value })}
-                  className="w-full px-3 py-2.5 rounded-xl text-sm outline-none" style={{ background: '#f9fafb', border: '1px solid #e5e7eb', color: '#111827' }} />
+                  className="w-full px-3 py-2.5 rounded-2xl text-sm outline-none" style={{ background: '#f9fafb', border: '1px solid #e5e7eb', color: '#111827' }} />
               </div>
               <div>
                 <label className="text-xs font-medium block mb-2" style={{ color: '#6b7280' }}>Role *</label>
@@ -276,7 +276,7 @@ export default function UserManagementPage() {
                     const Icon = cfg.icon
                     return (
                       <button key={r} type="button" onClick={() => setForm({ ...form, role: r })}
-                        className="p-3 rounded-xl text-center transition-all"
+                        className="p-3 rounded-2xl text-center transition-all"
                         style={{
                           border: form.role === r ? `2px solid ${cfg.color}` : '1px solid #e5e7eb',
                           background: form.role === r ? cfg.bg : '#fff',
@@ -307,7 +307,7 @@ export default function UserManagementPage() {
               <button onClick={() => setResetModal(null)} className="p-1 rounded-lg hover:bg-gray-100"><X className="w-4 h-4" style={{ color: '#6b7280' }} /></button>
             </div>
             <input type="password" placeholder="New password (min. 6 chars)" value={resetPw} onChange={e => setResetPw(e.target.value)}
-              className="w-full px-3 py-2.5 rounded-xl text-sm outline-none mb-4" style={{ background: '#f9fafb', border: '1px solid #e5e7eb', color: '#111827' }} />
+              className="w-full px-3 py-2.5 rounded-2xl text-sm outline-none mb-4" style={{ background: '#f9fafb', border: '1px solid #e5e7eb', color: '#111827' }} />
             <button onClick={() => handleResetPassword(resetModal)} className="btn-brand w-full h-10 text-sm">
               Reset Password
             </button>

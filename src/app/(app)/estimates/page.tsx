@@ -89,7 +89,7 @@ export default function EstimatesPage() {
         ].map(({ label, value, grad, shadow, icon: Icon, dark }) => (
           <div key={label} className="rounded-2xl p-5 relative overflow-hidden" style={{ background: grad, boxShadow: `0 8px 24px ${shadow}` }}>
             <div className="absolute -top-5 -right-5 w-20 h-20 rounded-full" style={{ background: 'rgba(255,255,255,0.12)' }} />
-            <div className="w-9 h-9 rounded-xl flex items-center justify-center mb-3" style={{ background: 'rgba(255,255,255,0.25)' }}>
+            <div className="w-9 h-9 rounded-2xl flex items-center justify-center mb-3" style={{ background: 'rgba(255,255,255,0.25)' }}>
               <Icon className="w-5 h-5" style={{ color: dark ? '#166534' : 'white' }} />
             </div>
             <p className="text-xl font-extrabold" style={{ color: dark ? '#166534' : 'white' }}>{value}</p>

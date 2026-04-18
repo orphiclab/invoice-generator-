@@ -79,7 +79,7 @@ export default function NewEstimatePage() {
             <div>
               <label style={labelStyle}>Client *</label>
               <select required value={form.clientId} onChange={e => setForm(p => ({ ...p, clientId: e.target.value }))}
-                className="w-full px-3 py-2.5 rounded-xl text-sm outline-none" style={inputStyle}>
+                className="w-full px-3 py-2.5 rounded-2xl text-sm outline-none" style={inputStyle}>
                 <option value="">Select client...</option>
                 {clients.map(c => <option key={c.id} value={c.id}>{c.name}{c.company ? ` — ${c.company}` : ''}</option>)}
               </select>
@@ -87,12 +87,12 @@ export default function NewEstimatePage() {
             <div>
               <label style={labelStyle}>Expiry Date *</label>
               <input required type="date" value={form.expiryDate} onChange={e => setForm(p => ({ ...p, expiryDate: e.target.value }))}
-                className="w-full px-3 py-2.5 rounded-xl text-sm outline-none" style={{ ...inputStyle, colorScheme: 'dark' }} />
+                className="w-full px-3 py-2.5 rounded-2xl text-sm outline-none" style={{ ...inputStyle, colorScheme: 'dark' }} />
             </div>
             <div>
               <label style={labelStyle}>Currency</label>
               <select value={form.currencyId} onChange={e => setForm(p => ({ ...p, currencyId: e.target.value }))}
-                className="w-full px-3 py-2.5 rounded-xl text-sm outline-none" style={inputStyle}>
+                className="w-full px-3 py-2.5 rounded-2xl text-sm outline-none" style={inputStyle}>
                 <option value="">LKR (Rs) — default</option>
                 {currencies.map(c => <option key={c.id} value={c.id}>{c.code} ({c.symbol}) — {c.name}</option>)}
               </select>
@@ -100,7 +100,7 @@ export default function NewEstimatePage() {
             <div>
               <label style={labelStyle}>Notes</label>
               <input placeholder="Optional notes..." value={form.notes} onChange={e => setForm(p => ({ ...p, notes: e.target.value }))}
-                className="w-full px-3 py-2.5 rounded-xl text-sm outline-none" style={inputStyle} />
+                className="w-full px-3 py-2.5 rounded-2xl text-sm outline-none" style={inputStyle} />
             </div>
           </div>
         </div>
@@ -126,15 +126,15 @@ export default function NewEstimatePage() {
               <div key={i} className="grid grid-cols-12 gap-3 items-center">
                 <div className="col-span-5">
                   <input placeholder="Description" value={item.description} onChange={e => updateItem(i, 'description', e.target.value)}
-                    className="w-full px-3 py-2 rounded-xl text-sm outline-none" style={inputStyle} />
+                    className="w-full px-3 py-2 rounded-2xl text-sm outline-none" style={inputStyle} />
                 </div>
                 <div className="col-span-2">
                   <input type="number" min="0" step="0.01" placeholder="1" value={item.quantity} onChange={e => updateItem(i, 'quantity', e.target.value)}
-                    className="w-full px-3 py-2 rounded-xl text-sm outline-none text-center" style={inputStyle} />
+                    className="w-full px-3 py-2 rounded-2xl text-sm outline-none text-center" style={inputStyle} />
                 </div>
                 <div className="col-span-2">
                   <input type="number" min="0" step="0.01" placeholder="0.00" value={item.unitPrice} onChange={e => updateItem(i, 'unitPrice', e.target.value)}
-                    className="w-full px-3 py-2 rounded-xl text-sm outline-none" style={inputStyle} />
+                    className="w-full px-3 py-2 rounded-2xl text-sm outline-none" style={inputStyle} />
                 </div>
                 <div className="col-span-2 text-sm font-semibold px-1" style={{ color: '#111827' }}>
                   {currSymbol}{lineTotal.toFixed(0)}
@@ -161,12 +161,12 @@ export default function NewEstimatePage() {
             <div className="flex items-center justify-between gap-4">
               <label style={{ ...labelStyle, margin: 0 }}>Tax %</label>
               <input type="number" min="0" max="100" step="0.1" value={form.taxRate} onChange={e => setForm(p => ({ ...p, taxRate: e.target.value }))}
-                className="w-24 px-3 py-1.5 rounded-xl text-sm outline-none text-right" style={inputStyle} />
+                className="w-24 px-3 py-1.5 rounded-2xl text-sm outline-none text-right" style={inputStyle} />
             </div>
             <div className="flex items-center justify-between gap-4">
               <label style={{ ...labelStyle, margin: 0 }}>Discount ({currSymbol})</label>
               <input type="number" min="0" step="0.01" value={form.discount} onChange={e => setForm(p => ({ ...p, discount: e.target.value }))}
-                className="w-24 px-3 py-1.5 rounded-xl text-sm outline-none text-right" style={inputStyle} />
+                className="w-24 px-3 py-1.5 rounded-2xl text-sm outline-none text-right" style={inputStyle} />
             </div>
             <div className="pt-3 border-t flex justify-between" style={{ borderColor: '#e5e7eb' }}>
               <span className="text-gray-900">Total</span>

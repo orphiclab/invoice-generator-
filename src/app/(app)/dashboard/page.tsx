@@ -129,7 +129,7 @@ export default function DashboardPage() {
         {/* Outstanding */}
         <div className="bg-white rounded-2xl p-4 sm:p-5" style={{ border: '1px solid #f0f2f0', boxShadow: '0 2px 8px rgba(0,0,0,0.05)' }}>
           <div className="flex items-start justify-between mb-2">
-            <div className="w-8 h-8 sm:w-9 sm:h-9 rounded-xl flex items-center justify-center" style={{ background: '#fff7ed' }}>
+            <div className="w-8 h-8 sm:w-9 sm:h-9 rounded-2xl flex items-center justify-center" style={{ background: '#fff7ed' }}>
               <AlertCircle style={{ color: '#f97316', width: 16, height: 16 }} />
             </div>
             <span className="flex items-center gap-0.5 text-[10px] font-bold px-1.5 py-0.5 rounded-full" style={{ background: '#fef2f2', color: '#dc2626' }}>
@@ -146,7 +146,7 @@ export default function DashboardPage() {
         {/* Invoices */}
         <div className="bg-white rounded-2xl p-4 sm:p-5" style={{ border: '1px solid #f0f2f0', boxShadow: '0 2px 8px rgba(0,0,0,0.05)' }}>
           <div className="flex items-start justify-between mb-2">
-            <div className="w-8 h-8 sm:w-9 sm:h-9 rounded-xl flex items-center justify-center" style={{ background: '#eff6ff' }}>
+            <div className="w-8 h-8 sm:w-9 sm:h-9 rounded-2xl flex items-center justify-center" style={{ background: '#eff6ff' }}>
               <FileText style={{ color: '#3b82f6', width: 16, height: 16 }} />
             </div>
           </div>
@@ -160,7 +160,7 @@ export default function DashboardPage() {
         {/* Clients */}
         <div className="bg-white rounded-2xl p-4 sm:p-5" style={{ border: '1px solid #f0f2f0', boxShadow: '0 2px 8px rgba(0,0,0,0.05)' }}>
           <div className="flex items-start justify-between mb-2">
-            <div className="w-8 h-8 sm:w-9 sm:h-9 rounded-xl flex items-center justify-center" style={{ background: '#f0fdf4' }}>
+            <div className="w-8 h-8 sm:w-9 sm:h-9 rounded-2xl flex items-center justify-center" style={{ background: '#f0fdf4' }}>
               <Users style={{ color: '#22c55e', width: 16, height: 16 }} />
             </div>
           </div>
@@ -296,7 +296,7 @@ export default function DashboardPage() {
                 { label: 'Log Expense', href: '/expenses',     color: '#22c55e', bg: '#f0fdf4' },
               ].map(item => (
                 <Link key={item.href} href={item.href}
-                  className="flex items-center justify-between px-3 py-2.5 rounded-xl transition-all group hover:bg-gray-50"
+                  className="flex items-center justify-between px-3 py-2.5 rounded-2xl transition-all group hover:bg-gray-50"
                   style={{ border: '1px solid #f3f4f6' }}>
                   <div className="flex items-center gap-2.5">
                     <div className="w-2 h-2 rounded-full" style={{ background: item.color }} />

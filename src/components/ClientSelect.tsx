@@ -68,7 +68,7 @@ export function ClientSelect({ clients, value, onChange, required, placeholder =
       <button
         type="button"
         onClick={() => setOpen(p => !p)}
-        className="w-full h-9 flex items-center justify-between px-3 rounded-xl text-sm border transition-all focus:outline-none focus:ring-2 focus:ring-purple-400/40"
+        className="w-full h-9 flex items-center justify-between px-3 rounded-2xl text-sm border transition-all focus:outline-none focus:ring-2 focus:ring-purple-400/40"
         style={{
           background: '#ffffff',
           borderColor: open ? '#a28ef9' : '#e5e7eb',
@@ -114,7 +114,7 @@ export function ClientSelect({ clients, value, onChange, required, placeholder =
       {/* Dropdown */}
       {open && (
         <div
-          className="absolute left-0 right-0 top-[calc(100%+4px)] z-50 rounded-xl overflow-hidden shadow-2xl"
+          className="absolute left-0 right-0 top-[calc(100%+4px)] z-50 rounded-2xl overflow-hidden shadow-2xl"
           style={{ background: '#fff', border: '1px solid #e5e7eb', maxHeight: 320 }}
         >
           {/* Search input */}

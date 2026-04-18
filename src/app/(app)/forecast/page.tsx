@@ -43,7 +43,7 @@ export default function ForecastPage() {
     <div className="p-4 sm:p-6 lg:p-8 max-w-5xl mx-auto">
       <div className="flex items-center gap-3 mb-8">
         <Link href="/dashboard">
-          <button className="p-2 rounded-xl hover:bg-gray-50 transition-colors" style={{ color: '#6b7280' }}>
+          <button className="p-2 rounded-2xl hover:bg-gray-50 transition-colors" style={{ color: '#6b7280' }}>
             <ArrowLeft className="w-5 h-5" />
           </button>
         </Link>
@@ -62,7 +62,7 @@ export default function ForecastPage() {
         ].map(card => (
           <div key={card.label} className="glass rounded-2xl p-5">
             <div className="flex items-center gap-3 mb-2">
-              <div className="w-9 h-9 rounded-xl flex items-center justify-center" style={{ background: card.bg }}>
+              <div className="w-9 h-9 rounded-2xl flex items-center justify-center" style={{ background: card.bg }}>
                 <card.icon className="w-4 h-4" style={{ color: card.color }} />
               </div>
               <span className="text-xs font-semibold" style={{ color: '#6b7280' }}>{card.label}</span>
@@ -127,7 +127,7 @@ export default function ForecastPage() {
           </h2>
           <div className="space-y-2">
             {data.summary.upcomingInvoices.map(inv => (
-              <div key={inv.invoiceNo} className="flex items-center justify-between px-4 py-3 rounded-xl" style={{ background: 'rgba(0,0,0,0.02)' }}>
+              <div key={inv.invoiceNo} className="flex items-center justify-between px-4 py-3 rounded-2xl" style={{ background: 'rgba(0,0,0,0.02)' }}>
                 <div>
                   <p className="text-sm font-semibold" style={{ color: 'var(--text-primary, #111827)' }}>{inv.invoiceNo} · {inv.client}</p>
                   <p className="text-xs" style={{ color: '#6b7280' }}>

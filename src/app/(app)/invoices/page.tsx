@@ -182,7 +182,7 @@ export default function InvoicesPage() {
           <p className="text-xs mt-0.5" style={{ color: '#9ca3af' }}>{invoices.length} total invoices</p>
         </div>
         <div className="flex items-center gap-2">
-          <button onClick={exportCSV} className="h-9 px-3 text-xs font-semibold rounded-xl flex items-center gap-1.5 transition-colors hover:bg-gray-100"
+          <button onClick={exportCSV} className="h-9 px-3 text-xs font-semibold rounded-2xl flex items-center gap-1.5 transition-colors hover:bg-gray-100"
             style={{ border: '1px solid #e5e7eb', color: '#6b7280' }}>
             <Download className="w-3.5 h-3.5" /> <span className="hidden sm:inline">Export</span>
           </button>
@@ -201,12 +201,12 @@ export default function InvoicesPage() {
           <input
             placeholder="Search invoices or clients…"
             value={search} onChange={e => setSearch(e.target.value)}
-            className="w-full pl-9 pr-4 h-9 rounded-xl text-sm outline-none transition-all"
+            className="w-full pl-9 pr-4 h-9 rounded-2xl text-sm outline-none transition-all"
             style={{ background: '#ffffff', border: '1px solid #e5e7eb', color: '#111827' }}
           />
         </div>
         <button onClick={() => setShowFilters(!showFilters)}
-          className={`h-9 px-3 text-xs font-semibold rounded-xl flex items-center gap-1.5 transition-all ${showFilters ? 'ring-2 ring-[#a28ef9]' : ''}`}
+          className={`h-9 px-3 text-xs font-semibold rounded-2xl flex items-center gap-1.5 transition-all ${showFilters ? 'ring-2 ring-[#a28ef9]' : ''}`}
           style={{ border: '1px solid #e5e7eb', color: showFilters ? '#a28ef9' : '#6b7280', background: showFilters ? '#f5f3ff' : '#fff' }}>
           <SlidersHorizontal className="w-3.5 h-3.5" />
           Filters
@@ -257,14 +257,14 @@ export default function InvoicesPage() {
                 <Calendar className="w-3 h-3" /> From
               </label>
               <input type="date" value={filters.dateFrom} onChange={e => setFilters(f => ({ ...f, dateFrom: e.target.value }))}
-                className="w-full px-3 py-2 rounded-xl text-xs outline-none" style={inputStyle} />
+                className="w-full px-3 py-2 rounded-2xl text-xs outline-none" style={inputStyle} />
             </div>
             <div>
               <label className="text-[11px] font-bold uppercase tracking-widest mb-1.5 flex items-center gap-1 block" style={{ color: '#9ca3af' }}>
                 <Calendar className="w-3 h-3" /> To
               </label>
               <input type="date" value={filters.dateTo} onChange={e => setFilters(f => ({ ...f, dateTo: e.target.value }))}
-                className="w-full px-3 py-2 rounded-xl text-xs outline-none" style={inputStyle} />
+                className="w-full px-3 py-2 rounded-2xl text-xs outline-none" style={inputStyle} />
             </div>
 
             {/* Amount range */}
@@ -273,14 +273,14 @@ export default function InvoicesPage() {
                 <DollarSign className="w-3 h-3" /> Min Amount
               </label>
               <input type="number" placeholder="0" value={filters.amountMin} onChange={e => setFilters(f => ({ ...f, amountMin: e.target.value }))}
-                className="w-full px-3 py-2 rounded-xl text-xs outline-none" style={inputStyle} />
+                className="w-full px-3 py-2 rounded-2xl text-xs outline-none" style={inputStyle} />
             </div>
             <div>
               <label className="text-[11px] font-bold uppercase tracking-widest mb-1.5 flex items-center gap-1 block" style={{ color: '#9ca3af' }}>
                 <DollarSign className="w-3 h-3" /> Max Amount
               </label>
               <input type="number" placeholder="∞" value={filters.amountMax} onChange={e => setFilters(f => ({ ...f, amountMax: e.target.value }))}
-                className="w-full px-3 py-2 rounded-xl text-xs outline-none" style={inputStyle} />
+                className="w-full px-3 py-2 rounded-2xl text-xs outline-none" style={inputStyle} />
             </div>
           </div>
 
@@ -289,7 +289,7 @@ export default function InvoicesPage() {
             <label className="text-[11px] font-bold uppercase tracking-widest mb-1.5 block" style={{ color: '#9ca3af' }}>Client</label>
             <div className="relative">
               <select value={filters.client} onChange={e => setFilters(f => ({ ...f, client: e.target.value }))}
-                className="w-full px-3 py-2 rounded-xl text-xs outline-none appearance-none pr-8 cursor-pointer" style={inputStyle}>
+                className="w-full px-3 py-2 rounded-2xl text-xs outline-none appearance-none pr-8 cursor-pointer" style={inputStyle}>
                 <option value="">All Clients</option>
                 {clientNames.map(n => <option key={n} value={n}>{n}</option>)}
               </select>

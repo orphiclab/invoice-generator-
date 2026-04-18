@@ -120,20 +120,20 @@ export default function RecurringPage() {
           <h2 className="text-base font-bold" style={{ color: '#111827' }}>New Recurring Invoice</h2>
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
             <input required placeholder="Title (e.g. Monthly Retainer)" value={form.title} onChange={e => setForm(p => ({ ...p, title: e.target.value }))}
-              className="px-3 py-2 rounded-xl text-sm outline-none" style={inputStyle} />
+              className="px-3 py-2 rounded-2xl text-sm outline-none" style={inputStyle} />
             <select required value={form.clientId} onChange={e => setForm(p => ({ ...p, clientId: e.target.value }))}
-              className="px-3 py-2 rounded-xl text-sm outline-none" style={inputStyle}>
+              className="px-3 py-2 rounded-2xl text-sm outline-none" style={inputStyle}>
               <option value="">Select client...</option>
               {clients.map(c => <option key={c.id} value={c.id}>{c.name}</option>)}
             </select>
             <select value={form.frequency} onChange={e => setForm(p => ({ ...p, frequency: e.target.value }))}
-              className="px-3 py-2 rounded-xl text-sm outline-none" style={inputStyle}>
+              className="px-3 py-2 rounded-2xl text-sm outline-none" style={inputStyle}>
               {Object.entries(FREQ_LABELS).map(([k, v]) => <option key={k} value={k}>{v}</option>)}
             </select>
             <input required type="number" step="0.01" placeholder="Total amount (Rs )" value={form.total} onChange={e => setForm(p => ({ ...p, total: e.target.value }))}
-              className="px-3 py-2 rounded-xl text-sm outline-none" style={inputStyle} />
+              className="px-3 py-2 rounded-2xl text-sm outline-none" style={inputStyle} />
             <input required type="date" value={form.nextRunDate} onChange={e => setForm(p => ({ ...p, nextRunDate: e.target.value }))}
-              className="px-3 py-2 rounded-xl text-sm outline-none" style={{ ...inputStyle, colorScheme: 'dark' }} placeholder="First run date" />
+              className="px-3 py-2 rounded-2xl text-sm outline-none" style={{ ...inputStyle, colorScheme: 'dark' }} placeholder="First run date" />
           </div>
           <div className="flex gap-3">
             <button type="submit" disabled={saving} className="btn-brand h-8 px-5 text-xs">
@@ -165,7 +165,7 @@ export default function RecurringPage() {
           <div className="divide-y" style={{ borderColor: '#f9fafb' }}>
           {recurring.map(r => (
             <div key={r.id} className="flex items-center gap-4 px-5 py-4 group hover:bg-gray-50 transition-colors" style={{ opacity: r.isActive ? 1 : 0.55 }}>
-              <div className="p-2.5 rounded-xl flex-shrink-0" style={{ background: `${FREQ_COLORS[r.frequency]}18` }}>
+              <div className="p-2.5 rounded-2xl flex-shrink-0" style={{ background: `${FREQ_COLORS[r.frequency]}18` }}>
                 <RefreshCw className="w-5 h-5" style={{ color: FREQ_COLORS[r.frequency] }} />
               </div>
               <div className="flex-1 min-w-0">

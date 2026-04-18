@@ -65,12 +65,12 @@ export default function ReportsPage() {
           </div>
           {periodType === 'quarterly' && (
             <select value={quarter} onChange={e => setQuarter(Number(e.target.value))}
-              className="h-8 px-3 rounded-xl text-xs font-semibold outline-none" style={{ background: '#ffffff', border: '1px solid #e5e7eb', color: '#111827' }}>
+              className="h-8 px-3 rounded-2xl text-xs font-semibold outline-none" style={{ background: '#ffffff', border: '1px solid #e5e7eb', color: '#111827' }}>
               {QUARTERS.map((q, i) => <option key={i} value={i}>{q}</option>)}
             </select>
           )}
           <select value={year} onChange={e => setYear(Number(e.target.value))}
-            className="h-8 px-3 rounded-xl text-xs font-semibold outline-none" style={{ background: '#ffffff', border: '1px solid #e5e7eb', color: '#111827' }}>
+            className="h-8 px-3 rounded-2xl text-xs font-semibold outline-none" style={{ background: '#ffffff', border: '1px solid #e5e7eb', color: '#111827' }}>
             {YEARS.map(y => <option key={y} value={y}>{y}</option>)}
           </select>
         </div>
@@ -89,7 +89,7 @@ export default function ReportsPage() {
               return (
                 <div key={label} className="rounded-2xl p-5 relative overflow-hidden" style={{ background: grad as string, boxShadow: `0 8px 24px ${shadow}` }}>
                   <div className="absolute -top-5 -right-5 w-20 h-20 rounded-full" style={{ background: 'rgba(255,255,255,0.12)' }} />
-                  <div className="w-9 h-9 rounded-xl flex items-center justify-center mb-3" style={{ background: 'rgba(255,255,255,0.25)' }}>
+                  <div className="w-9 h-9 rounded-2xl flex items-center justify-center mb-3" style={{ background: 'rgba(255,255,255,0.25)' }}>
                     <Icon className="w-5 h-5" style={{ color: light ? '#166534' : 'white' }} />
                   </div>
                   <p className="text-xl font-extrabold" style={{ color: light ? '#166534' : 'white' }}>{value}</p>

@@ -127,7 +127,7 @@ export default function NewInvoicePage() {
     <div className="p-4 sm:p-6 lg:p-8 max-w-4xl mx-auto">
       <div className="flex items-center gap-3 mb-8">
         <Link href="/invoices">
-          <button className="p-2 rounded-xl hover:bg-gray-50 transition-colors" style={{ color: '#6b7280' }}>
+          <button className="p-2 rounded-2xl hover:bg-gray-50 transition-colors" style={{ color: '#6b7280' }}>
             <ArrowLeft className="w-5 h-5" />
           </button>
         </Link>
@@ -155,7 +155,7 @@ export default function NewInvoicePage() {
                   />
                 </div>
                 <button type="button" onClick={() => setShowNewClient(true)}
-                  className="h-9 w-9 flex-shrink-0 rounded-xl flex items-center justify-center transition-all hover:opacity-90 active:scale-95"
+                  className="h-9 w-9 flex-shrink-0 rounded-2xl flex items-center justify-center transition-all hover:opacity-90 active:scale-95"
                   style={{ background: '#a28ef9', color: '#fff' }}
                   title="Add new client">
                   <UserPlus className="w-4 h-4" />
@@ -271,7 +271,7 @@ export default function NewInvoicePage() {
                   </div>
                 </div>
                 {/* Mobile: stacked card */}
-                <div className="sm:hidden rounded-xl p-3 space-y-2" style={{ background: '#f9fafb', border: '1px solid #e5e7eb' }}>
+                <div className="sm:hidden rounded-2xl p-3 space-y-2" style={{ background: '#f9fafb', border: '1px solid #e5e7eb' }}>
                   <div className="flex items-center justify-between">
                     <span className="text-[10px] font-bold uppercase" style={{ color: '#9ca3af' }}>Item {idx + 1}</span>
                     <button type="button" onClick={() => removeItem(idx)} className="p-1 rounded-lg hover:bg-red-500/10" style={{ color: 'hsl(0 72% 65%)' }}>
@@ -344,7 +344,7 @@ export default function NewInvoicePage() {
               <div className="mt-4">
                 <h3 className="text-sm font-bold mb-2" style={{ color: '#111827' }}>Bank Details</h3>
                 <select 
-                  className="w-full px-3 py-2 rounded-xl text-sm outline-none text-gray-900 focus:ring-2 focus:ring-[#a28ef9] focus:border-transparent" 
+                  className="w-full px-3 py-2 rounded-2xl text-sm outline-none text-gray-900 focus:ring-2 focus:ring-[#a28ef9] focus:border-transparent" 
                   style={{ border: '1px solid #e5e7eb', background: '#f9fafb' }}
                   onChange={(e) => setForm({ ...form, bankDetails: e.target.value || null })}
                   value={form.bankDetails || ""}
@@ -355,7 +355,7 @@ export default function NewInvoicePage() {
                   ))}
                 </select>
                 {form.bankDetails && (
-                  <div className="mt-3 p-3 rounded-xl" style={{ background: '#f9fafb', border: '1px solid #e5e7eb' }}>
+                  <div className="mt-3 p-3 rounded-2xl" style={{ background: '#f9fafb', border: '1px solid #e5e7eb' }}>
                     <p className="whitespace-pre-line text-xs" style={{ color: '#6b7280' }}>{form.bankDetails}</p>
                   </div>
                 )}
@@ -424,37 +424,37 @@ export default function NewInvoicePage() {
               <div>
                 <label className="text-xs font-medium block mb-1" style={{ color: '#6b7280' }}>Full Name *</label>
                 <input required value={newClient.name} onChange={e => setNewClient({ ...newClient, name: e.target.value })}
-                  className="w-full px-3 py-2.5 rounded-xl text-sm outline-none" placeholder="John Doe"
+                  className="w-full px-3 py-2.5 rounded-2xl text-sm outline-none" placeholder="John Doe"
                   style={{ background: '#f9fafb', border: '1px solid #e5e7eb', color: '#111827' }} autoFocus />
               </div>
               <div className="grid grid-cols-2 gap-3">
                 <div>
                   <label className="text-xs font-medium block mb-1" style={{ color: '#6b7280' }}>Email</label>
                   <input type="email" value={newClient.email} onChange={e => setNewClient({ ...newClient, email: e.target.value })}
-                    className="w-full px-3 py-2.5 rounded-xl text-sm outline-none" placeholder="john@email.com"
+                    className="w-full px-3 py-2.5 rounded-2xl text-sm outline-none" placeholder="john@email.com"
                     style={{ background: '#f9fafb', border: '1px solid #e5e7eb', color: '#111827' }} />
                 </div>
                 <div>
                   <label className="text-xs font-medium block mb-1" style={{ color: '#6b7280' }}>Phone</label>
                   <input value={newClient.phone} onChange={e => setNewClient({ ...newClient, phone: e.target.value })}
-                    className="w-full px-3 py-2.5 rounded-xl text-sm outline-none" placeholder="+94 77 123 4567"
+                    className="w-full px-3 py-2.5 rounded-2xl text-sm outline-none" placeholder="+94 77 123 4567"
                     style={{ background: '#f9fafb', border: '1px solid #e5e7eb', color: '#111827' }} />
                 </div>
               </div>
               <div>
                 <label className="text-xs font-medium block mb-1" style={{ color: '#6b7280' }}>Company</label>
                 <input value={newClient.company} onChange={e => setNewClient({ ...newClient, company: e.target.value })}
-                  className="w-full px-3 py-2.5 rounded-xl text-sm outline-none" placeholder="Acme Inc. (optional)"
+                  className="w-full px-3 py-2.5 rounded-2xl text-sm outline-none" placeholder="Acme Inc. (optional)"
                   style={{ background: '#f9fafb', border: '1px solid #e5e7eb', color: '#111827' }} />
               </div>
               <div className="flex gap-2 pt-2">
                 <button type="button" onClick={() => setShowNewClient(false)}
-                  className="flex-1 h-10 rounded-xl text-sm font-semibold transition-colors hover:bg-gray-50"
+                  className="flex-1 h-10 rounded-2xl text-sm font-semibold transition-colors hover:bg-gray-50"
                   style={{ border: '1px solid #e5e7eb', color: '#6b7280' }}>
                   Cancel
                 </button>
                 <button type="submit" disabled={savingClient}
-                  className="flex-1 h-10 rounded-xl text-sm font-semibold text-white transition-all hover:opacity-90"
+                  className="flex-1 h-10 rounded-2xl text-sm font-semibold text-white transition-all hover:opacity-90"
                   style={{ background: '#a28ef9' }}>
                   {savingClient ? 'Adding...' : 'Add & Select'}
                 </button>

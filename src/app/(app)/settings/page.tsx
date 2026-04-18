@@ -244,10 +244,10 @@ export default function SettingsPage() {
                   <div className="flex items-center gap-3 mt-1.5">
                     <input type="color" value={companyForm.brandColor}
                       onChange={e => setCompanyForm(f => ({ ...f, brandColor: e.target.value }))}
-                      className="w-10 h-10 rounded-xl border-0 cursor-pointer" />
+                      className="w-10 h-10 rounded-2xl border-0 cursor-pointer" />
                     <input value={companyForm.brandColor}
                       onChange={e => setCompanyForm(f => ({ ...f, brandColor: e.target.value }))}
-                      className="w-28 px-3 py-2 rounded-xl text-sm font-mono outline-none" style={inputStyle} />
+                      className="w-28 px-3 py-2 rounded-2xl text-sm font-mono outline-none" style={inputStyle} />
                     <div className="flex gap-1.5">
                       {['#a28ef9', '#3b82f6', '#22c55e', '#ef4444', '#f59e0b', '#222222'].map(c => (
                         <button key={c} type="button" onClick={() => setCompanyForm(f => ({ ...f, brandColor: c }))}
@@ -300,7 +300,7 @@ export default function SettingsPage() {
                 </Label>
                 <textarea value={companyForm.companyAddress} onChange={e => setCompanyForm(f => ({ ...f, companyAddress: e.target.value }))}
                   placeholder="123 Business St, Colombo 03, Sri Lanka" rows={2}
-                  className="w-full px-3 py-2 rounded-xl text-sm outline-none resize-none" style={{ ...inputStyle, border: '1px solid #e5e7eb' }} />
+                  className="w-full px-3 py-2 rounded-2xl text-sm outline-none resize-none" style={{ ...inputStyle, border: '1px solid #e5e7eb' }} />
               </div>
             </div>
           </div>
@@ -362,7 +362,7 @@ export default function SettingsPage() {
                 <select
                   value={invSettings.defaultCurrencyId}
                   onChange={e => setInvSettings(s => ({ ...s, defaultCurrencyId: e.target.value }))}
-                  className="w-full px-3 py-2 rounded-xl text-sm outline-none"
+                  className="w-full px-3 py-2 rounded-2xl text-sm outline-none"
                   style={{ background: '#f9fafb', border: '1px solid #e5e7eb', color: '#111827' }}
                 >
                   <option value="">Select currency…</option>
@@ -374,7 +374,7 @@ export default function SettingsPage() {
               <div className="sm:col-span-2 space-y-2">
                 <Label className="text-sm" style={labelStyle}>Default Notes / Payment Terms</Label>
                 <textarea value={invSettings.defaultNotes ?? ''} onChange={e => setInvSettings(s => ({ ...s, defaultNotes: e.target.value }))} rows={3} placeholder="Payment due within 30 days..."
-                  className="w-full px-3 py-2 rounded-xl text-sm outline-none resize-none" style={{ ...inputStyle, border: '1px solid #e5e7eb' }} />
+                  className="w-full px-3 py-2 rounded-2xl text-sm outline-none resize-none" style={{ ...inputStyle, border: '1px solid #e5e7eb' }} />
               </div>
             </div>
           </div>
@@ -522,7 +522,7 @@ function PortalSettings() {
       </button>
 
       {generatedUrl && (
-        <div className="rounded-xl p-4 space-y-2" style={{ background: 'rgba(139,92,246,0.1)', border: '1px solid rgba(139,92,246,0.25)' }}>
+        <div className="rounded-2xl p-4 space-y-2" style={{ background: 'rgba(139,92,246,0.1)', border: '1px solid rgba(139,92,246,0.25)' }}>
           <p className="text-xs font-medium" style={{ color: '#9B8AFF' }}>Portal Link Ready</p>
           <div className="flex items-center gap-2">
             <code className="text-sm font-mono flex-1 truncate" style={{ color: '#6b7280' }}>{generatedUrl}</code>

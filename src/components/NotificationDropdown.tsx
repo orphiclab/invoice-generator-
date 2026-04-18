@@ -117,7 +117,7 @@ export function NotificationDropdown() {
       {/* Bell button */}
       <button
         onClick={() => { setOpen(!open); if (!open) fetchNotifications() }}
-        className="w-9 h-9 rounded-xl flex items-center justify-center transition-colors relative hover:bg-gray-50"
+        className="w-9 h-9 rounded-2xl flex items-center justify-center transition-colors relative hover:bg-gray-50"
         style={{ color: '#6b7280', border: '1px solid #e5e7eb' }}
       >
         <Bell className="w-4 h-4" />
@@ -192,7 +192,7 @@ export function NotificationDropdown() {
                     onClick={() => { if (!n.isRead) markOneRead(n.id) }}
                   >
                     {/* Icon */}
-                    <div className="w-8 h-8 rounded-xl flex items-center justify-center flex-shrink-0 mt-0.5"
+                    <div className="w-8 h-8 rounded-2xl flex items-center justify-center flex-shrink-0 mt-0.5"
                       style={{ background: colors.bg }}>
                       <Icon className="w-3.5 h-3.5" style={{ color: colors.color }} />
                     </div>

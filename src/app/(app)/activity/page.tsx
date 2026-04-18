@@ -169,10 +169,10 @@ export default function ActivityPage() {
 
                   return (
                     <div key={log.id}
-                      className="flex items-start gap-3 p-3 rounded-xl transition-all hover:bg-white group"
+                      className="flex items-start gap-3 p-3 rounded-2xl transition-all hover:bg-white group"
                       style={{ border: '1px solid transparent' }}>
                       {/* Icon */}
-                      <div className="w-9 h-9 rounded-xl flex items-center justify-center flex-shrink-0"
+                      <div className="w-9 h-9 rounded-2xl flex items-center justify-center flex-shrink-0"
                         style={{ background: colors.bg }}>
                         <Icon className="w-4 h-4" style={{ color: colors.color }} />
                       </div>
