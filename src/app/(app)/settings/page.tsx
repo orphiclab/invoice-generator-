@@ -187,7 +187,7 @@ export default function SettingsPage() {
   const cardStyle = { border: '1px solid #f0f2f0', boxShadow: '0 2px 8px rgba(0,0,0,0.05)' }
 
   return (
-    <div className="p-4 sm:p-6 lg:p-8 max-w-3xl mx-auto">
+    <div className="p-4 sm:p-6 lg:p-8 max-w-3xl mx-auto pb-24 lg:pb-8">
       <div className="mb-6">
         <h1 className="text-xl sm:text-2xl font-extrabold tracking-tight" style={{ color: '#111827' }}>Settings</h1>
         <p className="text-xs mt-1" style={{ color: '#9ca3af' }}>Manage your account and workspace</p>

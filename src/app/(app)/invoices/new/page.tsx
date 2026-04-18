@@ -205,7 +205,8 @@ export default function NewInvoicePage() {
         <div className="glass rounded-2xl p-6">
           <h2 className="text-base font-bold" style={{ color: '#111827' }}>Line Items</h2>
           <div className="space-y-3">
-            <div className="grid grid-cols-12 gap-3 px-1">
+            {/* Column headers — desktop only */}
+            <div className="hidden sm:grid grid-cols-12 gap-3 px-1">
               <div className="col-span-5 text-xs font-semibold uppercase tracking-wider" style={{ color: '#9ca3af' }}>Description</div>
               <div className="col-span-2 text-xs font-semibold uppercase tracking-wider" style={{ color: '#9ca3af' }}>Qty</div>
               <div className="col-span-2 text-xs font-semibold uppercase tracking-wider" style={{ color: '#9ca3af' }}>Unit Price</div>
@@ -213,8 +214,70 @@ export default function NewInvoicePage() {
               <div className="col-span-1"></div>
             </div>
             {items.map((item, idx) => (
-              <div key={idx} className="grid grid-cols-12 gap-3 items-center">
-                <div className="col-span-5 relative group">
+              <div key={idx}>
+                {/* Desktop: 12-col grid */}
+                <div className="hidden sm:grid grid-cols-12 gap-3 items-center">
+                  <div className="col-span-5 relative group">
+                    <Select
+                      value={item.productId || "custom"}
+                      onValueChange={(val) => {
+                        if (val === "custom") {
+                          updateItem(idx, 'productId', '')
+                        } else {
+                          const p = availableProducts.find(x => x.id === val)
+                          if (p) {
+                            setItems(items.map((it, i) => i === idx ? { 
+                              ...it, 
+                              productId: p.id, 
+                              description: p.name, 
+                              unitPrice: p.unitPrice 
+                            } : it))
+                          }
+                        }
+                      }}
+                    >
+                      <SelectTrigger className="text-gray-900 w-full" style={inputStyle}>
+                        <SelectValue placeholder="Select or type..." />
+                      </SelectTrigger>
+                      <SelectContent style={{ background: '#ffffff', borderColor: '#e5e7eb' }}>
+                        <SelectItem value="custom">Custom Item / Service</SelectItem>
+                        {availableProducts.filter(p => p.isActive).map(p => (
+                          <SelectItem key={p.id} value={p.id}>
+                            {p.name} (Rs {p.unitPrice}) {p.trackInventory ? `— ${p.stockQuantity} in stock` : ''}
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                    {!item.productId && (
+                      <Input className="text-gray-900 w-full mt-1" style={inputStyle} placeholder="Add custom description..."
+                        value={item.description} onChange={(e) => updateItem(idx, 'description', e.target.value)} required />
+                    )}
+                  </div>
+                  <div className="col-span-2">
+                    <Input className="text-gray-900 w-full" style={inputStyle} type="number" min={0.01} step={0.01}
+                      value={item.quantity} onChange={(e) => updateItem(idx, 'quantity', parseFloat(e.target.value) || 0)} />
+                  </div>
+                  <div className="col-span-2">
+                    <Input className="text-gray-900 w-full" style={inputStyle} type="number" min={0} step={0.01} placeholder="0.00"
+                      value={item.unitPrice} onChange={(e) => updateItem(idx, 'unitPrice', parseFloat(e.target.value) || 0)} />
+                  </div>
+                  <div className="col-span-2 text-sm font-semibold px-1" style={{ color: '#111827' }}>
+                    {currSymbol}{(item.quantity * item.unitPrice).toLocaleString('en-IN', { maximumFractionDigits: 0 })}
+                  </div>
+                  <div className="col-span-1 flex justify-center">
+                    <button type="button" onClick={() => removeItem(idx)} className="p-1.5 rounded-lg hover:bg-red-500/10 transition-colors" style={{ color: 'hsl(0 72% 65%)' }}>
+                      <Trash2 className="w-3.5 h-3.5" />
+                    </button>
+                  </div>
+                </div>
+                {/* Mobile: stacked card */}
+                <div className="sm:hidden rounded-xl p-3 space-y-2" style={{ background: '#f9fafb', border: '1px solid #e5e7eb' }}>
+                  <div className="flex items-center justify-between">
+                    <span className="text-[10px] font-bold uppercase" style={{ color: '#9ca3af' }}>Item {idx + 1}</span>
+                    <button type="button" onClick={() => removeItem(idx)} className="p-1 rounded-lg hover:bg-red-500/10" style={{ color: 'hsl(0 72% 65%)' }}>
+                      <Trash2 className="w-3 h-3" />
+                    </button>
+                  </div>
                   <Select
                     value={item.productId || "custom"}
                     onValueChange={(val) => {
@@ -223,48 +286,43 @@ export default function NewInvoicePage() {
                       } else {
                         const p = availableProducts.find(x => x.id === val)
                         if (p) {
-                          setItems(items.map((it, i) => i === idx ? { 
-                            ...it, 
-                            productId: p.id, 
-                            description: p.name, 
-                            unitPrice: p.unitPrice 
-                          } : it))
+                          setItems(items.map((it, i) => i === idx ? { ...it, productId: p.id, description: p.name, unitPrice: p.unitPrice } : it))
                         }
                       }
                     }}
                   >
                     <SelectTrigger className="text-gray-900 w-full" style={inputStyle}>
-                      <SelectValue placeholder="Select or type..." />
+                      <SelectValue placeholder="Select product..." />
                     </SelectTrigger>
                     <SelectContent style={{ background: '#ffffff', borderColor: '#e5e7eb' }}>
                       <SelectItem value="custom">Custom Item / Service</SelectItem>
                       {availableProducts.filter(p => p.isActive).map(p => (
-                        <SelectItem key={p.id} value={p.id}>
-                          {p.name} (Rs {p.unitPrice}) {p.trackInventory ? `— ${p.stockQuantity} in stock` : ''}
-                        </SelectItem>
+                        <SelectItem key={p.id} value={p.id}>{p.name} (Rs {p.unitPrice})</SelectItem>
                       ))}
                     </SelectContent>
                   </Select>
                   {!item.productId && (
-                    <Input className="text-gray-900 w-full mt-1" style={inputStyle} placeholder="Add custom description..."
+                    <Input className="text-gray-900 w-full" style={inputStyle} placeholder="Description..."
                       value={item.description} onChange={(e) => updateItem(idx, 'description', e.target.value)} required />
                   )}
-                </div>
-                <div className="col-span-2">
-                  <Input className="text-gray-900 w-full" style={inputStyle} type="number" min={0.01} step={0.01}
-                    value={item.quantity} onChange={(e) => updateItem(idx, 'quantity', parseFloat(e.target.value) || 0)} />
-                </div>
-                <div className="col-span-2">
-                  <Input className="text-gray-900 w-full" style={inputStyle} type="number" min={0} step={0.01} placeholder="0.00"
-                    value={item.unitPrice} onChange={(e) => updateItem(idx, 'unitPrice', parseFloat(e.target.value) || 0)} />
-                </div>
-                <div className="col-span-2 text-sm font-semibold px-1" style={{ color: '#111827' }}>
-                  {currSymbol}{(item.quantity * item.unitPrice).toLocaleString('en-IN', { maximumFractionDigits: 0 })}
-                </div>
-                <div className="col-span-1 flex justify-center">
-                  <button type="button" onClick={() => removeItem(idx)} className="p-1.5 rounded-lg hover:bg-red-500/10 transition-colors" style={{ color: 'hsl(0 72% 65%)' }}>
-                    <Trash2 className="w-3.5 h-3.5" />
-                  </button>
+                  <div className="grid grid-cols-3 gap-2">
+                    <div>
+                      <label className="text-[10px] font-semibold block mb-0.5" style={{ color: '#9ca3af' }}>Qty</label>
+                      <Input className="text-gray-900 w-full" style={inputStyle} type="number" min={0.01} step={0.01}
+                        value={item.quantity} onChange={(e) => updateItem(idx, 'quantity', parseFloat(e.target.value) || 0)} />
+                    </div>
+                    <div>
+                      <label className="text-[10px] font-semibold block mb-0.5" style={{ color: '#9ca3af' }}>Price</label>
+                      <Input className="text-gray-900 w-full" style={inputStyle} type="number" min={0} step={0.01}
+                        value={item.unitPrice} onChange={(e) => updateItem(idx, 'unitPrice', parseFloat(e.target.value) || 0)} />
+                    </div>
+                    <div>
+                      <label className="text-[10px] font-semibold block mb-0.5" style={{ color: '#9ca3af' }}>Total</label>
+                      <div className="h-9 flex items-center text-sm font-bold" style={{ color: '#111827' }}>
+                        {currSymbol}{(item.quantity * item.unitPrice).toLocaleString('en-IN', { maximumFractionDigits: 0 })}
+                      </div>
+                    </div>
+                  </div>
                 </div>
               </div>
             ))}

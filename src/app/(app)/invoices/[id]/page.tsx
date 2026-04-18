@@ -4,7 +4,7 @@ import { useEffect, useState, useCallback } from 'react'
 import { useParams, useRouter } from 'next/navigation'
 import Link from 'next/link'
 import { toast } from 'sonner'
-import { ArrowLeft, Download, MessageCircle, Share2, Edit2, Check, Clock, Building2, Mail, Phone, MapPin, Copy, Send, X, DollarSign, AlertTriangle, Bell, Plus, CreditCard, ChevronDown, Eye, MessageSquare } from 'lucide-react'
+import { ArrowLeft, Download, MessageCircle, Share2, Edit2, Check, Clock, Building2, Mail, Phone, MapPin, Copy, Send, X, DollarSign, AlertTriangle, Bell, Plus, CreditCard, ChevronDown, Eye, MessageSquare, RefreshCw } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import { StatusBadge } from '@/components/StatusBadge'
@@ -52,6 +52,12 @@ export default function InvoiceDetailPage() {
   const [pdfTemplate, setPdfTemplate] = useState<TemplateId>('green')
   const [showTemplateMenu, setShowTemplateMenu] = useState(false)
   const [showPreview, setShowPreview] = useState(false)
+  // WhatsApp modal
+  const [whatsappModal, setWhatsappModal] = useState(false)
+  const [waPhone, setWaPhone] = useState('')
+  const [waCountryCode, setWaCountryCode] = useState('+91')
+  const [waMessage, setWaMessage] = useState('')
+  const [waMsgTemplate, setWaMsgTemplate] = useState<'friendly'|'formal'|'reminder'>('friendly')
   // Comments
   const [comments, setComments] = useState<{id:string;text:string;userName:string;createdAt:string}[]>([])
   const [commentText, setCommentText] = useState('')
@@ -89,13 +95,39 @@ export default function InvoiceDetailPage() {
     setUpdatingStatus(false)
   }
 
-  function shareWhatsApp() {
+  function buildWaMessage(template: 'friendly'|'formal'|'reminder', inv: Invoice) {
+    const link = `${window.location.origin}/share/${inv.shareToken}`
+    const due = new Date(inv.dueDate).toLocaleDateString('en-IN', { day: 'numeric', month: 'long', year: 'numeric' })
+    const sym = inv.currency?.symbol ?? 'Rs'
+    const amt = `${sym} ${inv.total.toLocaleString('en-IN', { maximumFractionDigits: 2 })}`
+    if (template === 'friendly') {
+      return `Hi ${inv.client.name} 👋\n\nHope you're doing well! Here's your invoice *${inv.invoiceNo}* for *${amt}*.\n\n📅 Due Date: ${due}\n🔗 View Invoice: ${link}\n\nLet me know if you have any questions. Thanks! 🙏`
+    } else if (template === 'formal') {
+      return `Dear ${inv.client.name},\n\nPlease find invoice *${inv.invoiceNo}* for the amount of *${amt}*, due on ${due}.\n\nYou may view and pay the invoice here:\n${link}\n\nKindly ensure payment before the due date. Thank you for your business.\n\nRegards,\n${inv.user.name}`
+    } else {
+      return `Hi ${inv.client.name},\n\nThis is a friendly reminder that invoice *${inv.invoiceNo}* for *${amt}* is due on *${due}*.\n\n⚠️ Please make payment at your earliest convenience:\n${link}\n\nIf you've already paid, please disregard this message. Thank you!`
+    }
+  }
+
+  function openWhatsappModal() {
     if (!invoice) return
-    const msg = encodeURIComponent(
-      `Hi ${invoice.client.name},\n\nPlease find your invoice ${invoice.invoiceNo} for Rs ${invoice.total.toLocaleString('en-IN')}.\n\nDue date: ${new Date(invoice.dueDate).toLocaleDateString('en-IN')}\n\nView invoice: ${process.env.NEXT_PUBLIC_APP_URL}/share/${invoice.shareToken}\n\nThank you!`
-    )
-    const phone = invoice.client.phone?.replace(/\D/g, '') || ''
-    window.open(`https://wa.me/${phone}?text=${msg}`, '_blank')
+    const rawPhone = invoice.client.phone?.replace(/\D/g, '') || ''
+    // Auto-detect country code
+    let cc = '+91', local = rawPhone
+    if (rawPhone.startsWith('91') && rawPhone.length >= 12) { cc = '+91'; local = rawPhone.slice(2) }
+    else if (rawPhone.startsWith('94') && rawPhone.length >= 11) { cc = '+94'; local = rawPhone.slice(2) }
+    else if (rawPhone.startsWith('1')  && rawPhone.length >= 11) { cc = '+1';  local = rawPhone.slice(1) }
+    setWaCountryCode(cc)
+    setWaPhone(local)
+    setWaMsgTemplate('friendly')
+    setWaMessage(buildWaMessage('friendly', invoice))
+    setWhatsappModal(true)
+  }
+
+  function sendViaWhatsApp() {
+    const full = (waCountryCode + waPhone).replace(/\D/g, '')
+    const msg = encodeURIComponent(waMessage)
+    window.open(full ? `https://wa.me/${full}?text=${msg}` : `https://wa.me/?text=${msg}`, '_blank')
   }
 
   function copyShareLink() {
@@ -121,6 +153,27 @@ export default function InvoiceDetailPage() {
     } else if (pdfTemplate === 'classic') {
       const { InvoicePDFClassic } = await import('@/components/InvoicePDFClassic')
       blob = await pdf(createElement(InvoicePDFClassic, { invoice })).toBlob()
+    } else if (pdfTemplate === 'sunset') {
+      const { InvoicePDFSunset } = await import('@/components/InvoicePDFSunset')
+      blob = await pdf(createElement(InvoicePDFSunset, { invoice })).toBlob()
+    } else if (pdfTemplate === 'lavender') {
+      const { InvoicePDFLavender } = await import('@/components/InvoicePDFLavender')
+      blob = await pdf(createElement(InvoicePDFLavender, { invoice })).toBlob()
+    } else if (pdfTemplate === 'emerald') {
+      const { InvoicePDFEmerald } = await import('@/components/InvoicePDFEmerald')
+      blob = await pdf(createElement(InvoicePDFEmerald, { invoice })).toBlob()
+    } else if (pdfTemplate === 'carbon') {
+      const { InvoicePDFCarbon } = await import('@/components/InvoicePDFCarbon')
+      blob = await pdf(createElement(InvoicePDFCarbon, { invoice })).toBlob()
+    } else if (pdfTemplate === 'ruby') {
+      const { InvoicePDFRuby } = await import('@/components/InvoicePDFRuby')
+      blob = await pdf(createElement(InvoicePDFRuby, { invoice })).toBlob()
+    } else if (pdfTemplate === 'bauhaus') {
+      const { InvoicePDFBauhaus } = await import('@/components/InvoicePDFBauhaus')
+      blob = await pdf(createElement(InvoicePDFBauhaus, { invoice })).toBlob()
+    } else if (pdfTemplate === 'studio') {
+      const { InvoicePDFStudio } = await import('@/components/InvoicePDFStudio')
+      blob = await pdf(createElement(InvoicePDFStudio, { invoice })).toBlob()
     } else {
       const { InvoicePDF } = await import('@/components/InvoicePDF')
       blob = await pdf(createElement(InvoicePDF, { invoice })).toBlob()
@@ -221,26 +274,28 @@ export default function InvoiceDetailPage() {
 
   return (
     <>
-    <div className="p-4 sm:p-6 lg:p-8 max-w-5xl mx-auto">
+    <div className="p-4 sm:p-6 lg:p-8 max-w-5xl mx-auto pb-24 sm:pb-8">
       {/* Header */}
-      <div className="flex items-center gap-3 mb-6">
-        <Link href="/invoices">
-          <button className="p-2 rounded-xl hover:bg-slate-100 transition-colors" style={{ color: '#64748B' }}>
-            <ArrowLeft className="w-5 h-5" />
-          </button>
-        </Link>
-        <div className="flex-1">
-          <div className="flex items-center gap-3">
-            <h1 className="text-xl font-bold font-mono" style={{ color: '#1E293B' }}>{invoice.invoiceNo}</h1>
-            <StatusBadge status={invoice.status} />
-          </div>
+      <div className="flex flex-col gap-3 mb-6">
+        <div className="flex items-center gap-3">
+          <Link href="/invoices">
+            <button className="p-2 rounded-xl hover:bg-slate-100 transition-colors" style={{ color: '#64748B' }}>
+              <ArrowLeft className="w-5 h-5" />
+            </button>
+          </Link>
+          <div className="flex-1 min-w-0">
+            <div className="flex items-center gap-2">
+              <h1 className="text-lg sm:text-xl font-bold font-mono truncate" style={{ color: '#1E293B' }}>{invoice.invoiceNo}</h1>
+              <StatusBadge status={invoice.status} />
+            </div>
           <p className="text-xs mt-0.5" style={{ color: '#6b7280' }}>
             <Clock className="w-3 h-3 inline mr-1" />Due {new Date(invoice.dueDate).toLocaleDateString('en-IN', { day: 'numeric', month: 'long', year: 'numeric' })}
           </p>
         </div>
-        {/* Actions */}
-        <div className="flex items-center gap-2">
-          <div className="w-36">
+        </div>
+        {/* Actions — scrollable on mobile */}
+        <div className="flex items-center gap-2 overflow-x-auto pb-1 -mx-1 px-1 scrollbar-hide">
+          <div className="w-28 sm:w-36 flex-shrink-0">
             <select
               value={invoice.status}
               onChange={(e) => updateStatus(e.target.value)}
@@ -267,76 +322,94 @@ export default function InvoiceDetailPage() {
               ))}
             </select>
           </div>
-          <button onClick={shareWhatsApp} title="Send via WhatsApp" className="p-2 rounded-xl hover:bg-green-500/10 transition-colors" style={{ color: '#16a34a' }}>
-            <MessageCircle className="w-4 h-4" />
+          <button onClick={openWhatsappModal} title="Send via WhatsApp"
+            className="flex items-center gap-1.5 px-2.5 sm:px-3 py-1.5 rounded-xl text-xs font-semibold transition-all hover:bg-green-500/10 flex-shrink-0 whitespace-nowrap"
+            style={{ color: '#16a34a', border: '1px solid rgba(22,163,74,0.3)' }}>
+            <MessageCircle className="w-3.5 h-3.5" /> <span className="hidden sm:inline">WhatsApp</span><span className="sm:hidden">WA</span>
           </button>
-          <button onClick={copyShareLink} title="Copy share link" className="p-2 rounded-xl hover:bg-gray-50 transition-colors" style={{ color: '#6b7280' }}>
+          <button onClick={copyShareLink} title="Copy share link" className="p-2 rounded-xl hover:bg-gray-50 transition-colors flex-shrink-0" style={{ color: '#6b7280' }}>
             <Share2 className="w-4 h-4" />
           </button>
           {/* Preview button */}
           <button onClick={() => setShowPreview(true)} title="Preview invoice PDF"
-            className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-semibold transition-all hover:bg-emerald-500/10"
+            className="flex items-center gap-1.5 px-2.5 sm:px-3 py-1.5 rounded-xl text-xs font-semibold transition-all hover:bg-emerald-500/10 flex-shrink-0 whitespace-nowrap"
             style={{ color: '#10B981', border: '1px solid rgba(16,185,129,0.3)' }}>
-            <Eye className="w-3.5 h-3.5" /> Preview
+            <Eye className="w-3.5 h-3.5" /> <span className="hidden sm:inline">Preview</span>
           </button>
           {/* Download with template picker */}
-          <div className="relative">
-            <div className="flex items-center rounded-xl overflow-hidden" style={{ border: '1px solid rgba(123,97,255,0.4)' }}>
-              <button onClick={downloadPDF} title="Download PDF"
-                className="flex items-center gap-1.5 px-3 py-1.5 text-xs font-semibold transition-all hover:bg-gray-50"
-                style={{ color: '#a28ef9' }}>
-                <Download className="w-3.5 h-3.5" />
-                {{
-                  green: '🌿 Green',
-                  classic: '🌌 Classic',
-                  midnight: '🌙 Midnight',
-                  ocean: '🌊 Ocean',
-                  rose: '🌸 Rose',
-                }[pdfTemplate]}
-              </button>
-              <button onClick={() => setShowTemplateMenu(p => !p)}
-                className="px-1.5 py-1.5 border-l hover:bg-gray-50 transition-all"
-                style={{ borderColor: 'rgba(123,97,255,0.4)', color: '#a28ef9' }}>
-                <ChevronDown className="w-3 h-3" />
-              </button>
-            </div>
-            {showTemplateMenu && (
-              <div className="absolute right-0 top-9 z-50 rounded-xl overflow-hidden shadow-2xl" style={{ background: '#ffffff', border: '1px solid #e5e7eb', minWidth: 180 }}>
-                <p className="text-[10px] font-bold px-3 pt-2.5 pb-1" style={{ color: '#9ca3af' }}>Choose Template</p>
-                {([
-                  { id: 'green',    label: '🌿 Green Modern'  },
-                  { id: 'classic',  label: '🌌 Classic Dark'  },
-                  { id: 'midnight', label: '🌙 Midnight Gold' },
-                  { id: 'ocean',    label: '🌊 Ocean Blue'    },
-                  { id: 'rose',     label: '🌸 Rose Studio'   },
-                ] as const).map(t => (
-                  <button key={t.id} onClick={() => { setPdfTemplate(t.id); setShowTemplateMenu(false); }}
-                    className="w-full text-left px-3 py-2.5 text-xs hover:bg-gray-50 transition-all flex items-center justify-between"
-                    style={{ color: pdfTemplate === t.id ? '#a28ef9' : '#374151' }}>
-                    {t.label}
-                    {pdfTemplate === t.id && <Check className="w-3 h-3" />}
-                  </button>
-                ))}
-              </div>
-            )}
+          <div className="flex items-center rounded-xl overflow-hidden flex-shrink-0" style={{ border: '1px solid rgba(123,97,255,0.4)' }}>
+            <button onClick={downloadPDF} title="Download PDF"
+              className="flex items-center gap-1.5 px-3 py-1.5 text-xs font-semibold transition-all hover:bg-gray-50"
+              style={{ color: '#a28ef9' }}>
+              <Download className="w-3.5 h-3.5" />
+              {{
+                green: '🌿 Green',
+                classic: '🌌 Classic',
+                midnight: '🌙 Midnight',
+                ocean: '🌊 Ocean',
+                rose: '🌸 Rose',
+                sunset: '🔥 Sunset',
+                lavender: '💜 Lavender',
+                emerald: '💎 Emerald',
+                carbon: '⚡ Carbon',
+                ruby: '❤️ Ruby',
+                bauhaus: '🔷 Bauhaus',
+                studio: '🎨 Studio',
+              }[pdfTemplate]}
+            </button>
+            <button onClick={() => setShowTemplateMenu(p => !p)}
+              className="px-1.5 py-1.5 border-l hover:bg-gray-50 transition-all"
+              style={{ borderColor: 'rgba(123,97,255,0.4)', color: '#a28ef9' }}>
+              <ChevronDown className="w-3 h-3" />
+            </button>
           </div>
           <button onClick={() => { setEmailForm(f => ({ ...f, to: invoice.client.email, subject: `Invoice ${invoice.invoiceNo}` })); setEmailModal(true) }}
-            title="Send email" className="p-2 rounded-xl hover:bg-blue-500/10 transition-colors" style={{ color: '#3b82f6' }}>
+            title="Send email" className="p-2 rounded-xl hover:bg-blue-500/10 transition-colors flex-shrink-0" style={{ color: '#3b82f6' }}>
             <Mail className="w-4 h-4" />
           </button>
-          <button onClick={duplicateInvoice} disabled={duplicating} title="Duplicate invoice" className="p-2 rounded-xl hover:bg-gray-50 transition-colors" style={{ color: '#6b7280' }}>
+          <button onClick={duplicateInvoice} disabled={duplicating} title="Duplicate invoice" className="p-2 rounded-xl hover:bg-gray-50 transition-colors flex-shrink-0" style={{ color: '#6b7280' }}>
             <Copy className="w-4 h-4" />
           </button>
           <Link href={`/invoices/${id}/edit`}>
-            <button className="p-2 rounded-xl hover:bg-gray-50 transition-colors" style={{ color: '#6b7280' }}><Edit2 className="w-4 h-4" /></button>
+            <button className="p-2 rounded-xl hover:bg-gray-50 transition-colors flex-shrink-0" style={{ color: '#6b7280' }}><Edit2 className="w-4 h-4" /></button>
           </Link>
         </div>
+        {/* Template dropdown — rendered OUTSIDE overflow container */}
+        {showTemplateMenu && (
+          <>
+            <div className="fixed inset-0 z-40" onClick={() => setShowTemplateMenu(false)} />
+            <div className="absolute right-4 top-[110px] z-50 rounded-xl shadow-2xl py-1" style={{ background: '#ffffff', border: '1px solid #e5e7eb', minWidth: 200, maxHeight: 420, overflowY: 'auto' }}>
+              <p className="text-[10px] font-bold px-3 pt-2 pb-1 sticky top-0" style={{ color: '#9ca3af', background: '#ffffff' }}>Choose Template</p>
+              {([
+                { id: 'green',    label: '🌿 Green Modern'  },
+                { id: 'classic',  label: '🌌 Classic Dark'  },
+                { id: 'midnight', label: '🌙 Midnight Gold' },
+                { id: 'ocean',    label: '🌊 Ocean Blue'    },
+                { id: 'rose',     label: '🌸 Rose Studio'   },
+                { id: 'sunset',   label: '🔥 Sunset Blaze'  },
+                { id: 'lavender', label: '💜 Lavender Mist' },
+                { id: 'emerald',  label: '💎 Emerald Exec'  },
+                { id: 'carbon',   label: '⚡ Carbon Pro'    },
+                { id: 'ruby',     label: '❤️ Ruby Red'      },
+                { id: 'bauhaus',  label: '🔷 Bauhaus Bold'  },
+                { id: 'studio',   label: '🎨 Studio Creative'},
+              ] as const).map(t => (
+                <button key={t.id} onClick={() => { setPdfTemplate(t.id); setShowTemplateMenu(false); }}
+                  className="w-full text-left px-3 py-2.5 text-xs hover:bg-gray-50 transition-all flex items-center justify-between"
+                  style={{ color: pdfTemplate === t.id ? '#a28ef9' : '#374151', fontWeight: pdfTemplate === t.id ? 600 : 400 }}>
+                  {t.label}
+                  {pdfTemplate === t.id && <Check className="w-3 h-3" />}
+                </button>
+              ))}
+            </div>
+          </>
+        )}
       </div>
 
       {/* Invoice Document */}
       <div className="rounded-2xl overflow-hidden shadow-2xl" style={{ background: '#ffffff' }}>
         {/* Dark header band — matching the reference design */}
-        <div className="px-10 py-8 flex items-center justify-between" style={{ background: 'linear-gradient(135deg, #1a2744 0%, #0f172a 100%)' }}>
+        <div className="px-4 sm:px-10 py-6 sm:py-8 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4" style={{ background: 'linear-gradient(135deg, #1a2744 0%, #0f172a 100%)' }}>
           <div>
             <div className="flex items-center gap-3 mb-3">
               <div className="w-10 h-10 rounded-xl flex items-center justify-center flex-shrink-0" style={{ background: 'linear-gradient(135deg, #a28ef9, #60A5FA)' }}>
@@ -381,25 +454,25 @@ export default function InvoiceDetailPage() {
             { label: 'Due Date', value: new Date(invoice.dueDate).toLocaleDateString('en-IN', { day: 'numeric', month: 'short', year: 'numeric' }) },
             { label: 'Invoice No', value: invoice.invoiceNo },
           ].map(({ label, value }, i) => (
-            <div key={label} className={`px-8 py-4 ${i < 2 ? 'border-r' : ''}`} style={{ borderColor: '#e5e7eb' }}>
-              <p className="text-xs font-semibold uppercase tracking-wider mb-1" style={{ color: '#9ca3af' }}>{label}</p>
-              <p className="text-sm font-semibold font-mono" style={{ color: '#111827' }}>{value}</p>
+            <div key={label} className={`px-3 sm:px-8 py-3 sm:py-4 ${i < 2 ? 'border-r' : ''}`} style={{ borderColor: '#e5e7eb' }}>
+              <p className="text-[10px] sm:text-xs font-semibold uppercase tracking-wider mb-0.5 sm:mb-1" style={{ color: '#9ca3af' }}>{label}</p>
+              <p className="text-xs sm:text-sm font-semibold font-mono" style={{ color: '#111827' }}>{value}</p>
             </div>
           ))}
         </div>
 
         {/* From / To */}
-        <div className="grid grid-cols-2 gap-0 border-b" style={{ borderColor: '#e5e7eb' }}>
-          <div className="px-10 py-7 border-r" style={{ borderColor: '#e5e7eb' }}>
-            <p className="text-xs font-bold uppercase tracking-widest mb-4" style={{ color: '#9ca3af' }}>Invoice From</p>
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-0 border-b" style={{ borderColor: '#e5e7eb' }}>
+          <div className="px-4 sm:px-10 py-5 sm:py-7 border-b sm:border-b-0 sm:border-r" style={{ borderColor: '#e5e7eb' }}>
+            <p className="text-xs font-bold uppercase tracking-widest mb-3 sm:mb-4" style={{ color: '#9ca3af' }}>Invoice From</p>
             <p className="font-bold text-sm" style={{ color: '#111827' }}>{invoice.user.company || invoice.user.name}</p>
             {invoice.user.company && <p className="text-sm mt-0.5" style={{ color: '#6b7280' }}>{invoice.user.name}</p>}
             {invoice.user.address && <p className="text-sm mt-1" style={{ color: '#6b7280' }}>{invoice.user.address}</p>}
             {invoice.user.email && <p className="text-sm mt-0.5" style={{ color: '#6b7280' }}>{invoice.user.email}</p>}
             {invoice.user.phone && <p className="text-sm mt-0.5" style={{ color: '#6b7280' }}>{invoice.user.phone}</p>}
           </div>
-          <div className="px-10 py-7">
-            <p className="text-xs font-bold uppercase tracking-widest mb-4" style={{ color: '#9ca3af' }}>Invoice To</p>
+          <div className="px-4 sm:px-10 py-5 sm:py-7">
+            <p className="text-xs font-bold uppercase tracking-widest mb-3 sm:mb-4" style={{ color: '#9ca3af' }}>Invoice To</p>
             <p className="font-bold text-sm" style={{ color: '#111827' }}>{invoice.client.name}</p>
             {invoice.client.company && <p className="text-sm mt-0.5" style={{ color: '#6b7280' }}>{invoice.client.company}</p>}
             {invoice.client.address && <p className="text-sm mt-1" style={{ color: '#6b7280' }}>{invoice.client.address}</p>}
@@ -409,7 +482,7 @@ export default function InvoiceDetailPage() {
         </div>
 
         {/* Items table */}
-        <div className="px-10 py-8">
+        <div className="px-4 sm:px-10 py-5 sm:py-8 overflow-x-auto">
           <table className="w-full">
             <thead>
               <tr style={{ background: '#f3f4f6', borderRadius: '8px' }}>
@@ -432,9 +505,9 @@ export default function InvoiceDetailPage() {
         </div>
 
         {/* Totals + Notes */}
-        <div className="px-10 pb-10 flex justify-between items-start gap-8">
+        <div className="px-4 sm:px-10 pb-8 sm:pb-10 flex flex-col sm:flex-row justify-between items-start gap-6 sm:gap-8">
           {/* Notes & Bank Details */}
-          <div className="flex-1 space-y-4">
+          <div className="flex-1 w-full space-y-4">
             {invoice.notes && (
               <div className="p-4 rounded-xl border-l-4" style={{ background: '#f9fafb', borderLeftColor: '#6366f1' }}>
                 <p className="text-xs font-bold uppercase tracking-wider mb-2" style={{ color: '#9ca3af' }}>Notes & Payment Terms</p>
@@ -450,7 +523,7 @@ export default function InvoiceDetailPage() {
           </div>
 
           {/* Totals */}
-          <div className="w-64 flex-shrink-0">
+          <div className="w-full sm:w-64 flex-shrink-0">
             <div className="space-y-2">
               <div className="flex justify-between text-sm">
                 <span style={{ color: '#6b7280' }}>Subtotal</span>
@@ -766,6 +839,124 @@ export default function InvoiceDetailPage() {
         onTemplateChange={(t) => setPdfTemplate(t)}
         onDownload={() => { setShowPreview(false); downloadPDF() }}
       />
+    )}
+
+    {/* ── WhatsApp Sender Modal ── */}
+    {whatsappModal && (
+      <div className="fixed inset-0 z-50 flex items-end sm:items-center justify-center p-0 sm:p-4"
+        style={{ background: 'rgba(0,0,0,0.75)', backdropFilter: 'blur(6px)' }}
+        onClick={(e) => { if (e.target === e.currentTarget) setWhatsappModal(false) }}>
+        <div className="w-full sm:max-w-lg rounded-t-3xl sm:rounded-2xl overflow-hidden"
+          style={{ background: '#0d1117', border: '1px solid rgba(255,255,255,0.08)', maxHeight: '92vh', display: 'flex', flexDirection: 'column' }}>
+
+          {/* Header */}
+          <div className="flex items-center justify-between px-5 py-4 border-b flex-shrink-0"
+            style={{ borderColor: 'rgba(255,255,255,0.07)', background: 'linear-gradient(135deg, #0d1117, #111827)' }}>
+            <div className="flex items-center gap-3">
+              <div className="w-9 h-9 rounded-xl flex items-center justify-center"
+                style={{ background: 'linear-gradient(135deg, #25d366, #128c7e)' }}>
+                <MessageCircle className="w-4.5 h-4.5 text-white" style={{ width: 18, height: 18 }} />
+              </div>
+              <div>
+                <p className="text-sm font-bold text-white">Send via WhatsApp</p>
+                <p className="text-[11px]" style={{ color: '#6b7280' }}>Opens WhatsApp with pre-filled message</p>
+              </div>
+            </div>
+            <button onClick={() => setWhatsappModal(false)}
+              className="p-1.5 rounded-lg transition-colors hover:bg-white/10" style={{ color: '#6b7280' }}>
+              <X className="w-4 h-4" />
+            </button>
+          </div>
+
+          <div className="overflow-y-auto flex-1 px-5 py-4 space-y-4">
+            {/* Phone number */}
+            <div>
+              <label className="text-xs font-semibold block mb-1.5" style={{ color: '#9ca3af' }}>WhatsApp Number</label>
+              <div className="flex gap-2">
+                <select value={waCountryCode} onChange={e => setWaCountryCode(e.target.value)}
+                  className="h-10 px-2 rounded-xl text-xs font-semibold outline-none"
+                  style={{ background: '#1a2035', border: '1px solid rgba(255,255,255,0.08)', color: '#e5e7eb', minWidth: 80 }}>
+                  {['+91 🇮🇳','+94 🇱🇰','+1 🇺🇸','+44 🇬🇧','+971 🇦🇪','+60 🇲🇾','+65 🇸🇬','+61 🇦🇺','+92 🇵🇰','+880 🇧🇩'].map(c => {
+                    const code = c.split(' ')[0]
+                    return <option key={code} value={code}>{c}</option>
+                  })}
+                </select>
+                <input
+                  type="tel"
+                  placeholder="Phone number"
+                  value={waPhone}
+                  onChange={e => setWaPhone(e.target.value.replace(/[^\d\s\-]/g, ''))}
+                  className="flex-1 h-10 px-3 rounded-xl text-sm outline-none"
+                  style={{ background: '#1a2035', border: '1px solid rgba(255,255,255,0.08)', color: '#e5e7eb' }}
+                />
+              </div>
+              {!waPhone.trim() && (
+                <p className="text-[10px] mt-1" style={{ color: '#f59e0b' }}>⚠️ No phone number — WhatsApp will open without a recipient</p>
+              )}
+            </div>
+
+            {/* Message templates */}
+            <div>
+              <label className="text-xs font-semibold block mb-1.5" style={{ color: '#9ca3af' }}>Message Template</label>
+              <div className="grid grid-cols-3 gap-2">
+                {([['friendly','😊 Friendly'],['formal','🤝 Formal'],['reminder','⚠️ Reminder']] as const).map(([id, label]) => (
+                  <button key={id} onClick={() => { setWaMsgTemplate(id); setWaMessage(buildWaMessage(id, invoice)) }}
+                    className="py-2 px-2 rounded-xl text-[11px] font-semibold transition-all"
+                    style={waMsgTemplate === id
+                      ? { background: 'rgba(37,211,102,0.2)', border: '1px solid rgba(37,211,102,0.5)', color: '#25d366' }
+                      : { background: '#1a2035', border: '1px solid rgba(255,255,255,0.06)', color: '#9ca3af' }}>
+                    {label}
+                  </button>
+                ))}
+              </div>
+            </div>
+
+            {/* Message editor */}
+            <div>
+              <div className="flex items-center justify-between mb-1.5">
+                <label className="text-xs font-semibold" style={{ color: '#9ca3af' }}>Message</label>
+                <button onClick={() => setWaMessage(buildWaMessage(waMsgTemplate, invoice))}
+                  className="flex items-center gap-1 text-[10px] px-2 py-1 rounded-lg transition-colors hover:bg-white/10"
+                  style={{ color: '#6b7280' }}>
+                  <RefreshCw className="w-2.5 h-2.5" /> Reset
+                </button>
+              </div>
+              <textarea
+                value={waMessage}
+                onChange={e => setWaMessage(e.target.value)}
+                rows={7}
+                className="w-full px-3 py-2.5 rounded-xl text-sm resize-none outline-none leading-relaxed"
+                style={{ background: '#1a2035', border: '1px solid rgba(255,255,255,0.08)', color: '#e5e7eb', fontFamily: 'inherit' }}
+              />
+              <p className="text-[10px] mt-1" style={{ color: '#4b5563' }}>{waMessage.length} chars · *text* = bold in WhatsApp</p>
+            </div>
+
+            {/* WhatsApp preview bubble */}
+            <div>
+              <label className="text-xs font-semibold block mb-2" style={{ color: '#9ca3af' }}>Preview</label>
+              <div className="rounded-xl p-3" style={{ background: '#0a1628' }}>
+                <div className="inline-block max-w-[85%] px-3 py-2 rounded-2xl rounded-tl-sm text-sm leading-relaxed whitespace-pre-wrap break-words"
+                  style={{ background: '#1f2b1f', color: '#e5e7eb', fontSize: 12.5 }}>
+                  {waMessage || <span style={{ color: '#4b5563' }}>Your message will appear here…</span>}
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {/* Footer */}
+          <div className="flex-shrink-0 px-5 py-4 border-t flex gap-3"
+            style={{ borderColor: 'rgba(255,255,255,0.07)', background: '#0d1117' }}>
+            <button onClick={() => setWhatsappModal(false)}
+              className="flex-1 h-10 rounded-xl text-sm font-semibold transition-all hover:bg-white/5"
+              style={{ border: '1px solid rgba(255,255,255,0.08)', color: '#9ca3af' }}>Cancel</button>
+            <button onClick={sendViaWhatsApp}
+              className="flex-1 h-10 rounded-xl text-sm font-bold text-white flex items-center justify-center gap-2 transition-all hover:opacity-90 active:scale-[0.97]"
+              style={{ background: 'linear-gradient(135deg, #25d366, #128c7e)' }}>
+              <MessageCircle className="w-4 h-4" /> Open in WhatsApp
+            </button>
+          </div>
+        </div>
+      </div>
     )}
     </>
   )

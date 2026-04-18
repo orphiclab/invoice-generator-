@@ -127,12 +127,12 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
           <Zap className="w-4 h-4" style={{ color: '#a4f5a6' }} />
         </div>
         <div className="flex-1 min-w-0">
-          <p className="font-bold text-sm leading-none tracking-tight" style={{ color: '#111827' }}>InvoiceFlow</p>
-          <p className="text-[10px] mt-0.5" style={{ color: '#9ca3af' }}>Smart Billing</p>
+          <p className="font-bold text-sm leading-none tracking-tight" style={{ color: TEXT_PRIMARY }}>InvoiceFlow</p>
+          <p className="text-[10px] mt-0.5" style={{ color: LABEL_COLOR }}>Smart Billing</p>
         </div>
         {/* Close button — mobile only */}
-        <button className="lg:hidden p-1 rounded-lg hover:bg-gray-100 -mr-1"
-          onClick={() => setSidebarOpen(false)} style={{ color: '#6b7280' }}>
+        <button className="lg:hidden p-1 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800 -mr-1"
+          onClick={() => setSidebarOpen(false)} style={{ color: INACTIVE_COLOR }}>
           <ChevronLeft className="w-4 h-4" />
         </button>
       </div>
@@ -176,7 +176,7 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
       {/* Bottom — Logout only */}
       <div className="pt-3 mt-2" style={{ borderTop: `1px solid ${BORDER_COLOR}` }}>
         <button onClick={handleLogout}
-          className="flex items-center gap-2.5 px-3 py-2.5 sm:py-2 rounded-xl text-[13px] font-semibold w-full transition-colors hover:bg-gray-50 active:scale-[0.97]"
+          className="flex items-center gap-2.5 px-3 py-2.5 sm:py-2 rounded-xl text-[13px] font-semibold w-full transition-colors hover:bg-gray-50 dark:hover:bg-gray-800 active:scale-[0.97]"
           style={{ color: INACTIVE_COLOR }}>
           <LogOut className="w-4 h-4" /> Log out
         </button>
@@ -222,8 +222,8 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
         {/* Topbar */}
         <header className="flex items-center gap-3 sm:gap-4 px-4 sm:px-6 h-[56px] sm:h-[60px] flex-shrink-0 relative z-20"
           style={{ background: TOPBAR_BG, borderBottom: `1px solid ${BORDER_COLOR}` }}>
-          <button className="lg:hidden p-2 -ml-1 rounded-xl hover:bg-gray-100 active:scale-95 transition-transform" onClick={() => setSidebarOpen(true)}
-            style={{ color: '#6b7280' }}>
+          <button className="lg:hidden p-2 -ml-1 rounded-xl hover:bg-gray-100 dark:hover:bg-gray-800 active:scale-95 transition-transform" onClick={() => setSidebarOpen(true)}
+            style={{ color: INACTIVE_COLOR }}>
             <Menu className="w-5 h-5" />
           </button>
           {/* Mobile logo */}
@@ -231,7 +231,7 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
             <div className="w-7 h-7 rounded-lg flex items-center justify-center" style={{ background: '#222222' }}>
               <Zap className="w-3.5 h-3.5" style={{ color: '#a4f5a6' }} />
             </div>
-            <span className="font-bold text-sm" style={{ color: '#111827' }}>InvoiceFlow</span>
+            <span className="font-bold text-sm" style={{ color: TEXT_PRIMARY }}>InvoiceFlow</span>
           </div>
           <div className="flex-1" />
           <div className="hidden sm:block">

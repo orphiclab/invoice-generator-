@@ -1,4 +1,4 @@
-name: Deploy Application
+name: Deploy to Oracle Cloud
 
 on:
   push:
@@ -6,9 +6,40 @@ on:
       - main
       - master
 
+env:
+  # Oracle Cloud Infrastructure Registry (OCIR)
+  # Format: <region-key>.ocir.io/<tenancy-namespace>/<repo-name>
+  IMAGE: ${{ secrets.OCIR_REGION }}.ocir.io/${{ secrets.OCIR_NAMESPACE }}/invoice-app
+
 jobs:
-  deploy:
+  # ── 1. Build & Push Docker image to OCIR ────────────────────────
+  build:
+    name: Build & Push Image
     runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Log in to OCIR
+        run: |
+          echo "${{ secrets.OCIR_TOKEN }}" | \
+            docker login ${{ secrets.OCIR_REGION }}.ocir.io \
+              --username "${{ secrets.OCIR_NAMESPACE }}/${{ secrets.OCIR_USER }}" \
+              --password-stdin
+
+      - name: Build Docker image
+        run: docker build -t $IMAGE:$GITHUB_SHA -t $IMAGE:latest .
+
+      - name: Push to OCIR
+        run: |
+          docker push $IMAGE:$GITHUB_SHA
+          docker push $IMAGE:latest
+
+  # ── 2. Deploy on OCI VM ──────────────────────────────────────────
+  deploy:
+    name: Deploy on OCI VM
+    runs-on: ubuntu-latest
+    needs: build
     steps:
       - name: Deploy via SSH
         uses: appleboy/ssh-action@v1.0.3
@@ -17,7 +48,30 @@ jobs:
           username: ${{ secrets.SERVER_USER }}
           key: ${{ secrets.SERVER_SSH_KEY }}
           script: |
+            set -e
             cd ~/app
+
+            # Pull latest code (nginx.conf, compose files, etc.)
             git pull origin main
-            sudo docker compose db migrate # (optional, if you do migrations manually)
-            sudo docker compose up -d --build
+
+            # Log in to OCIR on the server
+            echo "${{ secrets.OCIR_TOKEN }}" | \
+              docker login ${{ secrets.OCIR_REGION }}.ocir.io \
+                --username "${{ secrets.OCIR_NAMESPACE }}/${{ secrets.OCIR_USER }}" \
+                --password-stdin
+
+            # Pull the freshly built image
+            docker pull ${{ secrets.OCIR_REGION }}.ocir.io/${{ secrets.OCIR_NAMESPACE }}/invoice-app:latest
+
+            # Run Prisma migrations (inside a one-off container using the same image)
+            docker run --rm \
+              --network invoice_net \
+              --env-file ~/app/.env.prod \
+              ${{ secrets.OCIR_REGION }}.ocir.io/${{ secrets.OCIR_NAMESPACE }}/invoice-app:latest \
+              npx prisma migrate deploy
+
+            # Restart the stack
+            docker compose -f docker-compose.prod.yml --env-file ~/app/.env.prod up -d --pull always
+
+            # Clean up old images to free disk space
+            docker image prune -f

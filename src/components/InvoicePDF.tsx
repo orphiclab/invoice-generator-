@@ -467,7 +467,7 @@ export function InvoicePDF({ invoice }: { invoice: Invoice | null }) {
                 <Text style={[styles.totalLineValue, { color: GREEN_MID }]}>-{fmt(discountAmt)}</Text>
               </View>
             )}
-            {invoice.lateFeeAmount && invoice.lateFeeAmount > 0 && (
+            {!!invoice.lateFeeAmount && invoice.lateFeeAmount > 0 && (
               <View style={styles.totalLineRow}>
                 <Text style={styles.totalLineLabel}>Late Fee</Text>
                 <Text style={[styles.totalLineValue, { color: '#DC2626' }]}>{fmt(invoice.lateFeeAmount)}</Text>

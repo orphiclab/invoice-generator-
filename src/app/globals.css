@@ -120,13 +120,21 @@
   color: hsl(215 20% 45%) !important;
 }
 
-/* White panels used throughout — flip to dark card bg */
-[data-theme="dark"] .bg-white,
+/* ── bg-white class override ─────────────────────────────────── */
+[data-theme="dark"] .bg-white {
+  background-color: hsl(222 42% 11%) !important;
+}
+[data-theme="dark"] .bg-gray-50 {
+  background-color: hsl(220 30% 13%) !important;
+}
+
+/* ── Inline style background overrides ───────────────────────── */
 [data-theme="dark"] [style*="background: #ffffff"],
 [data-theme="dark"] [style*="background: '#ffffff'"],
 [data-theme="dark"] [style*="background:#ffffff"],
 [data-theme="dark"] [style*="background-color: rgb(255, 255, 255)"],
-[data-theme="dark"] [style*="background: rgb(255, 255, 255)"] {
+[data-theme="dark"] [style*="background: rgb(255, 255, 255)"],
+[data-theme="dark"] [style*="background: #fff"] {
   background-color: hsl(222 42% 11%) !important;
 }
 
@@ -140,7 +148,25 @@
   background-color: hsl(220 30% 13%) !important;
 }
 
-/* Dark hardcoded text → light in dark mode */
+/* ── Inline style border overrides ───────────────────────────── */
+[data-theme="dark"] [style*="border: 1px solid #f0f2f0"],
+[data-theme="dark"] [style*="border: '1px solid #f0f2f0'"],
+[data-theme="dark"] [style*="border: 1px solid rgb(240, 242, 240)"],
+[data-theme="dark"] [style*="border: 1px solid #e5e7eb"],
+[data-theme="dark"] [style*="border: '1px solid #e5e7eb'"],
+[data-theme="dark"] [style*="border: 1px solid rgb(229, 231, 235)"],
+[data-theme="dark"] [style*="border: 1px solid #f3f4f6"],
+[data-theme="dark"] [style*="border: 1px solid rgb(243, 244, 246)"],
+[data-theme="dark"] [style*="border-bottom: 1px solid #f3f4f6"],
+[data-theme="dark"] [style*="border-bottom: 1px solid rgb(243, 244, 246)"],
+[data-theme="dark"] [style*="borderColor: '#e5e7eb'"],
+[data-theme="dark"] [style*="borderColor: #e5e7eb"],
+[data-theme="dark"] [style*="border-color: rgb(229, 231, 235)"],
+[data-theme="dark"] [style*="border-color: #e5e7eb"] {
+  border-color: hsl(var(--border)) !important;
+}
+
+/* ── Inline text color overrides ─────────────────────────────── */
 [data-theme="dark"] [style*="color: #111827"],
 [data-theme="dark"] [style*="color: rgb(17, 24, 39)"],
 [data-theme="dark"] [style*="color: '#111827'"] {
@@ -165,8 +191,94 @@
   color: hsl(var(--foreground)) !important;
 }
 
-/* Tables in dark mode */
+[data-theme="dark"] [style*="color: #222222"],
+[data-theme="dark"] [style*="color: rgb(34, 34, 34)"] {
+  color: hsl(var(--foreground)) !important;
+}
+
+/* ── Muted and secondary text color catch-all ────────────────── */
+[data-theme="dark"] [style*="color: #6b7280"],
+[data-theme="dark"] [style*="color: '#6b7280'"],
+[data-theme="dark"] [style*="color:rgb(107, 114, 128)"],
+[data-theme="dark"] [style*="color: rgb(107, 114, 128)"],
+[data-theme="dark"] [style*="color: #4b5563"],
+[data-theme="dark"] [style*="color: rgb(75, 85, 99)"] {
+  color: hsl(215 20% 65%) !important;
+}
+
+[data-theme="dark"] [style*="color: #9ca3af"],
+[data-theme="dark"] [style*="color: '#9ca3af'"],
+[data-theme="dark"] [style*="color:rgb(156, 163, 175)"],
+[data-theme="dark"] [style*="color: rgb(156, 163, 175)"],
+[data-theme="dark"] [style*="color: #d1d5db"],
+[data-theme="dark"] [style*="color: rgb(209, 213, 219)"] {
+  color: hsl(215 15% 55%) !important;
+}
+
+/* ── Primary dark text color catch-all (#111827 and variants) ── */
+[data-theme="dark"] [style*="color: #111827"],
+[data-theme="dark"] [style*="color: '#111827'"],
+[data-theme="dark"] [style*="color:rgb(17, 24, 39)"],
+[data-theme="dark"] [style*="color: rgb(17, 24, 39)"],
+[data-theme="dark"] [style*="color: #0f172a"],
+[data-theme="dark"] [style*="color: rgb(15, 23, 42)"],
+[data-theme="dark"] [style*="color: #222222"],
+[data-theme="dark"] [style*="color: rgb(34, 34, 34)"] {
+  color: hsl(var(--foreground)) !important;
+}
+
+/* ── Catch-all for border colors using dark hex codes ─────────── */
+[data-theme="dark"] [style*="border: 1.5px solid #111827"],
+[data-theme="dark"] [style*="border: 1px solid #111827"],
+[data-theme="dark"] [style*="border: 1.5px solid rgb(17, 24, 39)"],
+[data-theme="dark"] [style*="border: 1px solid rgb(17, 24, 39)"],
+[data-theme="dark"] [style*="borderColor: '#111827'"],
+[data-theme="dark"] [style*="border-color: #111827"],
+[data-theme="dark"] [style*="border: 1px solid #e5e7eb"],
+[data-theme="dark"] [style*="border: 1px solid rgb(229, 231, 235)"] {
+  border-color: hsl(var(--border)) !important;
+}
+
+/* ── Specific rule for the Zap icon border on auth pages ──────── */
+[data-theme="dark"] .auth-left [style*="border"] {
+  border-color: hsl(var(--foreground)) !important;
+}
+
+/* ── Fix Lucide icons with hardcoded colors ──────────────────── */
+[data-theme="dark"] svg[stroke="#111827"],
+[data-theme="dark"] svg[stroke="rgb(17, 24, 39)"],
+[data-theme="dark"] svg[fill="#111827"],
+[data-theme="dark"] svg[fill="rgb(17, 24, 39)"],
+[data-theme="dark"] svg[color="#111827"] {
+  stroke: hsl(var(--foreground)) !important;
+}
+
+[data-theme="dark"] svg[stroke="#6b7280"],
+[data-theme="dark"] svg[stroke="rgb(107, 114, 128)"] {
+  stroke: hsl(215 20% 65%) !important;
+}
+
+[data-theme="dark"] svg[stroke="#9ca3af"],
+[data-theme="dark"] svg[stroke="rgb(156, 163, 175)"] {
+  stroke: hsl(215 15% 55%) !important;
+}
+
+/* ── Additional background patterns ──────────────────────────── */
+[data-theme="dark"] [style*="background: #f3f4f6"],
+[data-theme="dark"] [style*="background: rgb(243, 244, 246)"] {
+  background-color: hsl(220 20% 20%) !important;
+}
+
+/* ── Tables in dark mode ─────────────────────────────────────── */
 [data-theme="dark"] table {
+  color: hsl(var(--foreground));
+}
+
+[data-theme="dark"] thead th {
+  color: hsl(215 15% 52%) !important;
+}
+
+[data-theme="dark"] tbody td {
   color: hsl(var(--foreground));
 }
 
@@ -177,33 +289,109 @@
   background-color: hsl(220 30% 16%) !important;
 }
 
-/* Muted subtext — keep readable */
-[data-theme="dark"] [style*="color: #6b7280"],
-[data-theme="dark"] [style*="color: '#6b7280'"],
-[data-theme="dark"] [style*="color: rgb(107, 114, 128)"] {
+/* ── Hover overrides ─────────────────────────────────────────── */
+[data-theme="dark"] .hover\:bg-gray-50:hover {
+  background-color: hsl(220 25% 14%) !important;
+}
+[data-theme="dark"] .hover\:bg-gray-100:hover {
+  background-color: hsl(220 25% 16%) !important;
+}
+[data-theme="dark"] tr.hover\:bg-gray-50:hover,
+[data-theme="dark"] div.hover\:bg-gray-50:hover {
+  background-color: hsl(220 25% 14%) !important;
+}
+
+/* ── Divide color fix ────────────────────────────────────────── */
+[data-theme="dark"] .divide-y > :not(:first-child) {
+  border-color: hsl(var(--border)) !important;
+}
+
+/* ── Progress bar / track backgrounds ────────────────────────── */
+[data-theme="dark"] [style*="background: #f3f4f6"] {
+  background-color: hsl(220 20% 18%) !important;
+}
+
+/* ── Recharts tooltip dark mode ──────────────────────────────── */
+[data-theme="dark"] .recharts-default-tooltip,
+[data-theme="dark"] .recharts-tooltip-wrapper [style] {
+  background: hsl(222 42% 14%) !important;
+  border-color: hsl(var(--border)) !important;
+  color: hsl(var(--foreground)) !important;
+}
+
+/* ── SVG text in charts (donut center labels, etc.) ──────────── */
+[data-theme="dark"] .recharts-text[fill="#111827"],
+[data-theme="dark"] text[fill="#111827"] {
+  fill: hsl(var(--foreground)) !important;
+}
+[data-theme="dark"] .recharts-text[fill="#9ca3af"],
+[data-theme="dark"] text[fill="#9ca3af"] {
+  fill: hsl(215 15% 52%) !important;
+}
+
+/* ── Auth pages dark mode ────────────────────────────────────── */
+[data-theme="dark"] .auth-left {
+  background: hsl(222 42% 9%) !important;
+}
+[data-theme="dark"] .auth-left h1 {
+  color: hsl(var(--foreground)) !important;
+}
+[data-theme="dark"] .auth-left p,
+[data-theme="dark"] .auth-left span,
+[data-theme="dark"] .auth-left label,
+[data-theme="dark"] .auth-left a {
+  color: inherit;
+}
+[data-theme="dark"] .auth-left input {
+  background: hsl(220 25% 14%) !important;
+  border-color: hsl(var(--border)) !important;
+  color: hsl(var(--foreground)) !important;
+}
+[data-theme="dark"] .auth-left input::placeholder {
+  color: hsl(215 20% 45%) !important;
+}
+[data-theme="dark"] .auth-left button[type="submit"] {
+  background: hsl(258 84% 72%) !important;
+  color: #fff !important;
+}
+[data-theme="dark"] .auth-left [style*="border"] {
+  border-color: hsl(var(--border)) !important;
+}
+[data-theme="dark"] .auth-left [style*="background: #f3f4f6"],
+[data-theme="dark"] .auth-left [style*="background: rgb(243, 244, 246)"] {
+  background-color: hsl(220 20% 18%) !important;
+}
+
+/* ── Modal / slide-out panel backgrounds ─────────────────────── */
+[data-theme="dark"] [style*="background: '#ffffff'"],
+[data-theme="dark"] div[style*="background: #ffffff"] {
+  background-color: hsl(222 42% 11%) !important;
+}
+
+/* ── Tailwind text-gray classes ──────────────────────────────── */
+[data-theme="dark"] .text-gray-900 {
+  color: hsl(var(--foreground)) !important;
+}
+[data-theme="dark"] .text-gray-800 {
+  color: hsl(210 30% 85%) !important;
+}
+[data-theme="dark"] .text-gray-700 {
+  color: hsl(210 30% 80%) !important;
+}
+[data-theme="dark"] .text-gray-600 {
+  color: hsl(215 20% 65%) !important;
+}
+[data-theme="dark"] .text-gray-500 {
   color: hsl(215 20% 58%) !important;
 }
 
-[data-theme="dark"] [style*="color: #9ca3af"],
-[data-theme="dark"] [style*="color: '#9ca3af'"],
-[data-theme="dark"] [style*="color: rgb(156, 163, 175)"] {
-  color: hsl(215 15% 52%) !important;
-}
-
-/* Border colors */
-[data-theme="dark"] [style*="borderColor: '#e5e7eb'"],
-[data-theme="dark"] [style*="borderColor: #e5e7eb"],
-[data-theme="dark"] [style*="border-color: rgb(229, 231, 235)"],
-[data-theme="dark"] [style*="border: '1px solid #e5e7eb'"],
-[data-theme="dark"] [style*="border-color: #e5e7eb"],
-[data-theme="dark"] [style*="border: 1px solid #f0f2f0"],
-[data-theme="dark"] [style*="border: '1px solid #f0f2f0'"],
-[data-theme="dark"] [style*="border: 1px solid rgb(240, 242, 240)"],
-[data-theme="dark"] [style*="border-bottom: 1px solid #f3f4f6"],
-[data-theme="dark"] [style*="border-bottom: 1px solid rgb(243, 244, 246)"],
-[data-theme="dark"] [style*="border: 1px solid #f3f4f6"],
-[data-theme="dark"] [style*="border: 1px solid rgb(243, 244, 246)"] {
+/* ── Tailwind bg/border classes ──────────────────────────────── */
+[data-theme="dark"] .border-gray-100,
+[data-theme="dark"] .border-gray-200 {
   border-color: hsl(var(--border)) !important;
+}
+[data-theme="dark"] .bg-gray-100 {
+  background-color: hsl(220 25% 16%) !important;
 }
 
 * { border-color: hsl(var(--border)); box-sizing: border-box; }
@@ -426,12 +614,175 @@ body {
 .status-rejected { background: #fef2f2; color: #dc2626; border: 1px solid #fecaca; }
 .status-converted { background: #f5f3ff; color: #7c3aed; border: 1px solid #ddd6fe; }
 
-/* ── Input overrides for light theme ─────────────────────────── */
-input, textarea, select {
+/* ── Dark mode: status badges ────────────────────────────────── */
+[data-theme="dark"] .status-draft    { background: hsl(220 25% 16%); color: hsl(215 15% 60%); border-color: hsl(var(--border)); }
+[data-theme="dark"] .status-sent     { background: hsl(220 50% 16%); color: #60a5fa; border-color: hsl(220 50% 25%); }
+[data-theme="dark"] .status-paid     { background: hsl(145 40% 14%); color: #4ade80; border-color: hsl(145 40% 22%); }
+[data-theme="dark"] .status-overdue  { background: hsl(0 40% 14%); color: #f87171; border-color: hsl(0 40% 22%); }
+[data-theme="dark"] .status-accepted { background: hsl(145 40% 14%); color: #4ade80; border-color: hsl(145 40% 22%); }
+[data-theme="dark"] .status-rejected { background: hsl(0 40% 14%); color: #f87171; border-color: hsl(0 40% 22%); }
+[data-theme="dark"] .status-converted { background: hsl(270 40% 16%); color: #a78bfa; border-color: hsl(270 40% 25%); }
+
+/* ── Dark mode: pill tab bar ─────────────────────────────────── */
+[data-theme="dark"] .pill-tab-bar {
+  background: hsl(220 25% 14%);
+}
+[data-theme="dark"] .pill-tab {
+  color: hsl(215 15% 55%);
+}
+[data-theme="dark"] .pill-tab:hover {
+  background: hsl(220 25% 18%);
+  color: hsl(210 30% 80%);
+}
+[data-theme="dark"] .pill-tab.active {
+  background: hsl(220 25% 90%);
+  color: hsl(222 42% 11%);
+}
+
+/* ── Dark mode: icon button ──────────────────────────────────── */
+[data-theme="dark"] .btn-icon-clean {
+  background: hsl(222 42% 11%);
+  border-color: hsl(var(--border));
+  color: hsl(215 15% 55%);
+}
+[data-theme="dark"] .btn-icon-clean:hover {
+  background: hsl(220 25% 14%);
+  border-color: hsl(220 20% 25%);
+}
+
+/* ── Dark mode: view-all button ──────────────────────────────── */
+[data-theme="dark"] .btn-view-all {
+  background: hsl(222 42% 11%);
+  border-color: hsl(var(--border));
+  color: hsl(210 30% 80%);
+}
+[data-theme="dark"] .btn-view-all:hover {
+  background: hsl(220 25% 14%);
+  border-color: hsl(220 20% 25%);
+}
+
+/* ── Dark mode: table-clean ──────────────────────────────────── */
+[data-theme="dark"] .table-clean thead th {
+  color: hsl(215 15% 52%);
+}
+[data-theme="dark"] .table-clean tbody tr {
+  border-bottom-color: hsl(var(--border));
+}
+[data-theme="dark"] .table-clean tbody tr:hover {
+  background: hsl(220 25% 14%);
+}
+[data-theme="dark"] .table-clean tbody td {
+  color: hsl(210 30% 80%);
+}
+
+/* ── Dark mode: badge pills ──────────────────────────────────── */
+[data-theme="dark"] .badge-in-progress { background: hsl(25 50% 16%); color: #fb923c; }
+[data-theme="dark"] .badge-to-do       { background: hsl(270 40% 16%); color: #a78bfa; }
+[data-theme="dark"] .badge-done        { background: hsl(145 40% 14%); color: #4ade80; }
+
+/* ── Dark mode: glass cards ──────────────────────────────────── */
+[data-theme="dark"] .glass {
+  background: hsl(222 42% 11% / 0.85) !important;
+  border-color: hsl(var(--border)) !important;
+}
+
+/* ── Dark mode: hover red-50 for delete buttons ──────────────── */
+[data-theme="dark"] .hover\:bg-red-50:hover {
+  background-color: hsl(0 40% 14%) !important;
+}
+
+/* ── Dark mode: option elements in selects ───────────────────── */
+[data-theme="dark"] option {
+  background: hsl(222 42% 11%) !important;
+  color: hsl(var(--foreground)) !important;
+}
+
+/* ── Dark mode: box-shadow suppression for cards ─────────────── */
+[data-theme="dark"] [style*="boxShadow: '0 2px 8px rgba(0,0,0,0.05)'"],
+[data-theme="dark"] [style*="box-shadow: 0 2px 8px rgba(0,0,0,0.05)"] {
+  box-shadow: 0 2px 8px rgba(0,0,0,0.25) !important;
+}
+
+/* ── Input overrides — theme-aware ───────────────────────────── */
+:root:not([data-theme="dark"]) input,
+:root:not([data-theme="dark"]) textarea,
+:root:not([data-theme="dark"]) select {
   color: #222222 !important;
 }
-input::placeholder, textarea::placeholder {
+:root:not([data-theme="dark"]) input::placeholder,
+:root:not([data-theme="dark"]) textarea::placeholder {
   color: #9ca3af !important;
+}
+
+/* ══════════════════════════════════════════════════════════════
+   MOBILE RESPONSIVE FIXES
+   ══════════════════════════════════════════════════════════════ */
+
+/* Hide scrollbar on action bar scroll */
+.scrollbar-hide {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+.scrollbar-hide::-webkit-scrollbar {
+  display: none;
+}
+
+/* Add bottom padding on pages when mobile bottom nav is present */
+@media (max-width: 1023px) {
+  main > div[class*="p-4"] {
+    padding-bottom: 6rem !important;
+  }
+}
+
+/* Settings page: stack form fields on mobile */
+@media (max-width: 639px) {
+  /* Settings cards: full-width inputs */
+  .grid.grid-cols-2 > div {
+    grid-column: span 2;
+  }
+}
+
+/* Login/Register: better mobile spacing */
+@media (max-width: 800px) {
+  .auth-left {
+    padding: 20px 16px !important;
+    min-height: 100vh;
+  }
+}
+
+/* Pill tab bar: scrollable on mobile */
+@media (max-width: 639px) {
+  .pill-tab-bar {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+    flex-wrap: nowrap !important;
+    padding-bottom: 2px;
+  }
+  .pill-tab-bar::-webkit-scrollbar {
+    display: none;
+  }
+  .pill-tab {
+    flex-shrink: 0;
+    white-space: nowrap;
+  }
+}
+
+/* Make select elements have proper touch targets */
+@media (max-width: 639px) {
+  select, input, textarea {
+    min-height: 44px;
+    font-size: 16px !important; /* prevents iOS zoom on focus */
+  }
+}
+
+/* Template dropdown: position better on mobile */
+@media (max-width: 639px) {
+  .relative > div[class*="absolute"] {
+    right: 0;
+    left: auto;
+  }
 }
 
 @theme inline {

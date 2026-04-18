@@ -140,7 +140,7 @@ export default function ClientsPage() {
                   style={{ background: 'linear-gradient(135deg, #a28ef9, #7c5cfc)' }}>
                   {c.name.charAt(0).toUpperCase()}
                 </div>
-                <div className="flex gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
+                <div className="flex gap-1 sm:opacity-0 sm:group-hover:opacity-100 transition-opacity">
                   <button onClick={() => openEdit(c)} className="p-1.5 rounded-lg hover:bg-gray-100 transition-colors" style={{ color: '#6b7280' }}>
                     <Pencil className="w-3.5 h-3.5" />
                   </button>

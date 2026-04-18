@@ -87,7 +87,7 @@ export default function DashboardPage() {
   const paidCount = stats?.byStatus?.PAID ?? 0
 
   return (
-    <div className="p-4 sm:p-6 lg:p-8 space-y-4 sm:space-y-5">
+    <div className="p-4 sm:p-6 lg:p-8 space-y-4 sm:space-y-5 pb-24 lg:pb-8">
 
       {/* ── Page header ── */}
       <div className="flex items-start sm:items-center justify-between gap-3">
